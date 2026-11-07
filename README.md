@@ -1,5 +1,11 @@
 # Atlantic hurricane wind loss workflow
 
+An external station-wind evaluation is now included. See the
+[technical validation report](reports/wind_validation/wind_validation_report.md)
+for measured model errors, uncertainty coverage and conditional insured-loss
+sensitivities. The evaluation exposes substantial wind bias; the high-wind core
+and absolute insured losses remain unvalidated.
+
 A runnable Python workflow for a synthetic Florida insurance portfolio, NOAA
 Atlantic HURDAT2 tracks, assumed wind and vulnerability models, and paired
 historical versus alternative hazard comparisons. All dollar values are assumed
@@ -231,3 +237,24 @@ Re-running with the same configuration, file, code and library versions is
 seed-reproducible. Output directories are overwritten by a rerun; use a different
 `--out` for each experiment. Synthetic demo outputs default to `outputs/demo`,
 while historical runs default to `outputs/historical`.
+
+## Observational validation
+
+```bash
+python -m hurricane_risk.validation
+```
+
+This uses the downloaded HURDAT2 file and the bundled, source-attributed
+`data/validation/station_peaks.csv` and `sources.json`. All 49 METAR-section rows
+from NWS reports for Irma, Michael and Ian are retained, with 22 eligible primary
+comparisons. Incomplete peaks are lower bounds; suspect coordinates and missing
+winds are excluded from primary metrics. The command reproduces the report,
+diagnostic figure, station matches, exclusions, uncertainty bootstrap,
+leave-one-storm-out correction experiment and loss sensitivities in
+`reports/wind_validation/`. The original model and loss configuration are unchanged.
+
+Observations are external to this workflow but may have informed NHC best tracks;
+strict independence from track construction is not established. All eligible
+observed sustained peaks are below hurricane force. This is a documented
+observational diagnostic, not validation of a full spatial field or a fitted
+loss correction. See the report for the limits on interpreting the results.

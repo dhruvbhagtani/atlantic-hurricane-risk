@@ -1,0 +1,33 @@
+{
+  "measurement": {"height_m": 10, "averaging_minutes": 2, "units": "knots", "variable": "reported maximum sustained wind, never peak gust"},
+  "retrieved_utc_date": "2026-11-07",
+  "independence": "External station measurements, unused to fit the original workflow; not proven withheld from NHC best-track analysis.",
+  "sources": {
+    "irma_tbw": {
+      "storm_id": "AL112017", "name": "Irma", "product": "NWS Tampa Bay PSHTBW, 2017-09-14 16:41 UTC",
+      "url": "https://mesonet.agron.iastate.edu/wx/afos/p.php?e=201709141641&pil=PSHTBW",
+      "section": "A. METAR observations; all 10 unique rows, duplicate KRSW removed",
+      "window_start": "2017-09-09T00:00:00", "window_end": "2017-09-12T12:00:00"
+    },
+    "michael_tae": {
+      "storm_id": "AL142018", "name": "Michael", "product": "NWS Tallahassee PSH, 2018-10-27 01:40 UTC",
+      "url": "https://www.weather.gov/tae/michael_psh",
+      "section": "A. METAR observations; all 25 rows; I on maximum sustained wind means incomplete",
+      "window_start": "2018-10-09T00:00:00", "window_end": "2018-10-12T00:00:00"
+    },
+    "ian_tbw": {
+      "storm_id": "AL092022", "name": "Ian", "product": "NWS Tampa Bay PSHTBW, 2022-10-12 18:02 UTC",
+      "url": "https://mesonet.agron.iastate.edu/wx/afos/p.php?e=202210121802&pil=PSHTBW",
+      "section": "A. METAR observations; all 14 rows; remarks override individual flags for RSW PGD SRQ SPG TPA GIF PIE",
+      "window_start": "2022-09-27T00:00:00", "window_end": "2022-09-30T00:00:00"
+    }
+  },
+  "curation": [
+    "Numeric station data manually transcribed from NWS-authored primary reports (Irma and Ian accessed through the IEM archive).",
+    "Use all METAR-section rows in these three products, not stations selected by model fit; do not include non-METAR, marine or gust measurements.",
+    "Keep source coordinates unchanged. Flag Irma KFMY (longitude differs from Ian) and Ian KVDF (coordinates duplicate Irma KBKV) as suspect; exclude from primary scores.",
+    "No incomplete flag is not proof of full observational coverage. Preliminary report errors and unflagged outages remain possible.",
+    "Windows are analyst-selected UTC brackets around the regional passage, not exact instrument uptime; event peaks only, no time-series or peak-timing skill claims."
+  ],
+  "duration_reference": "https://www.aoml.noaa.gov/hrd/tcfaq/D4.html"
+}
