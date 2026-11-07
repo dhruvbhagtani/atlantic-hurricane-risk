@@ -3,3 +3,4 @@ __pycache__/
 .pytest_cache/
 data/hurdat2*.txt
 outputs/
+*.bundle

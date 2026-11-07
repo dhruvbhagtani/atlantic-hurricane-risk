@@ -1,0 +1,233 @@
+# Atlantic hurricane wind loss workflow
+
+A runnable Python workflow for a synthetic Florida insurance portfolio, NOAA
+Atlantic HURDAT2 tracks, assumed wind and vulnerability models, and paired
+historical versus alternative hazard comparisons. All dollar values are assumed
+present-day USD with a fixed portfolio. This is an educational catastrophe model;
+its assumptions are visible and replaceable, and its losses are not calibrated
+to insurance claims.
+
+## Run
+
+Python 3.10+:
+
+```bash
+python -m pip install -r requirements.txt
+python -m hurricane_risk --download
+```
+
+The default download is a pinned NOAA catalog through 2024, not a moving latest
+file. The analysis period is 1980–2024 (45 complete years), set in `config.json`.
+The downloader validates the format before retaining a file. Existing files are
+reused. Alternatively, download [NOAA HURDAT2](https://www.nhc.noaa.gov/data/#hurdat)
+yourself and run:
+
+```bash
+python -m hurricane_risk --tracks /path/to/hurdat2-atlantic.txt --out outputs/historical
+```
+
+Supply the **complete Atlantic catalog**, not selected landfall storms: omitting
+storms biases frequency and loss estimates. The parser checks catalog endpoints
+but cannot establish completeness of a user-supplied subset. Years are selected
+using the storm's season identifier; an event crossing New Year is assigned to
+its originating season. Changing to a later end year requires a newer input file.
+
+For an offline integration example:
+
+```bash
+python -m hurricane_risk --demo
+python -m unittest discover -s tests -v
+```
+
+`--demo` fabricates tracks in HURDAT2 format. Its outputs say **FABRICATED DEMO**
+and must never be presented as historical hurricane losses. Network access to
+NOAA was unavailable in the development workspace; the complete historical run
+was validated with a manually downloaded NOAA file. Five focused unit tests and
+historical output consistency checks passed, including zero-year retention,
+AEP >= OEP, and exact AAL scaling with the frequency multiplier.
+
+### Validated historical example
+
+The default configuration processes 310 hurricanes in 1980–2024 and a synthetic
+portfolio with $127,415,900 in replacement value. Results from the pinned NOAA
+catalog are:
+
+| Scenario | Insured AAL | Combined 5–95% range |
+|---|---:|---:|
+| Historical | $416,633 | $62,726–$895,355 |
+| Wind +10% | $680,246 | $149,002–$1,397,355 |
+| Wind +10%, frequency +20% | $816,295 | $178,803–$1,676,826 |
+
+These ranges reflect the assumed model and resampling distributions described
+below. RMW is missing for 88.2% of selected track observations, making the assumed
+35-km fallback an important source of model dependence. Historical tracks do not
+make these uncalibrated wind-only loss estimates observed insurance losses.
+
+## Track and wind model
+
+The [NOAA HURDAT2 format specification](https://www.aoml.noaa.gov/hrd/hurdat/hurdat2-format.pdf)
+documents positions, maximum one-minute sustained winds, central pressure and
+wind radii. Maximum wind is converted from knots to m/s with factor 0.514444;
+RMW is converted from nautical miles to km with factor 1.852. Negative RMW
+sentinels are treated as missing. RMW reporting is sparse in historical records.
+Missing-wind sentinels (`-99`, also accepting `-999`) are parsed as missing; selected hurricane tracks with
+missing intensity stop the workflow rather than silently imputing winds.
+
+Only storms attaining `HU` status somewhere in the selected season are included.
+All recorded phases of those storms contribute, including weakening and
+extratropical phases; this is an approximation and excludes storms that remain
+tropical storms. Original observations, including special landfall fixes, are
+retained. Latitude, unwrapped longitude, maximum wind and RMW are interpolated
+linearly at 30-minute intervals. Interpolation smooths the original observations;
+it does not reconstruct unobserved rapid intensity changes. Track gaps longer
+than 12 hours fail validation. Great-circle distances use Earth radius 6371.0088 km.
+
+The local wind approximation is an **explicitly assumed modified Rankine vortex**:
+
+```
+V(r,t) = e * Vmax(t) * r/R(t)             for 0 <= r <= R(t)
+V(r,t) = e * Vmax(t) * (R(t)/r)^alpha     for r > R(t)
+W(event, property) = max_t V(r(property,t),t)
+```
+
+Default `alpha = 0.6`, `e = 0.85`, and missing `R = 35 km`. Observed positive
+RMW is used when available. Wind is zero at the center and peaks at RMW; there
+is no artificial geographic cutoff. The wind variable throughout is an assumed
+one-minute sustained 10-m wind, **not a gust**. `e` is a uniform exposure/roughness
+reduction applied to every property, not a geographic land mask or inland decay
+model. Observed track intensity already reflects storm weakening to the extent
+captured in the best track. The profile ignores translation asymmetry, terrain,
+quadrant size, pressure, surface heterogeneity and explicit post-landfall decay;
+its outer wind tail is unconstrained by observed wind radii. It is applied to
+all phases even though extratropical wind fields may be very different.
+
+Parametric surface wind fitting has a research basis; see
+[Knaff et al. (2006), A Real-Time Hurricane Surface Wind Forecasting Model](https://journals.ametsoc.org/view/journals/mwre/134/5/mwr3126.1.xml).
+The simple profile and coefficients here are **assumptions**, not a reproduction
+or validation of that model or of Holland's pressure-gradient model. A smaller
+time step can be used to check peak-wind sensitivity; 30-minute sampling may
+still miss a small eye or RMW passage.
+
+## Exposure, damage and policy assumptions
+
+The seeded portfolio contains 300 synthetic properties clustered around Miami,
+Tampa, Orlando, Jacksonville, Pensacola and Fort Myers, with small coordinate
+jitter. Locations are approximate city clusters, not verified parcels or a
+geocoded coastline. Replacement values follow a clipped lognormal distribution
+(median $400,000, log standard deviation 0.45, bounds $100,000–$2,000,000).
+Construction probabilities are 40% wood, 40% masonry and 20% mitigated.
+
+Mean damage ratios are **explicit assumptions**, linearly interpolated in wind
+speed with endpoint clamping:
+
+| Sustained m/s | Wood | Masonry | Mitigated |
+|---:|---:|---:|---:|
+| 0 | 0 | 0 | 0 |
+| 20 | 0 | 0 | 0 |
+| 30 | .015 | .005 | .002 |
+| 40 | .08 | .04 | .015 |
+| 50 | .25 | .15 | .06 |
+| 60 | .50 | .35 | .18 |
+| 70 | .75 | .60 | .38 |
+| 85 | .95 | .85 | .65 |
+| 100 | 1 | 1 | .90 |
+
+These are not published FEMA/HAZUS curves. Replacing them with published curves
+requires matching their wind averaging duration, height, exposure and building
+classes; using a gust-based curve directly with sustained wind would be wrong.
+Damage above 100 m/s stays at its last tabulated value. Insurance recovery is
+`min(max(value * damage_ratio - 0.02 * value, 0), 1.0 * value)` per property
+per event. Both ground-up and insured event losses are saved. Annual losses sum
+independent event recoveries, assuming immediate full repair and reinstatement
+between storms, with no annual aggregate limit, demand surge, contents, business
+interruption, surge, flood or reinsurance.
+
+## AAL, OEP, AEP and alternative scenarios
+
+For each season, sum event insured losses for aggregate loss `A_y`; take the
+largest event insured loss for occurrence loss `O_y`. Include every selected
+season, including zero-loss years:
+
+- `AAL = sum_y A_y / number_of_years`.
+- `OEP(x) = P(O_y > x)` and `AEP(x) = P(A_y > x)`.
+- Return loss at period `T` is the inverse empirical CDF at `1 - 1/T`, using
+  NumPy's `inverted_cdf` method. Ties and probability atoms need not give exactly
+  `1/T` strict exceedance at that loss.
+
+The historical annual catalog is saved directly. EP curves and reported return
+losses use 20,000 resampled annual blocks for consistent scenario comparisons;
+historical AAL is computed exactly from the original annual catalog, without
+simulation error. Blocks retain within-year storm clustering and dependence.
+
+Three scenarios hold tracks, portfolio and policy terms fixed:
+
+1. Historical intensities and frequency.
+2. All storm winds multiplied by 1.10, including weakening phases.
+3. The same 1.10 wind multiplier plus a 1.20 annual frequency multiplier.
+
+For frequency `f`, a simulated year superposes `floor(f)` independent sampled
+catalog years and, with probability `f-floor(f)`, one additional sampled year.
+Aggregate losses sum across blocks and occurrence losses take the maximum.
+Thus `f=1.2` retains one full annual block and adds another with probability
+0.2; the expected event count and AAL increase by 20%. This is an **assumed
+annual-block superposition**, not a fitted Poisson frequency model or a physical
+climate projection. It changes clustering as well as mean frequency. Values
+below 1 produce an inactive year with probability `1-f`. Shared block indices
+and random numbers pair scenarios. AAL uses the exact expectation `f * mean(A_y)`.
+
+No return periods longer than the observed catalog are allowed by configuration.
+Even the default 20-year loss is weakly constrained by 45 historical years.
+Generating 20,000 resampled years does not add storms or identify unobserved
+extreme tails. Catalog stationarity is assumed; early observational uncertainty,
+historical changes in detection, and secular climate variability are not corrected.
+
+## Uncertainty and comparisons
+
+Each of 200 replicates is run in each of three modes:
+
+- `sampling`: bootstrap 45 annual blocks with replacement; preserve events
+  within each sampled year and all zero-loss years.
+- `model`: retain catalog years but vary globally shared parameters. RMW
+  multiplier is 0.8, 1.0 or 1.2 with probabilities .25, .50 and .25;
+  wind intensity has a mean-one lognormal multiplier with log SD .05;
+  damage ratio has a mean-one lognormal multiplier with log SD .20, clipped
+  to [0,1] after scaling. The RMW alternatives are recalculated wind fields,
+  not a monotone size correction to event maxima.
+- `combined`: both annual bootstrap and model parameter draws.
+
+Parameters are shared across the whole portfolio and all storms in a replicate,
+representing correlated model uncertainty. The same draws and resampled years
+are paired across scenarios. Saved intervals are 5th/50th/95th percentiles of
+AAL and OEP/AEP return losses. They are conditional sensitivity ranges under
+assumed parameter distributions, not calibrated predictive intervals. They do
+not include event/property damage randomness, track position errors, exposure
+uncertainty, alternative-scenario multiplier uncertainty, or novel storms.
+`scenario_comparison.csv` contains paired absolute and percentage changes with
+intervals. Percentage changes with a zero baseline are missing; the count of
+valid percentage replicates is included. Finite simulation error in EP estimates
+is not included as a separate uncertainty component. Increase simulation years
+and replicate count to assess numerical stability before relying on estimates.
+
+## Outputs
+
+Every run writes:
+
+| File | Content |
+|---|---|
+| `report.md`, `summary.csv` | Data label, AAL and return losses |
+| `portfolio.csv`, `assumed_vulnerability.csv` | Reproducible exposure and curves |
+| `hazard.npz` | Event × RMW alternative × property wind maxima in m/s, with IDs |
+| `event_losses.csv` | Ground-up and insured event losses by scenario, before frequency scaling |
+| `historical_annual_losses.csv` | Original annual sums/maxima including zero years |
+| `historical_empirical_ep.csv` | Exact catalog OEP/AEP at observed loss thresholds |
+| `simulated_annual_losses.csv`, `ep_curves.csv` | Simulated annual distributions and strict OEP/AEP |
+| `property_aal.csv` | Historical nominal ground-up and insured AAL by property |
+| `uncertainty_samples.csv`, `parameter_draws.csv` | Full metric and parameter replicates |
+| `uncertainty_intervals.csv`, `scenario_comparison.csv` | Conditional intervals and paired scenario deltas |
+| `portfolio_and_ep.png`, `aal_uncertainty.png`, `vulnerability.png` | Figures |
+| `manifest.json` | Input SHA-256, source hashes, configuration, versions and missing RMW fraction |
+
+Re-running with the same configuration, file, code and library versions is
+seed-reproducible. Output directories are overwritten by a rerun; use a different
+`--out` for each experiment. Synthetic demo outputs default to `outputs/demo`,
+while historical runs default to `outputs/historical`.
