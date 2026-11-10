@@ -388,3 +388,9 @@ The completed [structural comparison](reports/structural_models/report.md),
 all candidate results. The [land-only resolution check](reports/land_only_resolution/report.md)
 verifies the current exposure separately. See [current results](docs/current_results.md)
 for the resulting default behavior, remaining model limitations and reproduction commands.
+
+The [final review](reports/final_review/report.md) includes a separate
+[source-reviewed Laura high-wind point](reports/laura_reported_point_check/report.md).
+It reveals strong underprediction at that time, which the inland-attenuation
+candidate worsens despite improving the milder Valdosta scores. Optional candidates
+remain experimental; the full Laura NOAA time series is still a separate pending input.

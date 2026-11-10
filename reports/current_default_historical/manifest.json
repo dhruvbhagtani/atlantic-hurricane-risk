@@ -1,0 +1,109 @@
+{
+  "data_kind": "NOAA HURDAT2 user-supplied or downloaded catalog",
+  "track_path": "/scratch/gpfs/LRGROUP/db9274/NA_Ocean_cyclone/data/hurdat2-1851-2024-040425.txt",
+  "additional_inputs": {
+    "config.json": "5253d57126a45d82a4fefba10963902f0bc871a7ab5165c7aba5c9ac3132d7c4"
+  },
+  "coastline_sha256": "f5a00bf305b66b48b30ba0479f3efbf9041652088e2c06c91fa39bd3aee1b158",
+  "exposure_kind": "synthetic land-only",
+  "properties": 300,
+  "vulnerability_metadata": {
+    "averaging_minutes": 1,
+    "height_m": 10,
+    "wind_type": "sustained",
+    "units": "m/s",
+    "exposure": "local",
+    "source": "Explicit educational assumptions"
+  },
+  "download_url": null,
+  "track_sha256": "d595ada8aaa64e402c26eeb80efb344b52ef420b1627d8c0ee6ee65f0729923b",
+  "config": {
+    "start_year": 1980,
+    "end_year": 2024,
+    "seed": 7319,
+    "properties": 300,
+    "interpolation_minutes": 1,
+    "rmw_km": 35.0,
+    "rankine_alpha": 0.6,
+    "land_exposure_factor": 0.85,
+    "uncertainty_replicates": 200,
+    "simulation_years": 20000,
+    "return_periods": [
+      2,
+      5,
+      10,
+      20
+    ],
+    "scenarios": [
+      {
+        "name": "historical",
+        "wind_multiplier": 1.0,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct_frequency_plus_20pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.2
+      }
+    ],
+    "coastline_path": "data/geography/natural_earth_10m_atlantic.geojson.gz",
+    "synthetic_land_buffer_km": 2.0
+  },
+  "total_insured_value_usd": 127415900.0,
+  "storms": 310,
+  "years_including_zero_loss": 45,
+  "input_season_span": [
+    1851,
+    2024
+  ],
+  "rmw_missing_fraction": 0.8817802503477051,
+  "versions": {
+    "python": "3.12.2",
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "matplotlib": "3.9.2"
+  },
+  "source_sha256": {
+    "confirmation_study.py": "cde9ea35a042341d935c79cb4b646697322bf63691eac8a15ee2d150d838246b",
+    "observations.py": "3933351dc3045c89c6c788632f7f99a9df3d3f9997d7879a92fd3866a3a49d0d",
+    "model.py": "848eb608a760531a1f410edf8e2f8a1dc38611d8af37c05928c58185e86f3d27",
+    "structural_study.py": "fed48b8338c0a7efe21877e527c477c0af65a36d1439847841b86624123ec78f",
+    "validation.py": "0299ddcd8fe6099e8127e9e96fb072b82e0e686cc0e5706afa4f10253697057d",
+    "__init__.py": "07db4356552223670a5b7fb14a9fe7b5c15c1ddd64114f35db45cefe89799a46",
+    "global_hourly.py": "79481d4eb7c76556e7345bea8a568130e07d16dcf40feb359187ad4b90cd98c1",
+    "benchmark.py": "27f999a7fcd1f55f3113ec5ee54f5391e0525a0265e475ca4c362f38afeaf000",
+    "diagnostics.py": "9ad480546d177e77047073e962b1504f20c12f9e0c43279c729c66303841fc32",
+    "inputs.py": "1cb622b6aafede07e8766089ccdf6e6ddf8bb712abae395e3d21025cdb33c0a9",
+    "__main__.py": "a0609dbdc061078905339053062a0051b1878cf0c89c081995f1d8f344dbbe35",
+    "time_series_validation.py": "3cd8bcd7feaa810523523761379fd3e5b4eed1091babaaf6f810c780958cb489",
+    "artifacts.py": "d5ef30477449c094e8f9d59135cc2344c5d6f56f95fbe2a15148f62dbb78d619",
+    "geography.py": "628d40a36fdf5dec89394b81035ba171c02c82fe54954eaf4e3586cbb6ba4531",
+    "portfolio.py": "9a41d35c49fc7e4e829f85837db70237234b8dfbcc1f87f44696e084038613c4"
+  },
+  "outputs_sha256": {
+    "aal_uncertainty.png": "1d6bde759da3e113736b8be53dec827ec5e0ab9ebb958c5c6fbf041ce2244a17",
+    "assumed_vulnerability.csv": "1c54534dff3128582d06e033086c3d05c8f894ad0969b2bf4bae75d7c50bf25f",
+    "ep_curves.csv": "923612956feb32f34583c3bfc73213c1a02ceea64ccd94853f01442da812b8c4",
+    "event_losses.csv": "e14c8091164c6b6971347b0b9ca79e79721ee526d74127f4bb0babbdf6156977",
+    "exposure_location_audit.csv": "dd9cb53822c54a1eb794015155baf38f2ba50f1292a1648460f969984682b537",
+    "hazard.npz": "496f94de8bcae7d8a310781ee40afa95dfa507f375814620f3c3882354ea1c3a",
+    "historical_annual_losses.csv": "0c498be3991e5b4b2a4321b45a727d25c625953b1a2bb475d62e0a0203f13d22",
+    "historical_empirical_ep.csv": "c6c34d94716a39fcf9ab39bc993cf15c4e3fc332f3d08da5e3745b2bf5f69c46",
+    "parameter_draws.csv": "e3ee18d8f03943de39c6b49b3d1c354412e1ef63e9392649ab017c69f717e853",
+    "portfolio.csv": "2ac76f1580fc38688314d88f699fd25f4ccc20cd400dff6676b0331685263b04",
+    "portfolio_and_ep.png": "2797885bff351549cf2dd30ab367174379c68379c57d2712505f0feb37c0fd0f",
+    "property_aal.csv": "b971d846e1dc40faf561206dc5d4cdfb552cb764dbac018108be6f8cb47661ff",
+    "report.md": "dadd89e1897d87541ab463a986bdecb8ee9a5039b663e9133dd46a5485d1e304",
+    "scenario_comparison.csv": "6ef36e9ae4e622a35e046ca9b5fe450b5612c5828322a5aaf7fb5e8c3400987f",
+    "simulated_annual_losses.csv": "c958cd6846d632ad72fc1973d66b712458e852c5535c0df361c8084532f67d13",
+    "summary.csv": "81af3dfe5e1d8930019edd83280575f2a79c18de4fc45e168ab0f0da4469de6f",
+    "uncertainty_intervals.csv": "298eac2c678800d29cb04a293930e00446eb9a29fc174194badf35e3ac2ec838",
+    "uncertainty_samples.csv": "6e45e582f1498c75380fd962f54455574201b7af9cea302e4a12f28a60386e26",
+    "vulnerability.png": "515f7ee5874806277b4246f4ff5669f56ea60f7d1308201a794b92183730548c"
+  }
+}

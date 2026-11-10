@@ -57,6 +57,12 @@ def validate_frozen_model(event,lock_path):
     for name,digest in lock['model_code_sha256'].items():
         if sha256(Path(__file__).parent/name)!=digest:
             raise ValueError(f'Model changed before confirmation: {name}')
+    for name,digest in lock.get('support_inputs_sha256',{}).items():
+        if sha256(name)!=digest:
+            raise ValueError(f'Frozen study support input changed: {name}')
+    cfg=json.loads(Path('examples/structural_config.json').read_text())
+    if sha256(cfg['coastline_path'])!=lock['coastline_sha256']:
+        raise ValueError('Frozen study coastline changed')
     original=json.loads(Path('data/validation/reserved_evaluation.json').read_text())
     if event['candidates']!=original['candidates']:
         raise ValueError('Confirmation candidates differ from the registered model comparison')

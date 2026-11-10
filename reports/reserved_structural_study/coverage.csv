@@ -1,0 +1,5 @@
+storm_id,station_id,split,expected_reports,reports,good_reports,good_cadence_bins,coverage,max_gap_minutes,incomplete,metadata_issue,uptime_confirmed,exposure,height_m,averaging_minutes
+AL102023,KVLD,development,72,102,89,38,0.5277777777777778,2046.0,1,unknown_site_exposure;missing_uptime_reference,False,unknown,10,2
+AL092024,KVLD,development,96,103,96,49,0.5104166666666666,2654.0,1,unknown_site_exposure;missing_uptime_reference,False,unknown,10,2
+AL042024,KVLD,test,97,189,165,88,0.9072164948453608,188.0,1,unknown_site_exposure;missing_uptime_reference,False,unknown,10,2
+AL142024,KVLD,test,97,111,101,89,0.9175257731958762,300.0,1,unknown_site_exposure;missing_uptime_reference,False,unknown,10,2

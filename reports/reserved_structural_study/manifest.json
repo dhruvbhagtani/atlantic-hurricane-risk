@@ -1,0 +1,207 @@
+{
+  "registration": {
+    "purpose": "Reserve previously unexamined event windows before implementing and scoring structural wind candidates.",
+    "development_storms": [
+      "AL112017",
+      "AL142018",
+      "AL092022",
+      "AL102023",
+      "AL092024"
+    ],
+    "test_events": [
+      {
+        "storm_id": "AL042024",
+        "name": "Debby",
+        "start": "2024-08-04T00:00:00Z",
+        "end": "2024-08-08T00:00:00Z"
+      },
+      {
+        "storm_id": "AL142024",
+        "name": "Milton",
+        "start": "2024-10-08T00:00:00Z",
+        "end": "2024-10-12T00:00:00Z"
+      }
+    ],
+    "stations": [
+      {
+        "station_id": "KVLD",
+        "ncei_id": "72216693845",
+        "lat": 30.77629,
+        "lon": -83.27393
+      }
+    ],
+    "candidates": [
+      {
+        "name": "baseline",
+        "overrides": {}
+      },
+      {
+        "name": "fallback_rmw_25km",
+        "overrides": {
+          "rmw_km": 25.0
+        }
+      },
+      {
+        "name": "translation_asymmetry",
+        "overrides": {
+          "translation_fraction": 0.5,
+          "asymmetry_cap": 0.25
+        }
+      },
+      {
+        "name": "local_inland_attenuation",
+        "overrides": {
+          "inland_decay_km": 100.0
+        }
+      },
+      {
+        "name": "combined_structure",
+        "overrides": {
+          "translation_fraction": 0.5,
+          "asymmetry_cap": 0.25,
+          "inland_decay_km": 100.0
+        }
+      }
+    ],
+    "selection_rule": "Compare all candidates; do not tune or select using reserved-event errors.",
+    "primary_eligibility": "Provider-QC samples at report times require documented station height/duration. Unknown exposure, incomplete uptime and sampled peak censoring remain explicit; no full-event peak claims.",
+    "limitations": "Annual CSV metadata and the Helene window were previously inspected, but Debby/Milton wind values and residuals have not been examined. Reservation is analyst-level separation, not independence from NHC best-track construction.",
+    "created_utc": "2026-11-10T04:15:11.224660+00:00",
+    "annual_input_sha256": "b0df405f71f2fd55324a781494d8d596226745833d4fa0bf13f287bd1ad03096"
+  },
+  "lock": {
+    "registration_sha256": "49b4fd47b83118a24a39f87dbe844880c3d724a9a3d63a9f7f4950eaee0f217b",
+    "registration_commit": "3063c281eb87ebdf0ac9216d22cf17cca77cee7a",
+    "annual_input_sha256": "b0df405f71f2fd55324a781494d8d596226745833d4fa0bf13f287bd1ad03096",
+    "coastline_sha256": "f5a00bf305b66b48b30ba0479f3efbf9041652088e2c06c91fa39bd3aee1b158",
+    "model_code_sha256": {
+      "model.py": "848eb608a760531a1f410edf8e2f8a1dc38611d8af37c05928c58185e86f3d27",
+      "geography.py": "628d40a36fdf5dec89394b81035ba171c02c82fe54954eaf4e3586cbb6ba4531",
+      "time_series_validation.py": "3cd8bcd7feaa810523523761379fd3e5b4eed1091babaaf6f810c780958cb489",
+      "structural_study.py": "fed48b8338c0a7efe21877e527c477c0af65a36d1439847841b86624123ec78f"
+    },
+    "support_inputs_sha256": {
+      "examples/structural_config.json": "5336de15c67482d321d1445594a80796be3abdceaef452ae45c6596e437d6274",
+      "data/validation/station_metadata/KVLD_audit.json": "417893987039c441db8666b72f09912b4fcf9802b037223c7ba7d5fb3a209ef1",
+      "data/validation/station_metadata/homr_KVLD.json": "42b5eb776b45e67634f527276fc85860a89f84f5b30111013982cfcb5e35661c",
+      "data/validation/valdosta_event_plan.json": "a762108183dc52111d961ed5add8d5a397b184bef3347d68d82b59b3595fff18",
+      "data/validation/valdosta_time_series.csv": "2fb34142fef0bdb89cec8e04ebd6f5ccbef2f0a3bef6901b79961029964b3521"
+    },
+    "rule": "Frozen before first examination of reserved-event wind values or scores; do not update after viewing results."
+  },
+  "config": {
+    "start_year": 1980,
+    "end_year": 2024,
+    "seed": 7319,
+    "properties": 300,
+    "interpolation_minutes": 1,
+    "rmw_km": 35.0,
+    "rankine_alpha": 0.6,
+    "land_exposure_factor": 0.85,
+    "uncertainty_replicates": 200,
+    "simulation_years": 20000,
+    "return_periods": [
+      2,
+      5,
+      10,
+      20
+    ],
+    "scenarios": [
+      {
+        "name": "historical",
+        "wind_multiplier": 1.0,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct_frequency_plus_20pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.2
+      }
+    ],
+    "coastline_path": "data/geography/natural_earth_10m_atlantic.geojson.gz"
+  },
+  "metadata": {
+    "station_id": "KVLD",
+    "ncei_id": "72216693845",
+    "homr_ncdc_id": "20004698",
+    "coordinates": {
+      "lat": 30.77629,
+      "lon": -83.27393,
+      "valid_from": "2021-11-22",
+      "meaning": "ASOS primary DCP position per HOMR; not necessarily exact wind tower position"
+    },
+    "height_m": 10,
+    "height_reference": {
+      "url": "https://s3.amazonaws.com/fema-femadata/NationalDisasters/2023/Idalia/NIST_Windfield/Release_1/3-Hurricane_Idalia_2023_Model_Fit_Release1.pdf",
+      "page": 4,
+      "evidence": "Station table lists KVLD as ASOS with 10 m anemometer height."
+    },
+    "height_crosscheck": {
+      "url": "https://19january2017snapshot.epa.gov/sites/production/files/2016-01/documents/20140912residrisk.pdf",
+      "evidence": "Historical EPA inventory lists WBAN 93845 anemometer height 10.05 m."
+    },
+    "averaging_minutes": 2,
+    "duration_reference": "https://www.weather.gov/asos/WindSensor.html",
+    "equipment": "ANEMSONIC",
+    "equipment_valid_from": "2007-06-07",
+    "homr_url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:93845&date=all&definitions=false&phrData=true",
+    "homr_sha256": "42b5eb776b45e67634f527276fc85860a89f84f5b30111013982cfcb5e35661c",
+    "wind_tower_coordinate_sensitivity": {
+      "lat": 30.7825,
+      "lon": -83.2767,
+      "source": "NIST Idalia station table; roughly 0.7 km from the current HOMR DCP position. Evaluate separately without selecting by errors."
+    },
+    "exposure": "Airport site; quantitative directional roughness remains unknown.",
+    "uptime": "No uptime logs available. Good QC flags support measurements only at report times, not continuous peak capture.",
+    "eligibility": "Documented nominal 10-m, two-minute sample comparisons; full-event peaks stay censored unless independently established."
+  },
+  "inputs_sha256": {
+    "data/validation/reserved_evaluation.json": "49b4fd47b83118a24a39f87dbe844880c3d724a9a3d63a9f7f4950eaee0f217b",
+    "data/validation/structural_study_lock.json": "349eaae2c112dd2f6c0000a939386ffaae33cd31ac3a044c8389818d0323f977",
+    "data/raw/global_hourly/2024/72216693845.csv": "b0df405f71f2fd55324a781494d8d596226745833d4fa0bf13f287bd1ad03096",
+    "examples/structural_config.json": "5336de15c67482d321d1445594a80796be3abdceaef452ae45c6596e437d6274",
+    "data/hurdat2-1851-2024-040425.txt": "d595ada8aaa64e402c26eeb80efb344b52ef420b1627d8c0ee6ee65f0729923b",
+    "data/validation/station_metadata/KVLD_audit.json": "417893987039c441db8666b72f09912b4fcf9802b037223c7ba7d5fb3a209ef1",
+    "data/validation/valdosta_event_plan.json": "a762108183dc52111d961ed5add8d5a397b184bef3347d68d82b59b3595fff18",
+    "data/validation/valdosta_time_series.csv": "2fb34142fef0bdb89cec8e04ebd6f5ccbef2f0a3bef6901b79961029964b3521"
+  },
+  "code_sha256": {
+    "observations.py": "3933351dc3045c89c6c788632f7f99a9df3d3f9997d7879a92fd3866a3a49d0d",
+    "model.py": "848eb608a760531a1f410edf8e2f8a1dc38611d8af37c05928c58185e86f3d27",
+    "structural_study.py": "fed48b8338c0a7efe21877e527c477c0af65a36d1439847841b86624123ec78f",
+    "validation.py": "8a6c8eefa833e1dce0d2c581f8c54deb59bbb13118292e0db3dfbd8849f52ae9",
+    "__init__.py": "07db4356552223670a5b7fb14a9fe7b5c15c1ddd64114f35db45cefe89799a46",
+    "global_hourly.py": "79481d4eb7c76556e7345bea8a568130e07d16dcf40feb359187ad4b90cd98c1",
+    "benchmark.py": "fdce2cdc7c73caee7a7b787b7f1fa47994730227f690ddc433c4a300d0914c3b",
+    "diagnostics.py": "9ad480546d177e77047073e962b1504f20c12f9e0c43279c729c66303841fc32",
+    "inputs.py": "42b6dfa8c1a17c6c136173894932aca9517f7454ce24a9a5d002e6b2b2b5cfd6",
+    "__main__.py": "2946ecc6fefad315cf592f20040cc9581cf2cc38002baf72b41244164bd5b0d6",
+    "time_series_validation.py": "3cd8bcd7feaa810523523761379fd3e5b4eed1091babaaf6f810c780958cb489",
+    "artifacts.py": "d5ef30477449c094e8f9d59135cc2344c5d6f56f95fbe2a15148f62dbb78d619",
+    "geography.py": "628d40a36fdf5dec89394b81035ba171c02c82fe54954eaf4e3586cbb6ba4531"
+  },
+  "versions": {
+    "python": "3.12.2",
+    "numpy": "1.26.4",
+    "pandas": "2.2.2"
+  },
+  "outputs_sha256": {
+    "coordinate_sensitivity.csv": "c6bf8bc09950d3878d08c94b344273b8f6ff5a1da2fa2876f5f45d8159afbaed",
+    "coverage.csv": "046f074622c30df05e021c7714936ff42c1895e9f5475ba6f108896b0ae8200a",
+    "event_plan.json": "ed4a4b622adc6f3604cbdfc762e4a69f7aba00297e76d954ac464ba119a1be26",
+    "exposure_sensitivity.csv": "4b4bbb456dba1dc0ff70ec79424224569f4a554c39256d437a27fe9207b893d0",
+    "observed_time_series.csv": "5ce749b9e8db0c5c1ee51929421953cdaed3e93b5b941cd7c983c93846e3c59f",
+    "performance.csv": "0d3fe88f1c71718ed20a21d9808ff3377150ac9484c214e2cc54168b49b587c9",
+    "report.md": "ddeea18bb593122e153b014940a81732ec934ce01a5b46b3330df036b4a4c280",
+    "reserved_qc_audit.csv": "42c72bdc161714f861d98dbc52480bf82e9a6b9417b0feb8aecef470123d1f80",
+    "reserved_raw_event_records.csv": "1572041d383265a12365ef007c2a268bf8914c006796b9fe9856496521f0fc7a",
+    "storm_balanced_summary.csv": "b6156b1a82de7094ff02e66339d0a8bda22105caa9e663a11efbf036e5df80f2",
+    "time_matched_pairs.csv": "199c7ed64d5af8d206cb365851a688a249353e1c86e21450672b55e22d66211d",
+    "wind_strata.csv": "b1e2d5f3fd0ecd825ae9896c6b41e14b9b1fa7cd9a9af9bbc58678ae4adbd734"
+  }
+}
