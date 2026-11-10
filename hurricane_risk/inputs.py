@@ -75,3 +75,18 @@ def load_portfolio(path, vulnerability):
         raise ValueError("Invalid property coordinates")
     validate_portfolio(p, vulnerability["damage_nodes"])
     return p
+
+
+def portfolio_from_config(cfg, vulnerability, path=None):
+    """Resolve custom exposure or the declared reproducible synthetic generator."""
+    if path is not None:
+        return load_portfolio(path, vulnerability), None
+    if cfg.get('synthetic_land_buffer_km') is not None:
+        from .portfolio import land_only_portfolio
+        p, audit = land_only_portfolio(cfg['properties'], cfg['seed'], cfg['coastline_path'],
+                                      cfg['synthetic_land_buffer_km'])
+    else:
+        from .model import synthetic_portfolio
+        p, audit = synthetic_portfolio(cfg['properties'], cfg['seed']), None
+    validate_portfolio(p, vulnerability['damage_nodes'])
+    return p, audit

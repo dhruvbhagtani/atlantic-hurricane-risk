@@ -1,0 +1,12 @@
+[
+  {
+    "name": "baseline",
+    "overrides": {}
+  },
+  {
+    "name": "local_inland_attenuation",
+    "overrides": {
+      "inland_decay_km": 100.0
+    }
+  }
+]

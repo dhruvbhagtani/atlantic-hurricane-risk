@@ -1,0 +1,14 @@
+[
+  {
+    "name": "baseline",
+    "overrides": {}
+  },
+  {
+    "name": "combined_structure",
+    "overrides": {
+      "translation_fraction": 0.5,
+      "asymmetry_cap": 0.25,
+      "inland_decay_km": 100.0
+    }
+  }
+]

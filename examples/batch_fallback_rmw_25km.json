@@ -1,0 +1,12 @@
+[
+  {
+    "name": "baseline",
+    "overrides": {}
+  },
+  {
+    "name": "fallback_rmw_25km",
+    "overrides": {
+      "rmw_km": 25.0
+    }
+  }
+]
