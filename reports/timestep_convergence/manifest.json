@@ -1,0 +1,104 @@
+{
+  "purpose": "Compare predeclared wind variants and timestep convergence without fitting observations.",
+  "config": {
+    "start_year": 1980,
+    "end_year": 2024,
+    "seed": 7319,
+    "properties": 300,
+    "interpolation_minutes": 30,
+    "rmw_km": 35.0,
+    "rankine_alpha": 0.6,
+    "land_exposure_factor": 0.85,
+    "uncertainty_replicates": 200,
+    "simulation_years": 20000,
+    "return_periods": [
+      2,
+      5,
+      10,
+      20
+    ],
+    "scenarios": [
+      {
+        "name": "historical",
+        "wind_multiplier": 1.0,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct_frequency_plus_20pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.2
+      }
+    ]
+  },
+  "variants": [
+    {
+      "name": "baseline",
+      "overrides": {}
+    }
+  ],
+  "timesteps": [
+    30,
+    15,
+    5,
+    1
+  ],
+  "splits": {
+    "development": [
+      "AL092022",
+      "AL112017",
+      "AL142018"
+    ],
+    "test": []
+  },
+  "wind_tolerance_ms": 1.0,
+  "loss_tolerance_pct": 1.0,
+  "inputs_sha256": {
+    "data/hurdat2-1851-2024-040425.txt": "d595ada8aaa64e402c26eeb80efb344b52ef420b1627d8c0ee6ee65f0729923b",
+    "data/validation/station_peaks.csv": "22bcd3bcce508725d599443173863375f0256ba93268cc72a0b36901aad3674c",
+    "data/validation/sources.json": "6841b6867e5f84fa8e11b21a41b1292655ea6a697d1b57692efd66af0752114c",
+    "config.json": "cd18e803964f1bd57df40281feb8ea6d0c294163b5457768a7ac8ff975109cfe",
+    "examples/baseline_variant.json": "916d3bbae1d409da5382c00c8377455779c0090af574b9cb226792247388a9ec"
+  },
+  "code_sha256": {
+    "observations.py": "e6a87309c64deeb3e8b64c8be1cbc0b56a931708f4d9631af986fad9ae4b0ea4",
+    "model.py": "261a66d2b5354ee13b1bf6aad0f7500ad64833444e8e9a266b072f9ef27c660d",
+    "validation.py": "1179484f2924cd84fc21c99f22f001fc29a31ddcc00e72f2471ed4a9ecec3bad",
+    "__init__.py": "07db4356552223670a5b7fb14a9fe7b5c15c1ddd64114f35db45cefe89799a46",
+    "benchmark.py": "f8e424ccb75baf41ba71a8d06c744882296edb9b34383faa6d8b2bee496289db",
+    "diagnostics.py": "a70eb818e13270f597da49fdfbc32e2a07953e691501dec3c86cca9192c08a2e",
+    "inputs.py": "42b6dfa8c1a17c6c136173894932aca9517f7454ce24a9a5d002e6b2b2b5cfd6",
+    "__main__.py": "64cc06121ce192f98177c7d2a5df3ea40a850d6d10c3ed92100218544809a230",
+    "artifacts.py": "d5ef30477449c094e8f9d59135cc2344c5d6f56f95fbe2a15148f62dbb78d619"
+  },
+  "versions": {
+    "python": "3.12.2",
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "matplotlib": "3.9.2"
+  },
+  "vulnerability_metadata": {
+    "averaging_minutes": 1,
+    "height_m": 10,
+    "wind_type": "sustained",
+    "units": "m/s",
+    "exposure": "local",
+    "source": "Explicit educational assumptions"
+  },
+  "outputs_sha256": {
+    "annual_losses.csv": "8c8d9d0c98c7719a65676b7eedddf8e16c2c7a3070114d2eade97f50a454a53d",
+    "benchmark.png": "ec95bca7677a3350052442fa221b640ab40a884ddb8389241bc76a78a5497dd6",
+    "convergence.csv": "e4aa185d27e7a38f15e40a090b2ab261dd7085f17e06b5b5919f29889bb38001",
+    "event_losses.csv": "d6e852d369d67ff270415d7c7f6985f324306da802a4aeef3d76eb13671f0912",
+    "grouped_errors.csv": "7b82fd6c4f822f5b7a19cda0a02ff2e665e3b589e72038a111fa30a379b56679",
+    "portfolio.csv": "6f9461943a16a4565bf442a9982780b16809b6f38b528bbbaf28771306a72344",
+    "report.md": "946f5b8cf22a13f6444eb2ec7e109705eadd67d102ed758cf73ba245313aea64",
+    "station_pairs.csv": "eb5d39d10a0ab859c66a4d0ee4407ac20a9b934d3eb2c8ec45db6756341bce1e",
+    "station_skill.csv": "04032000a3f24936dd9ba95a045429baa349602ab8c55eb7f27710eced4d7ddd",
+    "summary.csv": "cc7b59724cc9129fbd1f443023fad4e823903e8164d5a0ad2ffb04fb87242f31"
+  }
+}

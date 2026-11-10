@@ -1,0 +1,125 @@
+{
+  "purpose": "Compare predeclared wind variants and timestep convergence without fitting observations.",
+  "config": {
+    "start_year": 1980,
+    "end_year": 2024,
+    "seed": 7319,
+    "properties": 300,
+    "interpolation_minutes": 30,
+    "rmw_km": 35.0,
+    "rankine_alpha": 0.6,
+    "land_exposure_factor": 0.85,
+    "uncertainty_replicates": 200,
+    "simulation_years": 20000,
+    "return_periods": [
+      2,
+      5,
+      10,
+      20
+    ],
+    "scenarios": [
+      {
+        "name": "historical",
+        "wind_multiplier": 1.0,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct_frequency_plus_20pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.2
+      }
+    ]
+  },
+  "variants": [
+    {
+      "name": "baseline",
+      "overrides": {}
+    },
+    {
+      "name": "fallback_rmw_25km",
+      "overrides": {
+        "rmw_km": 25.0
+      }
+    },
+    {
+      "name": "fallback_rmw_45km",
+      "overrides": {
+        "rmw_km": 45.0
+      }
+    },
+    {
+      "name": "outer_decay_0.5",
+      "overrides": {
+        "rankine_alpha": 0.5
+      }
+    },
+    {
+      "name": "outer_decay_0.7",
+      "overrides": {
+        "rankine_alpha": 0.7
+      }
+    }
+  ],
+  "timesteps": [
+    30,
+    15,
+    5
+  ],
+  "splits": {
+    "development": [
+      "AL092022",
+      "AL112017",
+      "AL142018"
+    ],
+    "test": []
+  },
+  "wind_tolerance_ms": 1.0,
+  "loss_tolerance_pct": 1.0,
+  "inputs_sha256": {
+    "data/hurdat2-1851-2024-040425.txt": "d595ada8aaa64e402c26eeb80efb344b52ef420b1627d8c0ee6ee65f0729923b",
+    "data/validation/station_peaks.csv": "22bcd3bcce508725d599443173863375f0256ba93268cc72a0b36901aad3674c",
+    "data/validation/sources.json": "6841b6867e5f84fa8e11b21a41b1292655ea6a697d1b57692efd66af0752114c",
+    "config.json": "cd18e803964f1bd57df40281feb8ea6d0c294163b5457768a7ac8ff975109cfe"
+  },
+  "code_sha256": {
+    "model.py": "261a66d2b5354ee13b1bf6aad0f7500ad64833444e8e9a266b072f9ef27c660d",
+    "validation.py": "9230cbeb85409bdcbf160a9c7a4a36b8cc53b4060b2e2f227e21324372393fb4",
+    "__init__.py": "07db4356552223670a5b7fb14a9fe7b5c15c1ddd64114f35db45cefe89799a46",
+    "benchmark.py": "f8e424ccb75baf41ba71a8d06c744882296edb9b34383faa6d8b2bee496289db",
+    "diagnostics.py": "a70eb818e13270f597da49fdfbc32e2a07953e691501dec3c86cca9192c08a2e",
+    "inputs.py": "42b6dfa8c1a17c6c136173894932aca9517f7454ce24a9a5d002e6b2b2b5cfd6",
+    "__main__.py": "64cc06121ce192f98177c7d2a5df3ea40a850d6d10c3ed92100218544809a230",
+    "artifacts.py": "d5ef30477449c094e8f9d59135cc2344c5d6f56f95fbe2a15148f62dbb78d619"
+  },
+  "versions": {
+    "python": "3.12.2",
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "matplotlib": "3.9.2"
+  },
+  "vulnerability_metadata": {
+    "averaging_minutes": 1,
+    "height_m": 10,
+    "wind_type": "sustained",
+    "units": "m/s",
+    "exposure": "local",
+    "source": "Explicit educational assumptions"
+  },
+  "outputs_sha256": {
+    "annual_losses.csv": "59b24a5e1cf6b2653e04c46404dc992d4207ab806b4f7d97bf164ed331e23c2d",
+    "benchmark.png": "1adbac5882a99b59406e4adf71412cdb19f1812ca010433b9336ec5f44ec3168",
+    "convergence.csv": "d9a106b46edb1211b823f1b0fa91fc372a3ca59ae7c26f3a8bee3eefbc2c0382",
+    "event_losses.csv": "1c22fcc46c10d3a75a2c0a643879b1f08ad7f758c78a7dfca6389c2c17bc5e2e",
+    "grouped_errors.csv": "2693522b2d8d9bc970e9a84a5ebc359de5ee87d0bbf1565cf87181b3229f21f0",
+    "portfolio.csv": "6f9461943a16a4565bf442a9982780b16809b6f38b528bbbaf28771306a72344",
+    "report.md": "37542eb67f6ab611ffb35d013d766d86d9b54b1860581469844a2432f81cb3d5",
+    "station_pairs.csv": "956f266768a268e2d5a1edb5c1f546428b53b697a2b30bf1a93e45a0258d7291",
+    "station_skill.csv": "f7736952e032f95b70814dc7f5e1a55c448728871568ae0637a225829b3f554b",
+    "summary.csv": "a3496a21ae6abcc49f980e23d333c73af6339a8f920ce3a39886f53e86817242"
+  }
+}

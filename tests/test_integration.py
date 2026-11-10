@@ -13,6 +13,26 @@ from hurricane_risk.artifacts import sha256
 
 
 class IntegrationTests(unittest.TestCase):
+    def test_custom_zero_damage_curves_apply_to_every_uncertainty_mode(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            cfg = json.loads(Path('config.json').read_text())
+            cfg.update(start_year=2000, end_year=2003, properties=6,
+                       uncertainty_replicates=20, simulation_years=100, return_periods=[2])
+            curves = json.loads(Path('examples/vulnerability.json').read_text())
+            curves['damage_nodes'] = {kind: [0.] * len(nodes) for kind, nodes in curves['damage_nodes'].items()}
+            config, vulnerability = root/'config.json', root/'curves.json'
+            config.write_text(json.dumps(cfg))
+            vulnerability.write_text(json.dumps(curves))
+            out = root/'run'
+            result = subprocess.run([sys.executable, '-m', 'hurricane_risk', '--demo', '--config', str(config),
+                                     '--vulnerability', str(vulnerability), '--out', str(out)],
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            samples = pd.read_csv(out/'uncertainty_samples.csv')
+            self.assertEqual(set(samples['mode']), {'sampling', 'model', 'combined'})
+            self.assertTrue(samples.filter(regex='_usd$').eq(0).all().all())
+
     def test_demo_reproducibility_policy_invariants_and_output_protection(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
