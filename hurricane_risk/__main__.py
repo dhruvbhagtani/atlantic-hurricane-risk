@@ -17,6 +17,9 @@ import numpy as np
 import pandas as pd
 import requests
 
+from .inputs import load_vulnerability, load_portfolio
+from .artifacts import output_directory, output_hashes, sha256
+
 from .model import (NOAA_URL, DAMAGE_NODES, WIND_NODES, read_hurdat, synthetic_portfolio,
                     hazard_catalog, property_losses, annual_losses, sample_annual_blocks,
                     ep_curve, loss_metrics)
@@ -24,10 +27,13 @@ from .model import (NOAA_URL, DAMAGE_NODES, WIND_NODES, read_hurdat, synthetic_p
 
 def validate_config(cfg):
     for key in ["properties", "interpolation_minutes", "uncertainty_replicates", "simulation_years"]:
-        if not isinstance(cfg[key], int) or cfg[key] < 1:
+        if type(cfg[key]) is not int or cfg[key] < 1:
             raise ValueError(f"{key} must be a positive integer")
     if cfg["uncertainty_replicates"] < 20:
         raise ValueError("Use at least 20 uncertainty replicates (200+ recommended)")
+    for key in ["start_year", "end_year", "seed"]:
+        if type(cfg[key]) is not int or cfg[key] < 0:
+            raise ValueError(f"{key} must be a nonnegative integer")
     if cfg["end_year"] < cfg["start_year"]:
         raise ValueError("end_year must be >= start_year")
     for key in ["rmw_km", "rankine_alpha", "land_exposure_factor"]:
@@ -36,7 +42,7 @@ def validate_config(cfg):
     if cfg["land_exposure_factor"] > 1:
         raise ValueError("land_exposure_factor must be <= 1")
     n_years = cfg["end_year"] - cfg["start_year"] + 1
-    if not cfg["return_periods"] or any(p <= 1 or p > n_years for p in cfg["return_periods"]):
+    if not cfg["return_periods"] or any(not isinstance(p, (int, float)) or not np.isfinite(p) or p <= 1 or p > n_years for p in cfg["return_periods"]):
         raise ValueError("Return periods must exceed 1 and not exceed catalog length")
     scenarios = cfg["scenarios"]
     if not scenarios or scenarios[0] != {"name": "historical", "wind_multiplier": 1., "frequency_multiplier": 1.}:
@@ -88,7 +94,8 @@ def demo_tracks(cfg):
     return "\n".join(lines) + "\n"
 
 
-def simulate_scenarios(events, hazard, portfolio, cfg, out):
+def simulate_scenarios(events, hazard, portfolio, cfg, out, vulnerability=None):
+    vulnerability_curves = vulnerability
     years = np.arange(cfg["start_year"], cfg["end_year"] + 1)
     rng = np.random.default_rng(cfg["seed"] + 2)
     scenarios = cfg["scenarios"]
@@ -100,7 +107,7 @@ def simulate_scenarios(events, hazard, portfolio, cfg, out):
     annual_catalog, point_metrics, annual_sim, event_tables = {}, {}, {}, []
     for s in scenarios:
         name = s["name"]
-        ground, insured = property_losses(hazard[:, 1, :] * s["wind_multiplier"], portfolio)
+        ground, insured = property_losses(hazard[:, 1, :] * s["wind_multiplier"], portfolio, vulnerability=vulnerability_curves)
         totals = insured.sum(axis=1)
         agg, occ = annual_losses(totals, events.year, years)
         annual_catalog[name] = (agg, occ)
@@ -157,7 +164,7 @@ def simulate_scenarios(events, hazard, portfolio, cfg, out):
                           "intensity_multiplier": intensity, "vulnerability_multiplier": vulnerability})
             for s in scenarios:
                 _, insured = property_losses(hazard[:, size_index, :] * s["wind_multiplier"] * intensity,
-                                              portfolio, vulnerability)
+                                              portfolio, vulnerability_scale=vulnerability, vulnerability=vulnerability_curves)
                 agg, occ = annual_losses(insured.sum(axis=1), events.year, years)
                 a, o = sample_annual_blocks(agg[boot], occ[boot], indices, uniforms, s["frequency_multiplier"])
                 metrics = loss_metrics(a, o, cfg["return_periods"])
@@ -194,7 +201,7 @@ def simulate_scenarios(events, hazard, portfolio, cfg, out):
     return point_metrics, pd.DataFrame(curves), pd.DataFrame(bounds)
 
 
-def plots(portfolio, curves, intervals, out, demo):
+def plots(portfolio, curves, intervals, out, demo, vulnerability=None):
     label = "SYNTHETIC DEMO — " if demo else ""
     fig, axes = plt.subplots(1, 3, figsize=(16, 4.8))
     axes[0].scatter(portfolio.lon, portfolio.lat, s=portfolio.replacement_value_usd / 15000, alpha=.5)
@@ -223,10 +230,11 @@ def plots(portfolio, curves, intervals, out, demo):
     fig.savefig(out / "aal_uncertainty.png", dpi=160)
     plt.close(fig)
     fig, ax = plt.subplots()
-    for name, nodes in DAMAGE_NODES.items():
-        ax.plot(WIND_NODES, nodes, marker="o", label=name)
+    vulnerability = vulnerability or load_vulnerability()
+    for name, nodes in vulnerability["damage_nodes"].items():
+        ax.plot(vulnerability["wind_nodes_ms"], nodes, marker="o", label=name)
     ax.set(xlabel="1-minute sustained wind at 10 m (m/s)", ylabel="Mean damage ratio",
-           title="Explicitly assumed vulnerability curves", ylim=(0, 1))
+           title="Vulnerability curves", ylim=(0, 1))
     ax.legend()
     fig.tight_layout()
     fig.savefig(out / "vulnerability.png", dpi=160)
@@ -240,65 +248,74 @@ def main():
     parser.add_argument("--download", action="store_true", help="Download pinned NOAA data if absent")
     parser.add_argument("--url", default=NOAA_URL)
     parser.add_argument("--demo", action="store_true", help="Use FABRICATED tracks; never historical estimates")
+    parser.add_argument("--portfolio", type=Path, help="Validated property CSV; default: seeded synthetic exposure")
+    parser.add_argument("--vulnerability", type=Path, help="Curve JSON with wind conventions and source")
     parser.add_argument("--out", type=Path, default=None)
     args = parser.parse_args()
     cfg = json.loads(args.config.read_text())
     validate_config(cfg)
     out = args.out or Path("outputs/demo" if args.demo else "outputs/historical")
-    out.mkdir(parents=True, exist_ok=True)
-    if args.demo:
-        track_path = out / "SYNTHETIC_tracks.txt"
-        track_path.write_text(demo_tracks(cfg))
-    else:
-        track_path = args.tracks
-        if not track_path.exists() and args.download:
-            download(track_path, args.url)
-        if not track_path.exists():
-            parser.error("Track file missing. Use --download, --tracks PATH, or --demo.")
-    tracks = read_hurdat(track_path)
-    if tracks.season.min() > cfg["start_year"] or tracks.season.max() < cfg["end_year"]:
-        raise ValueError("Input does not span requested years; provide a complete catalog, not a storm subset")
-    selected = tracks[tracks.season.between(cfg["start_year"], cfg["end_year"])]
-    ids = selected.loc[selected.status == "HU", "storm_id"].unique()
-    selected = selected[selected.storm_id.isin(ids)]
-    if selected.vmax_ms.isna().any():
-        raise ValueError("Selected hurricane tracks contain missing maximum winds; supply a complete "
-                         "catalog or explicitly resolve missing intensities before modeling")
-    portfolio = synthetic_portfolio(cfg["properties"], cfg["seed"])
-    portfolio.to_csv(out / "portfolio.csv", index=False)
-    pd.DataFrame({"wind_ms": WIND_NODES, **DAMAGE_NODES}).to_csv(out / "assumed_vulnerability.csv", index=False)
-    print(f"{'SYNTHETIC DEMO' if args.demo else 'HISTORICAL CATALOG'}: {len(ids)} storms, "
-          f"{len(portfolio)} properties; computing wind fields", flush=True)
-    events, hazard = hazard_catalog(selected, portfolio, cfg)
-    np.savez_compressed(out / "hazard.npz", wind_ms=hazard,
-                        storm_id=events.storm_id.to_numpy(dtype=str),
-                        property_id=portfolio.property_id.to_numpy(dtype=str), rmw_multipliers=[.8, 1, 1.2])
-    metrics, curves, intervals = simulate_scenarios(events, hazard, portfolio, cfg, out)
-    plots(portfolio, curves, intervals, out, args.demo)
-    manifest = {
-        "data_kind": "FABRICATED DEMO; NOT HISTORICAL" if args.demo else "NOAA HURDAT2 user-supplied or downloaded catalog",
-        "track_path": str(track_path.resolve()), "download_url": args.url if args.download and not args.demo else None,
-        "track_sha256": hashlib.sha256(track_path.read_bytes()).hexdigest(),
-        "config": cfg, "total_insured_value_usd": float(portfolio.replacement_value_usd.sum()),
-        "storms": len(events), "years_including_zero_loss": cfg["end_year"]-cfg["start_year"]+1,
-        "input_season_span": [int(tracks.season.min()), int(tracks.season.max())],
-        "rmw_missing_fraction": float(selected.rmw_km.isna().mean()),
-        "versions": {"python": platform.python_version(), "numpy": np.__version__, "pandas": pd.__version__,
-                     "matplotlib": matplotlib.__version__},
-        "source_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in Path(__file__).parent.glob("*.py")},
-    }
-    (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
-    lines = ["# " + manifest["data_kind"], "", f"Portfolio replacement value: ${manifest['total_insured_value_usd']:,.0f}.",
-             "", "| Scenario | Insured AAL | Combined 5–95% range |", "|---|---:|---:|"]
-    for name, m in metrics.items():
-        bound = intervals[(intervals.scenario == name) & (intervals["mode"] == "combined") & (intervals.metric == "aal_usd")].iloc[0]
-        lines.append(f"| {name} | ${m['aal_usd']:,.0f} | ${bound.p05:,.0f}–${bound.p95:,.0f} |")
-    lines += ["", "These are wind-only, assumed-model estimates. Alternative scenarios are sensitivity tests, not climate projections.",
-              "Ranges combine annual block resampling with assumed wind, storm-size and vulnerability uncertainty; they are not calibrated confidence bounds.",
-              "EP CSVs use strict exceedance; return losses are generalized inverse empirical CDF quantiles.",
-              "The simulated years recycle this finite catalog and add no new tail information. See README.md for equations and limitations."]
-    (out / "report.md").write_text("\n".join(lines) + "\n")
-    print(f"Results written to {out.resolve()}")
+    vulnerability = load_vulnerability(args.vulnerability)
+    portfolio = (load_portfolio(args.portfolio, vulnerability) if args.portfolio else
+                 synthetic_portfolio(cfg["properties"], cfg["seed"]))
+    destination = out
+    with output_directory(destination) as out:
+        if args.demo:
+            track_path = out / "SYNTHETIC_tracks.txt"
+            track_path.write_text(demo_tracks(cfg))
+        else:
+            track_path = args.tracks
+            if not track_path.exists() and args.download:
+                download(track_path, args.url)
+            if not track_path.exists():
+                parser.error("Track file missing. Use --download, --tracks PATH, or --demo.")
+        tracks = read_hurdat(track_path)
+        if tracks.season.min() > cfg["start_year"] or tracks.season.max() < cfg["end_year"]:
+            raise ValueError("Input does not span requested years; provide a complete catalog, not a storm subset")
+        selected = tracks[tracks.season.between(cfg["start_year"], cfg["end_year"])]
+        ids = selected.loc[selected.status == "HU", "storm_id"].unique()
+        selected = selected[selected.storm_id.isin(ids)]
+        if selected.vmax_ms.isna().any():
+            raise ValueError("Selected hurricane tracks contain missing maximum winds; supply a complete "
+                             "catalog or explicitly resolve missing intensities before modeling")
+        portfolio.to_csv(out / "portfolio.csv", index=False)
+        pd.DataFrame({"wind_ms": vulnerability["wind_nodes_ms"], **vulnerability["damage_nodes"]}).to_csv(out / "assumed_vulnerability.csv", index=False)
+        print(f"{'SYNTHETIC DEMO' if args.demo else 'HISTORICAL CATALOG'}: {len(ids)} storms, "
+              f"{len(portfolio)} properties; computing wind fields", flush=True)
+        events, hazard = hazard_catalog(selected, portfolio, cfg)
+        np.savez_compressed(out / "hazard.npz", wind_ms=hazard,
+                            storm_id=events.storm_id.to_numpy(dtype=str),
+                            property_id=portfolio.property_id.to_numpy(dtype=str), rmw_multipliers=[.8, 1, 1.2])
+        metrics, curves, intervals = simulate_scenarios(events, hazard, portfolio, cfg, out, vulnerability)
+        plots(portfolio, curves, intervals, out, args.demo, vulnerability)
+        manifest = {
+            "data_kind": "FABRICATED DEMO; NOT HISTORICAL" if args.demo else "NOAA HURDAT2 user-supplied or downloaded catalog",
+            "track_path": str((destination / "SYNTHETIC_tracks.txt").resolve() if args.demo else track_path.resolve()),
+            "additional_inputs": {str(p): sha256(p) for p in [args.config, args.portfolio, args.vulnerability] if p},
+            "exposure_kind": "user-supplied" if args.portfolio else "synthetic",
+            "vulnerability_metadata": vulnerability["metadata"], "download_url": args.url if args.download and not args.demo else None,
+            "track_sha256": hashlib.sha256(track_path.read_bytes()).hexdigest(),
+            "config": cfg, "total_insured_value_usd": float(portfolio.replacement_value_usd.sum()),
+            "storms": len(events), "years_including_zero_loss": cfg["end_year"]-cfg["start_year"]+1,
+            "input_season_span": [int(tracks.season.min()), int(tracks.season.max())],
+            "rmw_missing_fraction": float(selected.rmw_km.isna().mean()),
+            "versions": {"python": platform.python_version(), "numpy": np.__version__, "pandas": pd.__version__,
+                         "matplotlib": matplotlib.__version__},
+            "source_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in Path(__file__).parent.glob("*.py")},
+        }
+        lines = ["# " + manifest["data_kind"], "", f"Portfolio replacement value: ${manifest['total_insured_value_usd']:,.0f}.",
+                 "", "| Scenario | Insured AAL | Combined 5–95% range |", "|---|---:|---:|"]
+        for name, m in metrics.items():
+            bound = intervals[(intervals.scenario == name) & (intervals["mode"] == "combined") & (intervals.metric == "aal_usd")].iloc[0]
+            lines.append(f"| {name} | ${m['aal_usd']:,.0f} | ${bound.p05:,.0f}–${bound.p95:,.0f} |")
+        lines += ["", "These are wind-only, assumed-model estimates. Alternative scenarios are sensitivity tests, not climate projections.",
+                  "Ranges combine annual block resampling with assumed wind, storm-size and vulnerability uncertainty; they are not calibrated confidence bounds.",
+                  "EP CSVs use strict exceedance; return losses are generalized inverse empirical CDF quantiles.",
+                  "The simulated years recycle this finite catalog and add no new tail information. See README.md for equations and limitations."]
+        (out / "report.md").write_text("\n".join(lines) + "\n")
+        manifest["outputs_sha256"] = output_hashes(out)
+        (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    print(f"Results written to {destination.resolve()}")
 
 
 if __name__ == "__main__":

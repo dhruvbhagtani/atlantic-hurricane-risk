@@ -48,7 +48,7 @@ python -m unittest discover -s tests -v
 `--demo` fabricates tracks in HURDAT2 format. Its outputs say **FABRICATED DEMO**
 and must never be presented as historical hurricane losses. Network access to
 NOAA was unavailable in the development workspace; the complete historical run
-was validated with a manually downloaded NOAA file. Five focused unit tests and
+was validated with a manually downloaded NOAA file. Focused unit tests and
 historical output consistency checks passed, including zero-year retention,
 AEP >= OEP, and exact AAL scaling with the frequency multiplier.
 
@@ -234,8 +234,8 @@ Every run writes:
 | `manifest.json` | Input SHA-256, source hashes, configuration, versions and missing RMW fraction |
 
 Re-running with the same configuration, file, code and library versions is
-seed-reproducible. Output directories are overwritten by a rerun; use a different
-`--out` for each experiment. Synthetic demo outputs default to `outputs/demo`,
+seed-reproducible. Completed output directories are protected: a rerun must use a new `--out`.
+Runs are staged and published only after successful completion. Synthetic demo outputs default to `outputs/demo`,
 while historical runs default to `outputs/historical`.
 
 ## Observational validation
@@ -258,3 +258,27 @@ strict independence from track construction is not established. All eligible
 observed sustained peaks are below hurricane force. This is a documented
 observational diagnostic, not validation of a full spatial field or a fitted
 loss correction. See the report for the limits on interpreting the results.
+
+
+## Custom exposure and vulnerability
+
+```bash
+python -m hurricane_risk --tracks data/hurdat2-1851-2024-040425.txt \
+  --portfolio examples/portfolio.csv --vulnerability examples/vulnerability.json \
+  --out outputs/custom-example
+```
+
+Portfolio CSVs require unique `property_id`, `lat`, `lon`, `construction`,
+`replacement_value_usd`, `deductible_fraction`, and `limit_fraction`. Coordinates,
+values, policy fractions and construction membership are validated. Values use
+present-day USD. Custom curves require increasing `wind_nodes_ms`, monotone
+`damage_nodes` by construction, and `metadata` identifying the source and local
+10-m, one-minute sustained winds in m/s. Gust-based or differently exposed curves
+must be explicitly converted before import. The example JSON reproduces the
+original assumptions; it is not an empirically calibrated replacement.
+
+For the tested Python 3.12 environment, install `requirements-lock.txt`.
+GitHub Actions runs the unit tests and an offline CLI integration test, including
+custom inputs, repeatability, policy invariants and overwrite protection. Run
+manifests include input and output hashes. Existing historical results predate
+these workflow safeguards.
