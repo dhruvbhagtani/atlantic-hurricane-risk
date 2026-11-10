@@ -282,3 +282,37 @@ GitHub Actions runs the unit tests and an offline CLI integration test, includin
 custom inputs, repeatability, policy invariants and overwrite protection. Run
 manifests include input and output hashes. Existing historical results predate
 these workflow safeguards.
+
+## Joint wind and loss benchmark
+
+```bash
+python -m hurricane_risk.benchmark --out outputs/benchmark-run1
+```
+
+The default compares 30-, 15-, and 5-minute timesteps for the baseline, missing-RMW
+fallbacks of 25/45 km, and outer radial exponents of 0.5/0.7. Each change is tested
+individually on the same tracks, observations and exposure. Override these with
+`--variants examples/benchmark_variants.json` and `--timesteps 30 15 5 1`.
+Variants are predeclared sensitivity tests; the command does not fit parameters or
+select a winner. The historical production defaults are unchanged.
+
+Outputs include pooled and split-specific `station_skill.csv`, auditable
+`station_pairs.csv`, residuals grouped by storm, closest-track distance, side,
+intensity and RMW availability in `grouped_errors.csv`, exact annual and event
+losses, `summary.csv`, `convergence.csv`, a comparison plot and a report. Geometry
+is measured at closest approach, not necessarily peak modeled wind. Inland
+distance requires an independently audited coastline and is not inferred here.
+
+Each variant's finest tested timestep is its numerical reference. By default,
+non-reference cases pass only when maximum event/property wind change is at most
+1 m/s and each loss metric changes by at most 1% (adjust with
+`--wind-tolerance-ms` and `--loss-tolerance-pct`). A zero reference loss passes
+only when the absolute change is zero. These criteria assess numerical stability,
+not observational accuracy; add a finer reference to assess residual discretization.
+Return losses use exact annual empirical quantiles to remove resampling noise.
+
+Without `--splits`, all observations are labeled development. An explicit JSON
+split must assign every observed storm exactly once to `development` or `test`.
+Keep new test events separate before tuning; the three existing storms have
+already been examined and cannot become an untouched test set by relabeling.
+A split does not establish independence from NHC best-track construction.

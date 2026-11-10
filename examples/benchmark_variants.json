@@ -1,0 +1,30 @@
+[
+  {
+    "name": "baseline",
+    "overrides": {}
+  },
+  {
+    "name": "fallback_rmw_25km",
+    "overrides": {
+      "rmw_km": 25.0
+    }
+  },
+  {
+    "name": "fallback_rmw_45km",
+    "overrides": {
+      "rmw_km": 45.0
+    }
+  },
+  {
+    "name": "outer_decay_0.5",
+    "overrides": {
+      "rankine_alpha": 0.5
+    }
+  },
+  {
+    "name": "outer_decay_0.7",
+    "overrides": {
+      "rankine_alpha": 0.7
+    }
+  }
+]
