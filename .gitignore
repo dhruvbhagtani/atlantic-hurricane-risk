@@ -4,3 +4,4 @@ __pycache__/
 data/hurdat2*.txt
 outputs/
 *.bundle
+data/raw/

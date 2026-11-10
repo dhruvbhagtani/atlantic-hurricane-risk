@@ -339,3 +339,8 @@ timestep sensitivity: baseline insured AAL is $416,633 at 30 minutes, $511,514 a
 5 minutes and $532,088 at 1 minute. The 5-minute case still fails the declared
 convergence criteria against the 1-minute reference. Archived comparison reports
 and provenance manifests are linked there.
+
+For manual NOAA acquisition, see [the station-year download links and import commands](docs/data_downloads.md).
+`python -m hurricane_risk.global_hourly` reads the downloaded CSVs, decodes sustained
+wind speeds and quality flags, and retains raw event records and a QC audit. Site
+exposure, wind-duration metadata and instrument uptime still need separate evidence.
