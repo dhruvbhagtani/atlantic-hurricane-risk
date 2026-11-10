@@ -1,0 +1,6 @@
+variant,planned_storms,scored_storms,primary_complete_storms,registered_primary_complete,registered_primary_rmse_ms,available_case_storm_balanced_rmse_ms,available_case_storm_balanced_bias_ms,eligible_reports,hurricane_force_reports
+baseline,3,3,3,True,4.963243476774178,4.963243476774178,2.9205680656735056,1182,0
+fallback_rmw_25km,3,3,3,True,4.384922039706081,4.384922039706081,1.8147117832474018,1182,0
+translation_asymmetry,3,3,3,True,4.6054838186805815,4.6054838186805815,2.5336489009998915,1182,0
+local_inland_attenuation,3,3,3,True,4.38518450450831,4.38518450450831,0.17363497379042162,1182,0
+combined_structure,3,3,3,True,4.273484244524289,4.273484244524289,-0.10813229720566442,1182,0

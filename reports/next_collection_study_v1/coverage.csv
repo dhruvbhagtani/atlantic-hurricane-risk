@@ -1,0 +1,7 @@
+storm_id,station_id,split,expected_reports,reports,good_reports,good_cadence_bins,coverage,max_gap_minutes,incomplete,metadata_issue,uptime_confirmed,exposure,height_m,averaging_minutes,primary_metadata_eligible
+AL192020,KPNS,test,97,179,135,58,0.5979381443298969,2375.0,1,unknown_site_exposure;missing_uptime_reference,False,unknown,10,2,True
+AL192020,KMOB,test,97,194,173,96,0.9896907216494846,60.0,1,unknown_site_exposure;missing_uptime_reference,False,unknown,10,2,True
+AL092021,KMSY,test,97,197,169,94,0.9690721649484536,150.0,1,unknown_site_exposure;missing_uptime_reference,False,unknown,10,2,False
+AL092021,KBTR,test,97,140,103,65,0.6701030927835051,1925.0,1,unknown_site_exposure;missing_uptime_reference,False,unknown,10,2,True
+AL062018,KILM,test,121,297,236,97,0.8016528925619835,1394.0,1,unknown_site_exposure;missing_uptime_reference,False,unknown,10,2,True
+AL062018,KFAY,test,121,371,366,120,0.9917355371900827,60.0,1,unknown_site_exposure;missing_uptime_reference,False,unknown,10,2,True

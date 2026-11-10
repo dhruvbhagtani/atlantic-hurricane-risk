@@ -77,3 +77,60 @@ across gaps. Model curves stop at the available best-track endpoint. The separat
 peak benchmark retains 51 station/event rows across five storms, with the original
 22 eligible primary peak comparisons. New data are not promoted to primary scores
 without supporting metadata and adequate peak capture.
+
+## Laura confirmation inputs
+
+The registered Lake Charles/Laura evaluation requires these two files:
+
+- [KLCH 2020 station-year CSV](https://noaa-global-hourly-pds.s3.amazonaws.com/2020/72240003937.csv), saved as `data/raw/global_hourly/2020/72240003937.csv`.
+- [KLCH NOAA station history](https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:03937&date=all&definitions=false&phrData=true), saved as `data/raw/metadata/homr_KLCH.json`.
+
+Run from the project root:
+
+```bash
+bash scripts/download_laura_validation.sh
+# Validate manually supplied files without network access:
+bash scripts/download_laura_validation.sh --check-only
+# Once both inputs pass, use a fresh output directory:
+python -m hurricane_risk.confirmation_study --out outputs/laura-confirmation-run3
+```
+
+The downloader verifies the registered plan and frozen model hashes first. It
+checks the CSV schema, station identity, year and event-window records, and the
+station history's dated KLCH/WBAN identity and coordinates. Downloads are staged
+in temporary files and published only after validation. Interrupted or rejected
+downloads are removed; existing files are checked and never overwritten. Move an
+invalid existing file aside before retrying. These checks establish usable input
+structure, not complete annual coverage or complete event-peak capture.
+
+On November 10, 2026, both files were supplied manually after workspace DNS failures.
+Both pass validation. The history returns surface, radar and upper-air records
+sharing identifiers; the reader selects the unique dated ASOS surface record.
+The [completed evaluation](../reports/laura_confirmation/report.md) retains 71
+eligible reports and all five frozen candidates, without tuning or promotion.
+
+## Next registered collection
+
+Sally (KPNS/KMOB), Ida (KMSY/KBTR) and Florence (KILM/KFAY) are now reserved before
+their station winds or errors are inspected. The [locked plan](../data/validation/next_collection_v1/plan.json)
+lists the six annual CSV and six HOMR URLs and their exact local paths.
+
+```bash
+bash scripts/download_next_validation.sh --out outputs/next-inputs-run1
+# Check manual downloads without network access; choose a fresh receipt directory.
+bash scripts/download_next_validation.sh --check-only --out outputs/next-input-check-run2
+```
+
+This command verifies the collection and frozen model hashes, stages downloads,
+checks dated surface identity and annual station/year metadata, and records raw
+hashes and acquisition times. It excludes wind columns from the annual identity
+checks. It does not evaluate candidate errors or certify instrument eligibility.
+All 12 files now pass the [offline readiness check](../reports/next_collection_acquisition_v1/receipt.json).
+The original KILM URL returned 404; a
+[pinned amendment](../data/validation/next_collection_v1/provider_id_amendment_v1.json)
+corrects its provider ID to `72302013748`, with
+[the corrected CSV URL](https://noaa-global-hourly-pds.s3.amazonaws.com/2018/72302013748.csv)
+and local path `data/raw/global_hourly/2018/72302013748.csv`.
+The original plan and registration are retained. The six pairs have now been
+evaluated under a pre-inspection implementation lock. See
+[the completed results and remaining metadata limits](next_collection_results.md).

@@ -1,0 +1,128 @@
+{
+  "registration": {
+    "purpose": "Additional high-wind confirmation event; parameters unchanged after Debby/Milton evaluation.",
+    "storm_id": "AL132020",
+    "name": "Laura",
+    "station_id": "KLCH",
+    "ncei_id": "72240003937",
+    "window_start": "2020-08-26T00:00:00Z",
+    "window_end": "2020-08-29T00:00:00Z",
+    "annual_url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2020/72240003937.csv",
+    "selection_basis": "Major landfall near Lake Charles; chosen for high-wind exposure and a second geographic region, before obtaining or inspecting station-series winds or model errors.",
+    "candidates": [
+      {
+        "name": "baseline",
+        "overrides": {}
+      },
+      {
+        "name": "fallback_rmw_25km",
+        "overrides": {
+          "rmw_km": 25.0
+        }
+      },
+      {
+        "name": "translation_asymmetry",
+        "overrides": {
+          "translation_fraction": 0.5,
+          "asymmetry_cap": 0.25
+        }
+      },
+      {
+        "name": "local_inland_attenuation",
+        "overrides": {
+          "inland_decay_km": 100.0
+        }
+      },
+      {
+        "name": "combined_structure",
+        "overrides": {
+          "translation_fraction": 0.5,
+          "asymmetry_cap": 0.25,
+          "inland_decay_km": 100.0
+        }
+      }
+    ],
+    "frozen_model_lock_sha256": "349eaae2c112dd2f6c0000a939386ffaae33cd31ac3a044c8389818d0323f977",
+    "rule": "No fitting, parameter changes or selection. Report all candidates and QC exclusions, even if the high-wind observations are missing or censored.",
+    "created_utc": "2026-11-10T04:40:48.441155+00:00"
+  },
+  "frozen_model_lock_sha256": "349eaae2c112dd2f6c0000a939386ffaae33cd31ac3a044c8389818d0323f977",
+  "config": {
+    "start_year": 1980,
+    "end_year": 2024,
+    "seed": 7319,
+    "properties": 300,
+    "interpolation_minutes": 1,
+    "rmw_km": 35.0,
+    "rankine_alpha": 0.6,
+    "land_exposure_factor": 0.85,
+    "uncertainty_replicates": 200,
+    "simulation_years": 20000,
+    "return_periods": [
+      2,
+      5,
+      10,
+      20
+    ],
+    "scenarios": [
+      {
+        "name": "historical",
+        "wind_multiplier": 1.0,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct_frequency_plus_20pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.2
+      }
+    ],
+    "coastline_path": "data/geography/natural_earth_10m_atlantic.geojson.gz"
+  },
+  "inputs_sha256": {
+    "data/validation/laura_confirmation_registration.json": "dc5fbda564c563be88dd4d033b19168b541b4eb45e31ae027495802f6436e932",
+    "data/raw/global_hourly/2020/72240003937.csv": "4c9bfabe40e4d21ba86a4dbe33abe525621e6d4b4faa1d5cad377350c811429b",
+    "data/raw/metadata/homr_KLCH.json": "26f7fa08065e33f4c3a47b5b1b8eae2f84eac6d6f10046feed63213469a7f292",
+    "data/hurdat2-1851-2024-040425.txt": "d595ada8aaa64e402c26eeb80efb344b52ef420b1627d8c0ee6ee65f0729923b"
+  },
+  "code_sha256": {
+    "confirmation_study.py": "9d4433e0720aee7024b34820f8a731a6ea9247142c38dd962ee444709e4839b1",
+    "observations.py": "3933351dc3045c89c6c788632f7f99a9df3d3f9997d7879a92fd3866a3a49d0d",
+    "model.py": "848eb608a760531a1f410edf8e2f8a1dc38611d8af37c05928c58185e86f3d27",
+    "structural_study.py": "fed48b8338c0a7efe21877e527c477c0af65a36d1439847841b86624123ec78f",
+    "confirmation_inputs.py": "93ce30cdf852ed6fdc62d5429d72d5197aca0dd2af2248d473c76e4e318660db",
+    "validation.py": "0299ddcd8fe6099e8127e9e96fb072b82e0e686cc0e5706afa4f10253697057d",
+    "__init__.py": "07db4356552223670a5b7fb14a9fe7b5c15c1ddd64114f35db45cefe89799a46",
+    "global_hourly.py": "79481d4eb7c76556e7345bea8a568130e07d16dcf40feb359187ad4b90cd98c1",
+    "benchmark.py": "27f999a7fcd1f55f3113ec5ee54f5391e0525a0265e475ca4c362f38afeaf000",
+    "diagnostics.py": "9ad480546d177e77047073e962b1504f20c12f9e0c43279c729c66303841fc32",
+    "inputs.py": "1cb622b6aafede07e8766089ccdf6e6ddf8bb712abae395e3d21025cdb33c0a9",
+    "__main__.py": "a0609dbdc061078905339053062a0051b1878cf0c89c081995f1d8f344dbbe35",
+    "time_series_validation.py": "3cd8bcd7feaa810523523761379fd3e5b4eed1091babaaf6f810c780958cb489",
+    "artifacts.py": "d5ef30477449c094e8f9d59135cc2344c5d6f56f95fbe2a15148f62dbb78d619",
+    "merge_benchmarks.py": "560870a6f0b78b5f11a76571e9847965da588facd504aa9055e6159b9d134fc7",
+    "reported_point_check.py": "b6cb1dc25c25bb1de61bc6b40cbcc94db719f4e239b1962e58e1bf7dd579c920",
+    "geography.py": "628d40a36fdf5dec89394b81035ba171c02c82fe54954eaf4e3586cbb6ba4531",
+    "portfolio.py": "9a41d35c49fc7e4e829f85837db70237234b8dfbcc1f87f44696e084038613c4"
+  },
+  "outputs_sha256": {
+    "coordinate_sensitivity.csv": "7af8adec240ba33eda9f3d93f22b85dbcd592f099b3fd8e766fa17705e9092ef",
+    "coverage.csv": "ac130f318a4d02c98a7401e5d233afd345652b3fbcc06c979eaf173b27041d0f",
+    "exposure_sensitivity.csv": "28a18ad456e61d57a4b4810a4114a0c8f6bff735e53668d28ff0842034e47212",
+    "high_wind_scores.csv": "2b338688a116ee7730986fb71abf0cf95e712c476ab0a5785faf82b77eda120d",
+    "homr_KLCH.json": "26f7fa08065e33f4c3a47b5b1b8eae2f84eac6d6f10046feed63213469a7f292",
+    "observed_time_series.csv": "a49c0cc36fc314772c722dd075f85b447ddd960005c1d05d141106717741b758",
+    "performance.csv": "c8f084bc9c413efe9f36d65e9e56fc392fbf2ccf5e6043e74d45373e6b38aad9",
+    "qc_audit.csv": "236be7d7ed516c075a97385da7dd2967fff3814598516c0e191fdde0ce7f12b5",
+    "raw_event_records.csv": "bf5a40f1b653968a1fc6009b71907f87b9eda3afbaa17d29825943e8564ff9e5",
+    "report.md": "16aef86c0c7cf120726306cc8e31618982a0d3292da794ef40208cface0c2a23",
+    "station_metadata.json": "a0158080be410b47f5d4dbb47d04baa21281e38e114aed8bf1b8574d642f1b16",
+    "storm_balanced_summary.csv": "870745a2586a9dfdc7e1b5357927f432f98fad95c34f1b7f8000b603a131100b",
+    "time_matched_pairs.csv": "d9deea7ac4f2f2540a3b20d1fdd149d7dba99e57dbf57bf265e7d84ec5e9c76e",
+    "wind_strata.csv": "8970ca289ac86c9104df0f1231458285c206cdec38e5d1d61743e98dcfb40017"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "station_id": "KLCH",
+  "ncei_id": "72240003937",
+  "homr_ncdc_id": "20008735",
+  "history_selection": "Unique record with dated WBAN 03937, ICAO KLCH and ASOS platform during Laura.",
+  "history_records_returned": 3,
+  "lat": 30.12472,
+  "lon": -93.22833,
+  "height_m": 10,
+  "averaging_minutes": 2,
+  "height_duration_source": "https://www.weather.gov/lch/2020Laura-PSHLCH",
+  "evidence": "The METAR section states 10-m anemometer height and two-minute wind averaging. KLCH is listed with incomplete sustained and gust peaks.",
+  "wind_tower_coordinate_sensitivity": {
+    "lat": 30.12,
+    "lon": -93.22,
+    "source": "Rounded coordinates in NWS Laura METAR table, not an inferred sensor relocation."
+  },
+  "exposure": "Quantitative directional roughness is not established.",
+  "uptime": "NWS explicitly flags KLCH sustained and gust peaks incomplete. No claim of complete capture is made."
+}

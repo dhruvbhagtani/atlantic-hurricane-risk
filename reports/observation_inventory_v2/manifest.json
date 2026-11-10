@@ -1,0 +1,24 @@
+{
+  "schema_version": 2,
+  "inputs_sha256": {
+    "data/validation/expanded_station_peaks.csv": "7746a0e085b1a174be8bdf0e70ba678d7f404c254aa85fe22aef2a60f263105d",
+    "data/validation/next_collection_v1/evaluation_access_v1.json": "9ff348a196debb4398df179f0bfd7bfdc5012dbdfc19a8a95cc7810e12e62520",
+    "reports/reserved_structural_study/manifest.json": "4aff7f82014e7a8a8f2fff2635e9cf6ecf41d6bf2049a2eb41b0e5b97634d057",
+    "reports/reserved_structural_study/coverage.csv": "046f074622c30df05e021c7714936ff42c1895e9f5475ba6f108896b0ae8200a",
+    "reports/reserved_structural_study/time_matched_pairs.csv": "199c7ed64d5af8d206cb365851a688a249353e1c86e21450672b55e22d66211d",
+    "reports/laura_confirmation/manifest.json": "cd72e507d305f6ffb7b6e838edd0ca329c0c6be8cac725b8fc1092474797ba33",
+    "reports/laura_confirmation/coverage.csv": "ac130f318a4d02c98a7401e5d233afd345652b3fbcc06c979eaf173b27041d0f",
+    "reports/laura_confirmation/time_matched_pairs.csv": "d9deea7ac4f2f2540a3b20d1fdd149d7dba99e57dbf57bf265e7d84ec5e9c76e",
+    "reports/next_collection_study_v1/manifest.json": "25371c95aeb899c41ffda49f88c07d57490bb2a940d5eac0728eafad03a577ec",
+    "reports/next_collection_study_v1/coverage.csv": "5c0b7400f3b455195a9e27aadf672da942c1b71b298ca15ce02e8871b3a5411f",
+    "reports/next_collection_study_v1/time_matched_pairs.csv": "58d227de42d7a21d75ed002933a79ff6e4a15dad08f32fc2384259efa19aef17",
+    "reports/next_collection_study_v1/station_scores.csv": "620bec5b798c903a6746d6ad6fab04d9eb8d75a8feac866cc3a1766da5781138",
+    "reports/next_collection_study_v1/station_metadata_audit.json": "c90bbca7910b44f2bd29e18f6cf55e1cadb0e3a135798e055fbff3fd1d758415"
+  },
+  "script_sha256": "71c429e0f11941fef6d3c8506ca841c772426c167fb08e387fe6b288ad61aaaf",
+  "outputs_sha256": {
+    "inventory.csv": "a196d76ea60a6895e6247e441afd9fc748abaa9ca66c5e630b83b8cc828adebf",
+    "report.md": "85c869056480446e67ad413edeac377675db39e3e356d60b981a2ffd02616a01",
+    "schema.json": "a6f49cf0936e4d646f33912002ab6aef681f5c699515319b1a80b4ff92d40654"
+  }
+}

@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-11-10T20:07:58.064462+00:00",
+  "wind_values_inspected": false,
+  "station_audits": [
+    {
+      "storm_id": "AL192020",
+      "station_id": "KPNS",
+      "homr_ncdc_id": "10002256",
+      "homr_path": "data/raw/metadata/homr_KPNS.json",
+      "homr_sha256": "ddc237bcbee6df5267611e4bb45ad3ebd201e03d459b0699fd8f3cd5b2abb40a",
+      "coordinates": {
+        "lat": 30.47806,
+        "lon": -87.18694,
+        "dated_source": {
+          "latitude_rptd": "30,28,41,N",
+          "longitude_rptd": "087,11,13,W",
+          "latitude_dec": "30.47806",
+          "longitude_dec": "-87.18694",
+          "latitude_dms": "30,28,41,N",
+          "longitude_dms": "087,11,13,W",
+          "precision": "DDMMSS",
+          "date": {
+            "beginDate": "1997-11-25T00:00:00.000",
+            "endDate": "2021-07-08T00:00:00.000"
+          }
+        }
+      },
+      "height_m": 10,
+      "height_source_url": "https://www.epa.gov/sites/default/files/2016-12/documents/pp2_final_risk_assessment_w_app_11082016.pdf",
+      "height_source_publication_year": 2016,
+      "height_source_pdf_page": 165,
+      "height_evidence_scope": "Historical station-specific nominal height in EPA Appendix 3, Attachment 1. Coordinate/site continuity assessed separately against dated HOMR history.",
+      "height_matches_event_site": true,
+      "height_limitation": "Historical nominal height; event-specific inspection and continuous sensor uptime are not established.",
+      "averaging_minutes": 2,
+      "duration_source_url": "https://www.weather.gov/asos/WindSensor.html",
+      "duration_evidence_scope": "Dated ASOS platform and NWS ASOS sustained-wind reporting convention.",
+      "roughness_verified": false,
+      "uptime_confirmed": false
+    },
+    {
+      "storm_id": "AL192020",
+      "station_id": "KMOB",
+      "homr_ncdc_id": "20000021",
+      "homr_path": "data/raw/metadata/homr_KMOB.json",
+      "homr_sha256": "48b6a452b96ec923d366132423732c7d2c68fd7fcffafd14b13971b787094f3b",
+      "coordinates": {
+        "lat": 30.68833,
+        "lon": -88.24556,
+        "dated_source": {
+          "latitude_rptd": "30,41,18,N",
+          "longitude_rptd": "088,14,44,W",
+          "latitude_dec": "30.68833",
+          "longitude_dec": "-88.24556",
+          "latitude_dms": "30,41,18,N",
+          "longitude_dms": "088,14,44,W",
+          "precision": "DDMMSS",
+          "date": {
+            "beginDate": "1996-02-01T00:00:00.000",
+            "endDate": "2021-07-09T00:00:00.000"
+          }
+        }
+      },
+      "height_m": 10,
+      "height_source_url": "https://www.epa.gov/sites/default/files/2016-12/documents/pp2_final_risk_assessment_w_app_11082016.pdf",
+      "height_source_publication_year": 2016,
+      "height_source_pdf_page": 160,
+      "height_evidence_scope": "Historical station-specific nominal height in EPA Appendix 3, Attachment 1. Coordinate/site continuity assessed separately against dated HOMR history.",
+      "height_matches_event_site": true,
+      "height_limitation": "Historical nominal height; event-specific inspection and continuous sensor uptime are not established.",
+      "averaging_minutes": 2,
+      "duration_source_url": "https://www.weather.gov/asos/WindSensor.html",
+      "duration_evidence_scope": "Dated ASOS platform and NWS ASOS sustained-wind reporting convention.",
+      "roughness_verified": false,
+      "uptime_confirmed": false
+    },
+    {
+      "storm_id": "AL092021",
+      "station_id": "KMSY",
+      "homr_ncdc_id": "20008704",
+      "homr_path": "data/raw/metadata/homr_KMSY.json",
+      "homr_sha256": "1ad31faccaf62949c91e8decd1244adbdceec7bcd3f66ed00b1506b0a2892680",
+      "coordinates": {
+        "lat": 29.99691,
+        "lon": -90.27751,
+        "dated_source": {
+          "latitude_rptd": "29.99691",
+          "longitude_rptd": "-90.27751",
+          "latitude_dec": "29.99691",
+          "longitude_dec": "-90.27751",
+          "latitude_dms": "29,59,49,N",
+          "longitude_dms": "090,16,39,W",
+          "precision": "DDddddd",
+          "datum_horiz": "NAD83",
+          "source": "ASOS SITE SURVEY",
+          "date": {
+            "beginDate": "2017-04-10T00:00:00.000",
+            "endDate": "2021-11-22T00:00:00.000"
+          }
+        }
+      },
+      "height_m": 10,
+      "height_source_url": "https://www.weather.gov/lch/2021Ida-PSHLIX",
+      "height_source_publication_year": 2016,
+      "height_source_pdf_page": 168,
+      "height_evidence_scope": "Contemporaneous event-specific METAR statement explicitly covers the KMSY entry after the 2017 relocation. Dated HOMR remains the coordinate source; the rounded PSH coordinates are not substituted.",
+      "height_matches_event_site": true,
+      "height_limitation": "Event-specific nominal height/duration documented; sensor uptime and site roughness remain unverified.",
+      "averaging_minutes": 2,
+      "duration_source_url": "https://www.weather.gov/lch/2021Ida-PSHLIX",
+      "duration_evidence_scope": "Dated ASOS platform and NWS ASOS sustained-wind reporting convention.",
+      "roughness_verified": false,
+      "uptime_confirmed": false
+    },
+    {
+      "storm_id": "AL092021",
+      "station_id": "KBTR",
+      "homr_ncdc_id": "20008806",
+      "homr_path": "data/raw/metadata/homr_KBTR.json",
+      "homr_sha256": "fa7027c70b173177c472b7756169f22fabbce11a64e546966749eec410603c01",
+      "coordinates": {
+        "lat": 30.5372,
+        "lon": -91.1469,
+        "dated_source": {
+          "latitude_rptd": "30.5372",
+          "longitude_rptd": "-91.1469",
+          "latitude_dec": "30.5372",
+          "longitude_dec": "-91.1469",
+          "latitude_dms": "30,32,14,N",
+          "longitude_dms": "091,08,49,W",
+          "precision": "DDddddd",
+          "datum_horiz": "NAD83",
+          "source": "ASOS SITE SURVEY",
+          "date": {
+            "beginDate": "2018-04-10T00:00:00.000",
+            "endDate": "2021-11-22T00:00:00.000"
+          }
+        }
+      },
+      "height_m": 10,
+      "height_source_url": "https://www.epa.gov/sites/default/files/2016-12/documents/pp2_final_risk_assessment_w_app_11082016.pdf",
+      "height_source_publication_year": 2016,
+      "height_source_pdf_page": 168,
+      "height_evidence_scope": "Historical station-specific nominal height in EPA Appendix 3, Attachment 1. Coordinate/site continuity assessed separately against dated HOMR history.",
+      "height_matches_event_site": true,
+      "height_limitation": "Historical nominal height; event-specific inspection and continuous sensor uptime are not established.",
+      "averaging_minutes": 2,
+      "duration_source_url": "https://www.weather.gov/asos/WindSensor.html",
+      "duration_evidence_scope": "Dated ASOS platform and NWS ASOS sustained-wind reporting convention.",
+      "roughness_verified": false,
+      "uptime_confirmed": false
+    },
+    {
+      "storm_id": "AL062018",
+      "station_id": "KILM",
+      "homr_ncdc_id": "20013557",
+      "homr_path": "data/raw/metadata/homr_KILM.json",
+      "homr_sha256": "d0ec379397cc613fd48da9f8be59cad907834f8b73a1463d38619609712627d6",
+      "coordinates": {
+        "lat": 34.2675,
+        "lon": -77.8997,
+        "dated_source": {
+          "latitude_rptd": "34.2675",
+          "longitude_rptd": "-77.8997",
+          "latitude_dec": "34.2675",
+          "longitude_dec": "-77.8997",
+          "latitude_dms": "34,16,03,N",
+          "longitude_dms": "077,53,59,W",
+          "precision": "DDdddd",
+          "datum_horiz": "NAD83",
+          "source": "ASOS SITE SURVEY",
+          "date": {
+            "beginDate": "2016-09-11T00:00:00.000",
+            "endDate": "2021-11-22T00:00:00.000"
+          }
+        }
+      },
+      "height_m": 10,
+      "height_source_url": "https://www.epa.gov/sites/default/files/2016-12/documents/pp2_final_risk_assessment_w_app_11082016.pdf",
+      "height_source_publication_year": 2016,
+      "height_source_pdf_page": 172,
+      "height_evidence_scope": "Historical station-specific nominal height in EPA Appendix 3, Attachment 1. Coordinate/site continuity assessed separately against dated HOMR history.",
+      "height_matches_event_site": true,
+      "height_limitation": "Historical nominal height; event-specific inspection and continuous sensor uptime are not established.",
+      "averaging_minutes": 2,
+      "duration_source_url": "https://www.weather.gov/asos/WindSensor.html",
+      "duration_evidence_scope": "Dated ASOS platform and NWS ASOS sustained-wind reporting convention.",
+      "roughness_verified": false,
+      "uptime_confirmed": false
+    },
+    {
+      "storm_id": "AL062018",
+      "station_id": "KFAY",
+      "homr_ncdc_id": "20013614",
+      "homr_path": "data/raw/metadata/homr_KFAY.json",
+      "homr_sha256": "2aed900c70e057db0c9636fa6b3da979343da3c7e1f0c64cfc4f9501f232efef",
+      "coordinates": {
+        "lat": 34.99139,
+        "lon": -78.88028,
+        "dated_source": {
+          "latitude_rptd": "34,59,29,N",
+          "longitude_rptd": "078,52,49,W",
+          "latitude_dec": "34.99139",
+          "longitude_dec": "-78.88028",
+          "latitude_dms": "34,59,29,N",
+          "longitude_dms": "078,52,49,W",
+          "precision": "DDMMSS",
+          "date": {
+            "beginDate": "1998-04-15T00:00:00.000",
+            "endDate": "2021-11-22T00:00:00.000"
+          }
+        }
+      },
+      "height_m": 10,
+      "height_source_url": "https://www.epa.gov/sites/default/files/2016-12/documents/pp2_final_risk_assessment_w_app_11082016.pdf",
+      "height_source_publication_year": 2016,
+      "height_source_pdf_page": 171,
+      "height_evidence_scope": "Historical station-specific nominal height in EPA Appendix 3, Attachment 1. Coordinate/site continuity assessed separately against dated HOMR history.",
+      "height_matches_event_site": true,
+      "height_limitation": "Historical nominal height; event-specific inspection and continuous sensor uptime are not established.",
+      "averaging_minutes": 2,
+      "duration_source_url": "https://www.weather.gov/asos/WindSensor.html",
+      "duration_evidence_scope": "Dated ASOS platform and NWS ASOS sustained-wind reporting convention.",
+      "roughness_verified": false,
+      "uptime_confirmed": false
+    }
+  ]
+}

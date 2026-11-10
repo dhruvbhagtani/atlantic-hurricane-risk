@@ -30,17 +30,26 @@ def entries_at(entries,date):
 
 def station_metadata(document,event):
     stations=document['stationCollection']['stations']
-    if len(stations)!=1:
-        raise ValueError('Expected exactly one station history')
-    station=stations[0]
-    ids=entries_at(station['identifiers'],'2020-08-27')
-    if not any(i['idType']=='WBAN' and i['id']=='03937' for i in ids) or not any(i['idType']=='ICAO' and i['id']=='KLCH' for i in ids):
+    identified=[]
+    for station in stations:
+        ids=entries_at(station['identifiers'],'2020-08-27')
+        if (any(i['idType']=='WBAN' and i['id']=='03937' for i in ids)
+                and any(i['idType']=='ICAO' and i['id']=='KLCH' for i in ids)):
+            identified.append(station)
+    if not identified:
         raise ValueError('Station identity is not documented during Laura')
+    surface=[station for station in identified if any(
+        p['platform']=='ASOS' for p in entries_at(station.get('platforms',[]),'2020-08-27'))]
+    if len(surface)!=1:
+        raise ValueError('Expected exactly one dated ASOS station history for KLCH')
+    station=surface[0]
     positions=entries_at(station['location']['latLonPairs'],'2020-08-27')
     if not positions:
         raise ValueError('No dated station coordinates for Laura')
     position=max(positions,key=lambda e:e['date']['beginDate'])
     return {'station_id':'KLCH','ncei_id':event['ncei_id'],'homr_ncdc_id':station['ncdcStnId'],
+            'history_selection':'Unique record with dated WBAN 03937, ICAO KLCH and ASOS platform during Laura.',
+            'history_records_returned':len(stations),
             'lat':float(position['latitude_dec']),'lon':float(position['longitude_dec']),
             'height_m':10,'averaging_minutes':2,
             'height_duration_source':'https://www.weather.gov/lch/2020Laura-PSHLCH',
@@ -100,6 +109,8 @@ def main():
                      'best_track_provenance':'Unknown NHC use; confirmation withheld from this project’s model development.',
                      'stations':[station]}]}
     tracks=read_hurdat(args.tracks)
+    input_hashes={str(p):sha256(p) for p in [args.registration,args.annual,args.homr,args.tracks]}
+    code_hashes={p.name:sha256(p) for p in Path(__file__).parent.glob('*.py')}
     with output_directory(args.out) as out:
         summary=compare_candidates(series,plan,tracks,cfg,event['candidates'],out,meta)
         series.to_csv(out/'observed_time_series.csv',index=False)
@@ -127,13 +138,23 @@ def main():
         perf=pd.read_csv(out/'performance.csv')
         for r in perf.itertuples():text.append(f'| {r.variant} | {r.n} | {r.bias_ms:.2f} | {r.rmse_ms:.2f} |')
         text += ['',f"Samples meeting the 64-kt threshold ({64*KNOT_TO_MS:.4f} m/s): {rows[0]['hurricane_force_samples']}.",
-                 'High-wind subset errors are retained separately. These samples are not independent storm replicates.',
+                 '', '| Candidate | High-wind samples | High-wind bias (m/s) | High-wind RMSE (m/s) |',
+                 '|---|---:|---:|---:|']
+        for r in rows:
+            text.append(f"| {r['variant']} | {r['hurricane_force_samples']} | {r['high_wind_bias_ms']:.2f} | {r['high_wind_rmse_ms']:.2f} |")
+        coverage=pd.read_csv(out/'coverage.csv').iloc[0]
+        text += ['', 'A small signed bias can conceal cancellation between overprediction and underprediction; consult RMSE and the sample residuals.',
+                 'These samples are not independent storm replicates.',
+                 f"The good sampled peak is {rows[0]['observed_sampled_peak_ms']:.2f} m/s. It remains a lower bound on the complete event peak.",
+                 f"Good reports occupy {coverage.good_cadence_bins} of {coverage.expected_reports} planned cadence bins ({coverage.coverage:.1%}).",
+                 f"The maximum gap, including window boundaries, is {coverage.max_gap_minutes:.0f} minutes; uptime is unconfirmed.",
+                 f"The surface station history is NCDC {meta['homr_ncdc_id']}, selected by dated ASOS and station identifiers from {meta['history_records_returned']} returned records.",
                  'All results, including failures or underprediction, are reported; no candidate is promoted from these scores.',
                  'See coverage.csv for outages, qc_audit.csv for exclusions, and the source hashes in manifest.json.','']
         (out/'report.md').write_text('\n'.join(text))
         manifest={'registration':event,'frozen_model_lock_sha256':sha256(frozen_path),'config':cfg,
-                  'inputs_sha256':{str(p):sha256(p) for p in [args.registration,args.annual,args.homr,args.tracks]},
-                  'code_sha256':{p.name:sha256(p) for p in Path(__file__).parent.glob('*.py')},
+                  'inputs_sha256':input_hashes,
+                  'code_sha256':code_hashes,
                   'outputs_sha256':output_hashes(out)}
         (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     print(summary.to_string(index=False));print(pd.DataFrame(rows).to_string(index=False))

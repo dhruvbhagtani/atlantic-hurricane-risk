@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "collection_id": "next_collection_v1",
+  "started_utc": "2026-11-10T20:11:18.201240+00:00",
+  "finished_utc": "2026-11-10T20:11:18.453888+00:00",
+  "check_only": true,
+  "registration_sha256": "5c827f02a0a7114c89cf73b0f3906ef4156d4d543e2450e3778acf9daa9d8327",
+  "provider_id_amendment_sha256": "2a5035fdacba7ebe51b4a813ca666628d30d06ff4674e6cefd56ca64e594b110",
+  "wind_values_inspected": false,
+  "instrument_eligibility_verified": false,
+  "limitations": "Identity-only input readiness. Wind QC, complete annual/event coverage, instrument height/duration, roughness and uptime are not certified.",
+  "inputs": [
+    {
+      "storm_id": "AL192020",
+      "station_id": "KPNS",
+      "kind": "homr",
+      "path": "data/raw/metadata/homr_KPNS.json",
+      "url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13899&date=all&definitions=false&phrData=true",
+      "access_started_utc": "2026-11-10T20:11:18.201816+00:00",
+      "status": "validated existing input",
+      "sha256": "ddc237bcbee6df5267611e4bb45ad3ebd201e03d459b0699fd8f3cd5b2abb40a"
+    },
+    {
+      "storm_id": "AL192020",
+      "station_id": "KPNS",
+      "kind": "annual",
+      "path": "data/raw/global_hourly/2020/72222313899.csv",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2020/72222313899.csv",
+      "access_started_utc": "2026-11-10T20:11:18.202475+00:00",
+      "status": "validated existing input",
+      "sha256": "4105e45fa9398d0ab13b861b67541369434b7c8c4753f4a3dcdd42e038944f04"
+    },
+    {
+      "storm_id": "AL192020",
+      "station_id": "KMOB",
+      "kind": "homr",
+      "path": "data/raw/metadata/homr_KMOB.json",
+      "url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13894&date=all&definitions=false&phrData=true",
+      "access_started_utc": "2026-11-10T20:11:18.249328+00:00",
+      "status": "validated existing input",
+      "sha256": "48b6a452b96ec923d366132423732c7d2c68fd7fcffafd14b13971b787094f3b"
+    },
+    {
+      "storm_id": "AL192020",
+      "station_id": "KMOB",
+      "kind": "annual",
+      "path": "data/raw/global_hourly/2020/72223013894.csv",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2020/72223013894.csv",
+      "access_started_utc": "2026-11-10T20:11:18.249996+00:00",
+      "status": "validated existing input",
+      "sha256": "34fa8b93b4c4557c4f10305c7ac8733b12a67462265418ef15ccb384c5ecb04c"
+    },
+    {
+      "storm_id": "AL092021",
+      "station_id": "KMSY",
+      "kind": "homr",
+      "path": "data/raw/metadata/homr_KMSY.json",
+      "url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:12916&date=all&definitions=false&phrData=true",
+      "access_started_utc": "2026-11-10T20:11:18.293393+00:00",
+      "status": "validated existing input",
+      "sha256": "1ad31faccaf62949c91e8decd1244adbdceec7bcd3f66ed00b1506b0a2892680"
+    },
+    {
+      "storm_id": "AL092021",
+      "station_id": "KMSY",
+      "kind": "annual",
+      "path": "data/raw/global_hourly/2021/72231012916.csv",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2021/72231012916.csv",
+      "access_started_utc": "2026-11-10T20:11:18.294530+00:00",
+      "status": "validated existing input",
+      "sha256": "c87c811c6e40e84290ea83a838f47ae1a7a03a103f7fad618e5cb26ccdfee835"
+    },
+    {
+      "storm_id": "AL092021",
+      "station_id": "KBTR",
+      "kind": "homr",
+      "path": "data/raw/metadata/homr_KBTR.json",
+      "url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13970&date=all&definitions=false&phrData=true",
+      "access_started_utc": "2026-11-10T20:11:18.335190+00:00",
+      "status": "validated existing input",
+      "sha256": "fa7027c70b173177c472b7756169f22fabbce11a64e546966749eec410603c01"
+    },
+    {
+      "storm_id": "AL092021",
+      "station_id": "KBTR",
+      "kind": "annual",
+      "path": "data/raw/global_hourly/2021/72232013970.csv",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2021/72232013970.csv",
+      "access_started_utc": "2026-11-10T20:11:18.335793+00:00",
+      "status": "validated existing input",
+      "sha256": "addc64adade3e8d824dc3afc9769658568acabfbe2db180ff5be61c5b68c231e"
+    },
+    {
+      "storm_id": "AL062018",
+      "station_id": "KILM",
+      "kind": "homr",
+      "path": "data/raw/metadata/homr_KILM.json",
+      "url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13748&date=all&definitions=false&phrData=true",
+      "access_started_utc": "2026-11-10T20:11:18.371518+00:00",
+      "status": "validated existing input",
+      "sha256": "d0ec379397cc613fd48da9f8be59cad907834f8b73a1463d38619609712627d6"
+    },
+    {
+      "storm_id": "AL062018",
+      "station_id": "KILM",
+      "kind": "annual",
+      "path": "data/raw/global_hourly/2018/72302013748.csv",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2018/72302013748.csv",
+      "access_started_utc": "2026-11-10T20:11:18.372233+00:00",
+      "status": "validated existing input",
+      "sha256": "c7926e5904fd49ccdae2a6052bbe7032ee6b0ff88fb1988585661d971c5ee026"
+    },
+    {
+      "storm_id": "AL062018",
+      "station_id": "KFAY",
+      "kind": "homr",
+      "path": "data/raw/metadata/homr_KFAY.json",
+      "url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:93740&date=all&definitions=false&phrData=true",
+      "access_started_utc": "2026-11-10T20:11:18.418106+00:00",
+      "status": "validated existing input",
+      "sha256": "2aed900c70e057db0c9636fa6b3da979343da3c7e1f0c64cfc4f9501f232efef"
+    },
+    {
+      "storm_id": "AL062018",
+      "station_id": "KFAY",
+      "kind": "annual",
+      "path": "data/raw/global_hourly/2018/72303593740.csv",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2018/72303593740.csv",
+      "access_started_utc": "2026-11-10T20:11:18.418431+00:00",
+      "status": "validated existing input",
+      "sha256": "c11eaf90628c9c38ea33931e7b9b2e8fc9fcd23ba1ae26b55316689e36f97415"
+    }
+  ]
+}

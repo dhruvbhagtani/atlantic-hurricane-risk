@@ -56,13 +56,28 @@ results; aggregation requires every repeated baseline table and exposure file to
 match exactly. Inland-distance bins and a near-shore uncertainty flag are included.
 
 A separate Laura/Lake Charles high-wind confirmation was registered after the
-initial reserved tests, with unchanged candidate parameters. Its reader and dated
-instrument-history checks are implemented; the requested annual CSV and HOMR JSON
-are still pending manual download. A separate source-reviewed NWS Laura point is now evaluated at its reported time:
-43.73 m/s observed versus 26.99 m/s baseline and 18.39 m/s with inland attenuation.
-This exposes strong underprediction and limits transport of improvements seen at
-Valdosta. It is not the pending provider-QC time-series validation or a complete peak.
-See the [reported-point check](../reports/laura_reported_point_check/report.md).
+initial reserved tests, with unchanged candidate parameters. The manually downloaded
+2020 CSV and HOMR history now pass validation. Dated ASOS metadata selects surface
+record NCDC 20008735 from three returned records, excluding radar and upper-air records.
+The [completed Laura confirmation](../reports/laura_confirmation/report.md) retains
+71 eligible reports, including four at or above 64 kt and a sampled peak of 43.8 m/s.
+
+| Fixed candidate | Overall RMSE (m/s) | Hurricane-force RMSE (m/s; 4 reports) |
+|---|---:|---:|
+| Baseline | 8.78 | 16.34 |
+| Missing RMW fallback 25 km | 7.14 | 15.40 |
+| Translation asymmetry | 8.12 | 15.79 |
+| Local inland attenuation | 4.98 | 17.59 |
+| Combined structure | 4.90 | 17.94 |
+
+The baseline high-wind signed bias is only −0.42 m/s because large positive and
+negative residuals cancel. Inland attenuation improves overall scores but worsens
+high-wind RMSE and produces −12.96 m/s high-wind bias. Good reports occupy only
+32 of 73 planned cadence bins; the maximum gap including window boundaries is
+2,460 minutes. These are report-time scores with an incomplete peak, not validation
+of a continuous high-wind footprint. Candidates remain experimental and unchanged.
+The separate [NWS reported-point check](../reports/laura_reported_point_check/report.md)
+is retained as an earlier diagnostic with a different reported time and coordinate.
 
 ## Reproduce
 
@@ -83,19 +98,31 @@ python -m hurricane_risk.structural_study --out outputs/reserved-study-run2
 python -m hurricane_risk.benchmark --variants examples/baseline_variant.json \
   --timesteps 1 0.5 0.25 --out outputs/current-resolution-run2
 
-# Additional registered high-wind confirmation, after downloading its inputs.
+# Additional registered high-wind confirmation; inputs are now available locally.
 bash scripts/download_laura_validation.sh
-python -m hurricane_risk.confirmation_study --out outputs/laura-confirmation-run1
+# For manual downloads, validate both files without network access:
+bash scripts/download_laura_validation.sh --check-only
+python -m hurricane_risk.confirmation_study --out outputs/laura-confirmation-run3
 
 python -m unittest discover -s tests -v
 ```
 
-The offline suite contains 37 tests, including unchanged test-data influence on
+The offline suite contains 54 tests, including registered station/storm weighting,
+missing/ineligible pair retention, identity amendments, timing-shift direction and shared
+support, inventory missingness, new-collection locks, identity checks that omit
+wind values, dated surface-station selection,
+interrupted-download cleanup,
+input validation and reuse without overwrites, unchanged test-data influence on
 development scores, registration/input/model hash checks, land constraints,
 shared wind-kernel consistency and CLI financial invariants. Dependency versions
 are pinned and GitHub Actions executes the same offline suite. Run source hashes
 are now captured before computation so long-run manifests do not pick up later
 source edits.
+
+The November 10 continuation completed Laura validation after manual input delivery.
+The acquisition command stages and validates each input before publishing it,
+preserves existing inputs and offers an offline readiness check. See
+[download instructions](data_downloads.md#laura-confirmation-inputs) for exact destinations.
 
 See [the review summary](../reports/final_review/report.md),
 [current historical output](../reports/current_default_historical/report.md),
@@ -104,3 +131,22 @@ See [the review summary](../reports/final_review/report.md),
 
 Absolute insured-loss calibration, continuous high-wind footprints and independence
 from NHC input construction are not established by these experiments.
+
+## Timing diagnosis and next collection
+
+The [Laura timing diagnostic](../reports/laura_timing/report.md) reproduces the
+archived candidates and shows the baseline dense maximum 33 minutes before the
+highest observed report. Center-distance/RMW geometry and all 11 declared timing,
+position and size cases are retained without selecting a correction.
+
+The [coverage inventory v3](../reports/observation_inventory_v3/report.md) records
+60 examined station/event pairs. Sally, Ida and Florence now supply 1,182 additional
+QC report-time comparisons across six stations, with no hurricane-force samples.
+Baseline station/storm-balanced RMSE is 4.96 m/s. An event-specific NWS Ida
+instrument statement resolves KMSY's height gap via a transparent metadata
+supplement after the first evaluation, with every observation and prediction
+unchanged. All three storms now have complete nominal instrument eligibility.
+All candidates and stations remain in the report. Original test roles are retained;
+every examined pair is development-only for future tuning. The original registration,
+pre-inspection Wilmington provider-ID amendment, evaluation lock and raw hashes
+are preserved. See [the completed collection results](next_collection_results.md).
