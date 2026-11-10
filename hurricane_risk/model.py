@@ -80,7 +80,7 @@ def synthetic_portfolio(n: int, seed: int) -> pd.DataFrame:
     })
 
 
-def interpolate_track(track: pd.DataFrame, minutes: int, fallback_rmw: float):
+def interpolate_track(track: pd.DataFrame, minutes: int, fallback_rmw: float, evaluation_times=None):
     if track.empty or not np.isfinite(minutes) or minutes <= 0 or fallback_rmw <= 0:
         raise ValueError("Need a nonempty track and positive timestep/RMW")
     t = track.time.astype("int64").to_numpy() / 1e9
@@ -89,7 +89,12 @@ def interpolate_track(track: pd.DataFrame, minutes: int, fallback_rmw: float):
     if len(t) > 1 and np.max(np.diff(t)) > 12 * 3600:
         raise ValueError(f"Track gap >12 hours: {track.storm_id.iloc[0]}")
     # Retain all original fixes, including special landfall observations.
-    target = np.unique(np.r_[np.arange(t[0], t[-1], minutes * 60), t])
+    if evaluation_times is None:
+        target = np.unique(np.r_[np.arange(t[0], t[-1], minutes * 60), t])
+    else:
+        target = pd.to_datetime(evaluation_times, utc=True).astype('int64').to_numpy() / 1e9
+        if not np.isfinite(target).all() or (target < t[0]).any() or (target > t[-1]).any():
+            raise ValueError('Evaluation times must lie within the track window')
     rmw = track.rmw_km.fillna(fallback_rmw).to_numpy()
     lon = np.rad2deg(np.unwrap(np.deg2rad(track.lon.to_numpy())))
     return tuple(np.interp(target, t, x) for x in
@@ -108,19 +113,72 @@ def rankine_wind(distance, vmax, rmw, alpha=.6):
     return vmax * np.where(ratio <= 1, ratio, np.maximum(ratio, 1)**(-alpha))
 
 
+def interpolation_times(track, minutes, evaluation_times=None):
+    t = track.time.astype('int64').to_numpy()/1e9
+    if evaluation_times is not None:
+        return pd.to_datetime(evaluation_times, utc=True).astype('int64').to_numpy()/1e9
+    return np.unique(np.r_[np.arange(t[0], t[-1], minutes*60), t])
+
+
+def translation_velocity(track, targets):
+    """Differentiate original fixes, then interpolate motion components in m/s."""
+    t = track.time.astype('int64').to_numpy()/1e9
+    if len(t) == 1:
+        return np.zeros(len(targets)), np.zeros(len(targets))
+    lat = np.deg2rad(track.lat.to_numpy())
+    lon = np.unwrap(np.deg2rad(track.lon.to_numpy()))
+    north = np.gradient(lat, t)*6371008.8
+    east = np.gradient(lon, t)*6371008.8*np.cos(lat)
+    return np.interp(targets, t, east), np.interp(targets, t, north)
+
+
+def surface_wind(distance, vmax, rmw, center_lat, center_lon, site_lat, site_lon,
+                 cfg, motion_east=0., motion_north=0., inland_distance_km=None):
+    """Shared wind kernel; optional, explicitly assumed structural sensitivities."""
+    wind = rankine_wind(distance, vmax, rmw, cfg['rankine_alpha'])*cfg['land_exposure_factor']
+    fraction = cfg.get('translation_fraction', 0.)
+    if fraction:
+        lat0, lat1 = np.deg2rad(center_lat), np.deg2rad(site_lat)
+        delta = np.deg2rad(np.asarray(site_lon)-np.asarray(center_lon))
+        bearing = np.arctan2(np.sin(delta)*np.cos(lat1),
+                            np.cos(lat0)*np.sin(lat1)-np.sin(lat0)*np.cos(lat1)*np.cos(delta))
+        speed = np.hypot(motion_east, motion_north)
+        # NH counterclockwise tangential wind; reverse rotation in the SH.
+        sign = np.where(np.asarray(center_lat) >= 0, 1., -1.)
+        projection = sign*(-np.cos(bearing)*motion_east + np.sin(bearing)*motion_north)
+        cosine = np.divide(projection, speed, out=np.zeros_like(projection), where=speed > 0)
+        beta = np.minimum(cfg.get('asymmetry_cap', .25), fraction*speed/np.maximum(vmax, 1e-12))
+        # Preserve best-track Vmax on the favored side, avoiding a second
+        # addition of translation speed to an already earth-relative maximum.
+        wind = wind*(1+beta*cosine)/(1+beta)
+    length = cfg.get('inland_decay_km', 0.)
+    if length:
+        if inland_distance_km is None:
+            raise ValueError('Local inland attenuation requires coastline distances')
+        wind = wind*np.exp(-np.maximum(inland_distance_km, 0)/length)
+    return wind
+
+
 def hazard_catalog(tracks, portfolio, cfg):
     """Event/property maxima at three assumed RMW multipliers; no radius cutoff."""
     events, fields = [], []
+    inland = None
+    if cfg.get('inland_decay_km', 0.):
+        from .geography import coast_distances
+        inland, _ = coast_distances(portfolio.lat, portfolio.lon, cfg['coastline_path'])
     for sid, tr in tracks.groupby("storm_id", sort=True):
         lat, lon, vmax, rmw = interpolate_track(tr, cfg["interpolation_minutes"], cfg["rmw_km"])
+        u, v = (translation_velocity(tr, interpolation_times(tr, cfg['interpolation_minutes']))
+                if cfg.get('translation_fraction', 0.) else (np.zeros(len(lat)), np.zeros(len(lat))))
         maxima = np.zeros((3, len(portfolio)))
         for start in range(0, len(lat), 256):
             sl = slice(start, start + 256)
             r = distance_km(lat[sl, None], lon[sl, None],
                             portfolio.lat.to_numpy()[None, :], portfolio.lon.to_numpy()[None, :])
             for j, scale in enumerate([.8, 1., 1.2]):
-                wind = rankine_wind(r, vmax[sl, None], rmw[sl, None] * scale,
-                                    cfg["rankine_alpha"]) * cfg["land_exposure_factor"]
+                wind = surface_wind(r, vmax[sl, None], rmw[sl, None]*scale,
+                                    lat[sl, None], lon[sl, None], portfolio.lat.to_numpy()[None, :],
+                                    portfolio.lon.to_numpy()[None, :], cfg, u[sl, None], v[sl, None], inland)
                 maxima[j] = np.maximum(maxima[j], wind.max(axis=0))
         fields.append(maxima)
         events.append((sid, tr.name.iloc[0], tr.season.iloc[0]))
@@ -161,7 +219,7 @@ def annual_losses(event_losses, event_years, years):
     if not np.isfinite(event_losses).all() or (event_losses < 0).any():
         raise ValueError("Event losses must be finite and nonnegative")
     sums, maxima = np.zeros(len(years)), np.zeros(len(years))
-    index = np.asarray(event_years, dtype=int) - years[0]
+    index = np.asarray(event_years, dtype=int) - int(years[0])
     np.add.at(sums, index, event_losses)
     np.maximum.at(maxima, index, event_losses)
     return sums, maxima

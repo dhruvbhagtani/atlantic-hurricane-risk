@@ -1,0 +1,143 @@
+{
+  "purpose": "external station-peak evaluation; not strictly withheld validation",
+  "inputs": {
+    "data/hurdat2-1851-2024-040425.txt": "d595ada8aaa64e402c26eeb80efb344b52ef420b1627d8c0ee6ee65f0729923b",
+    "data/validation/station_peaks.csv": "22bcd3bcce508725d599443173863375f0256ba93268cc72a0b36901aad3674c",
+    "data/validation/sources.json": "6841b6867e5f84fa8e11b21a41b1292655ea6a697d1b57692efd66af0752114c",
+    "config.json": "5253d57126a45d82a4fefba10963902f0bc871a7ab5165c7aba5c9ac3132d7c4"
+  },
+  "config": {
+    "start_year": 1980,
+    "end_year": 2024,
+    "seed": 7319,
+    "properties": 300,
+    "interpolation_minutes": 1,
+    "rmw_km": 35.0,
+    "rankine_alpha": 0.6,
+    "land_exposure_factor": 0.85,
+    "uncertainty_replicates": 200,
+    "simulation_years": 20000,
+    "return_periods": [
+      2,
+      5,
+      10,
+      20
+    ],
+    "scenarios": [
+      {
+        "name": "historical",
+        "wind_multiplier": 1.0,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct_frequency_plus_20pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.2
+      }
+    ],
+    "coastline_path": "data/geography/natural_earth_10m_atlantic.geojson.gz",
+    "synthetic_land_buffer_km": 2.0
+  },
+  "sources": {
+    "measurement": {
+      "height_m": 10,
+      "averaging_minutes": 2,
+      "units": "knots",
+      "variable": "reported maximum sustained wind, never peak gust"
+    },
+    "retrieved_utc_date": "2026-11-07",
+    "independence": "External station measurements, unused to fit the original workflow; not proven withheld from NHC best-track analysis.",
+    "sources": {
+      "irma_tbw": {
+        "storm_id": "AL112017",
+        "name": "Irma",
+        "product": "NWS Tampa Bay PSHTBW, 2017-09-14 16:41 UTC",
+        "url": "https://mesonet.agron.iastate.edu/wx/afos/p.php?e=201709141641&pil=PSHTBW",
+        "section": "A. METAR observations; all 10 unique rows, duplicate KRSW removed",
+        "window_start": "2017-09-09T00:00:00",
+        "window_end": "2017-09-12T12:00:00"
+      },
+      "michael_tae": {
+        "storm_id": "AL142018",
+        "name": "Michael",
+        "product": "NWS Tallahassee PSH, 2018-10-27 01:40 UTC",
+        "url": "https://www.weather.gov/tae/michael_psh",
+        "section": "A. METAR observations; all 25 rows; I on maximum sustained wind means incomplete",
+        "window_start": "2018-10-09T00:00:00",
+        "window_end": "2018-10-12T00:00:00"
+      },
+      "ian_tbw": {
+        "storm_id": "AL092022",
+        "name": "Ian",
+        "product": "NWS Tampa Bay PSHTBW, 2022-10-12 18:02 UTC",
+        "url": "https://mesonet.agron.iastate.edu/wx/afos/p.php?e=202210121802&pil=PSHTBW",
+        "section": "A. METAR observations; all 14 rows; remarks override individual flags for RSW PGD SRQ SPG TPA GIF PIE",
+        "window_start": "2022-09-27T00:00:00",
+        "window_end": "2022-09-30T00:00:00"
+      }
+    },
+    "curation": [
+      "Numeric station data manually transcribed from NWS-authored primary reports (Irma and Ian accessed through the IEM archive).",
+      "Use all METAR-section rows in these three products, not stations selected by model fit; do not include non-METAR, marine or gust measurements.",
+      "Keep source coordinates unchanged. Flag Irma KFMY (longitude differs from Ian) and Ian KVDF (coordinates duplicate Irma KBKV) as suspect; exclude from primary scores.",
+      "No incomplete flag is not proof of full observational coverage. Preliminary report errors and unflagged outages remain possible.",
+      "Windows are analyst-selected UTC brackets around the regional passage, not exact instrument uptime; event peaks only, no time-series or peak-timing skill claims."
+    ],
+    "duration_reference": "https://www.aoml.noaa.gov/hrd/tcfaq/D4.html"
+  },
+  "bootstrap_replicates": 2000,
+  "bootstrap_seed": 7330,
+  "ensemble_seed": 7329,
+  "versions": {
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "matplotlib": "3.9.2"
+  },
+  "code_sha256": {
+    "confirmation_study.py": "cde9ea35a042341d935c79cb4b646697322bf63691eac8a15ee2d150d838246b",
+    "observations.py": "3933351dc3045c89c6c788632f7f99a9df3d3f9997d7879a92fd3866a3a49d0d",
+    "model.py": "848eb608a760531a1f410edf8e2f8a1dc38611d8af37c05928c58185e86f3d27",
+    "structural_study.py": "fed48b8338c0a7efe21877e527c477c0af65a36d1439847841b86624123ec78f",
+    "validation.py": "0299ddcd8fe6099e8127e9e96fb072b82e0e686cc0e5706afa4f10253697057d",
+    "__init__.py": "07db4356552223670a5b7fb14a9fe7b5c15c1ddd64114f35db45cefe89799a46",
+    "global_hourly.py": "79481d4eb7c76556e7345bea8a568130e07d16dcf40feb359187ad4b90cd98c1",
+    "benchmark.py": "27f999a7fcd1f55f3113ec5ee54f5391e0525a0265e475ca4c362f38afeaf000",
+    "diagnostics.py": "9ad480546d177e77047073e962b1504f20c12f9e0c43279c729c66303841fc32",
+    "inputs.py": "1cb622b6aafede07e8766089ccdf6e6ddf8bb712abae395e3d21025cdb33c0a9",
+    "__main__.py": "a0609dbdc061078905339053062a0051b1878cf0c89c081995f1d8f344dbbe35",
+    "time_series_validation.py": "3cd8bcd7feaa810523523761379fd3e5b4eed1091babaaf6f810c780958cb489",
+    "artifacts.py": "d5ef30477449c094e8f9d59135cc2344c5d6f56f95fbe2a15148f62dbb78d619",
+    "merge_benchmarks.py": "560870a6f0b78b5f11a76571e9847965da588facd504aa9055e6159b9d134fc7",
+    "geography.py": "628d40a36fdf5dec89394b81035ba171c02c82fe54954eaf4e3586cbb6ba4531",
+    "portfolio.py": "9a41d35c49fc7e4e829f85837db70237234b8dfbcc1f87f44696e084038613c4"
+  },
+  "coastline_sha256": "f5a00bf305b66b48b30ba0479f3efbf9041652088e2c06c91fa39bd3aee1b158",
+  "eligible_pairs": 22,
+  "eligible_storms": 3,
+  "custom_exposure": false,
+  "vulnerability_metadata": {
+    "averaging_minutes": 1,
+    "height_m": 10,
+    "wind_type": "sustained",
+    "units": "m/s",
+    "exposure": "local",
+    "source": "Explicit educational assumptions"
+  },
+  "model_changed": false,
+  "outputs_sha256": {
+    "exposure_location_audit.csv": "dd9cb53822c54a1eb794015155baf38f2ba50f1292a1648460f969984682b537",
+    "held_out_predictions.csv": "d8cbc396bd6763fc41eec6434544fc4f644d253c49e0b46eeb49ea3c155b5b83",
+    "insured_loss_sensitivity.csv": "3fd9f74378aa75601e69261dd5db84ee63c0a9a7293ffc147cef4673bc58d008",
+    "observed_footprints.png": "3d90cf4b3843c11588e98fad5814569c59762aaec8fe01d78608a455dcbbf066",
+    "performance.csv": "5acf5676896cb9fe965c84be70ddfc09e732a025c8f0ef037d7fe2076bfa45e8",
+    "station_pairs.csv": "a27a644664e79fb46819d66615fc064056b37fd7f09674aa17335b4b881dc859",
+    "storm_bootstrap.csv": "4ba517f01df703dbaec2e6b1fec526aa693705bdee2ba6620122d500688f68a9",
+    "validation_diagnostics.png": "c708c5ccb5bb2b02428c00a9ed5ccdc67b25f87a764af2a137943083e591fe24",
+    "wind_validation_report.md": "1e797fca54b42b26981cf7f5849f55dc7b29fa105a5e799220c85525a82d4842"
+  }
+}

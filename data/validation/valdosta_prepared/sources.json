@@ -1,0 +1,37 @@
+{
+  "sources": {
+    "AL102023": {
+      "storm_id": "AL102023",
+      "name": "Idalia",
+      "window_start": "2023-08-29T00:00:00",
+      "window_end": "2023-08-31T23:59:00",
+      "product": "NOAA Global Hourly KVLD 2023; METAR/SPECI sustained winds",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2023/72216693845.csv",
+      "section": "Quality-flagged time series; see coverage.csv and input plan",
+      "best_track_provenance": "Unknown whether these observations informed NHC best-track analysis. Values inspected during pipeline development; not an untouched test event."
+    },
+    "AL092024": {
+      "storm_id": "AL092024",
+      "name": "Helene",
+      "window_start": "2024-09-25T00:00:00",
+      "window_end": "2024-09-28T23:59:00",
+      "product": "NOAA Global Hourly KVLD 2024; METAR/SPECI sustained winds",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2024/72216693845.csv",
+      "section": "Quality-flagged time series; see coverage.csv and input plan",
+      "best_track_provenance": "Unknown whether these observations informed NHC best-track analysis. Values inspected during pipeline development; not an untouched test event."
+    }
+  },
+  "quality_control_description": "Good requires NCEI speed QC 1 or 5, normal/variable/calm wind, METAR/SPECI and matching call sign. Conflicting duplicate timestamps are suspect; missing winds retained.",
+  "quality_control_reference": "https://www.ncei.noaa.gov/pub/data/noaa/isd-format-document.pdf",
+  "measurement": {
+    "variable": "maximum of good sustained wind samples",
+    "units": "knots",
+    "height_m": "per station in plan",
+    "averaging_minutes": "per station in plan"
+  },
+  "independence": "Split membership is not proof of independence from best-track analysis.",
+  "curation": [
+    "All plan stations retained; incomplete or metadata-incompatible peaks excluded from primary scores."
+  ],
+  "registration": null
+}

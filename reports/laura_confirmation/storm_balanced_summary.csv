@@ -1,0 +1,6 @@
+variant,split,storms,samples,storm_mean_bias_ms,storm_mean_rmse_ms
+baseline,test,1,71,6.493836034534796,8.78246969531343
+fallback_rmw_25km,test,1,71,4.531616280134668,7.136385037273856
+translation_asymmetry,test,1,71,5.849018190972944,8.11807974937192
+local_inland_attenuation,test,1,71,0.9240929386086434,4.978017824642015
+combined_structure,test,1,71,0.4866951036722408,4.899729669517719

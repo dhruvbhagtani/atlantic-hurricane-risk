@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "collection_id": "next_collection_v1",
+  "registered_utc": "2026-11-10T19:54:55.828566+00:00",
+  "plan_sha256": "196db30864559f388997af68f8072446d1d71247d39003330d725651f2189e5e",
+  "frozen_inputs_sha256": {
+    "hurricane_risk/model.py": "848eb608a760531a1f410edf8e2f8a1dc38611d8af37c05928c58185e86f3d27",
+    "hurricane_risk/geography.py": "628d40a36fdf5dec89394b81035ba171c02c82fe54954eaf4e3586cbb6ba4531",
+    "hurricane_risk/time_series_validation.py": "3cd8bcd7feaa810523523761379fd3e5b4eed1091babaaf6f810c780958cb489",
+    "hurricane_risk/structural_study.py": "fed48b8338c0a7efe21877e527c477c0af65a36d1439847841b86624123ec78f",
+    "hurricane_risk/global_hourly.py": "79481d4eb7c76556e7345bea8a568130e07d16dcf40feb359187ad4b90cd98c1",
+    "hurricane_risk/observations.py": "3933351dc3045c89c6c788632f7f99a9df3d3f9997d7879a92fd3866a3a49d0d",
+    "examples/structural_config.json": "5336de15c67482d321d1445594a80796be3abdceaef452ae45c6596e437d6274",
+    "examples/structural_variants.json": "572f3be4614f8365011cfd04e96fc242ac2c80a443df47f40d3b38e8da5c000c",
+    "data/validation/structural_study_lock.json": "349eaae2c112dd2f6c0000a939386ffaae33cd31ac3a044c8389818d0323f977",
+    "data/hurdat2-1851-2024-040425.txt": "d595ada8aaa64e402c26eeb80efb344b52ef420b1627d8c0ee6ee65f0729923b",
+    "data/geography/natural_earth_10m_atlantic.geojson.gz": "f5a00bf305b66b48b30ba0479f3efbf9041652088e2c06c91fa39bd3aee1b158"
+  },
+  "rule": "Do not update after wind inspection; amendments must retain this original lock. No claim of external timestamping."
+}

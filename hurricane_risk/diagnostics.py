@@ -1,0 +1,58 @@
+"""Track-relative station geometry, optional coastal distances and grouped errors."""
+import numpy as np
+import pandas as pd
+
+from .model import distance_km, interpolate_track
+from .validation import scores
+
+
+def station_geometry(pairs, tracks, sources, cfg):
+    result = pairs.copy()
+    rows = []
+    for row in result.itertuples():
+        source = sources['sources'][row.source_id]
+        track = tracks[(tracks.storm_id == row.storm_id) &
+                       tracks.time.between(source['window_start'], source['window_end'])]
+        lat, lon, wind, rmw = interpolate_track(track, cfg['interpolation_minutes'], cfg['rmw_km'])
+        r = distance_km(lat, lon, row.lat, row.lon)
+        closest = int(np.argmin(r))
+        a, b = max(closest-1, 0), min(closest+1, len(lat)-1)
+        # Local east/north vectors; unwrap station offset for dateline crossings.
+        dx = (lon[b]-lon[a]) * np.cos(np.deg2rad(lat[closest]))
+        dy = lat[b]-lat[a]
+        px = ((row.lon-lon[closest]+180) % 360-180) * np.cos(np.deg2rad(lat[closest]))
+        py = row.lat-lat[closest]
+        cross = dx*py-dy*px
+        side = 'stationary_or_on_track' if abs(cross) < 1e-10 else ('left' if cross > 0 else 'right')
+        rows.append({'closest_distance_km': r[closest], 'closest_rmw_km': rmw[closest],
+                     'distance_over_rmw': r[closest]/rmw[closest],
+                     'closest_vmax_ms': wind[closest], 'side_of_track': side,
+                     'rmw_missing_fraction': float(track.rmw_km.isna().mean())})
+    result = pd.concat([result.reset_index(drop=True), pd.DataFrame(rows)], axis=1)
+    if cfg.get('coastline_path'):
+        from .geography import coast_distances
+        coast, on_land = coast_distances(result.lat, result.lon, cfg['coastline_path'])
+        result['signed_coast_distance_km'] = coast
+        result['inland_distance_km'] = np.maximum(coast, 0)
+        result['coast_land_mask'] = on_land
+        result['near_coast_uncertain'] = np.abs(coast) < 5
+    return result
+
+
+def grouped_errors(pairs):
+    primary = pairs[pairs.primary].copy()
+    primary['distance_bin_km'] = pd.cut(primary.closest_distance_km, [0, 35, 100, 200, np.inf],
+                                       include_lowest=True).astype(str)
+    primary['intensity_bin_ms'] = pd.cut(primary.closest_vmax_ms, [0, 33, 50, 70, np.inf],
+                                        include_lowest=True).astype(str)
+    primary['rmw_availability'] = np.where(primary.rmw_missing_fraction > 0, 'some_missing', 'all_observed')
+    rows = []
+    dimensions = ['split', 'storm_id', 'side_of_track', 'distance_bin_km', 'intensity_bin_ms', 'rmw_availability']
+    if 'inland_distance_km' in primary:
+        primary['inland_bin_km'] = pd.cut(primary.inland_distance_km, [0, 5, 25, 75, np.inf], include_lowest=True).astype(str)
+        dimensions += ['inland_bin_km', 'near_coast_uncertain']
+    for dimension in dimensions:
+        for label, group in primary.groupby(dimension, observed=True):
+            rows.append({'dimension': dimension, 'group': str(label),
+                         'storms': group.storm_id.nunique(), **scores(group.observed_ms, group.modeled_ms)})
+    return pd.DataFrame(rows)

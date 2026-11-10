@@ -1,0 +1,17 @@
+{
+  "schema_version": 2,
+  "inventory_id": "observation_inventory_v2",
+  "row_key": [
+    "storm_id",
+    "station_id"
+  ],
+  "missing_counts": "Unknown/not collected, never interpreted as zero.",
+  "hurricane_force_reports": "Number of baseline-eligible time-matched reports >=64 kt; not independent storm replicates. Not inferred from reported peaks.",
+  "legacy_primary_peak_eligible": "Eligibility under the original peak curation only; not verification of station roughness, height or complete uptime.",
+  "historical_role": "Original role; examined tests are development-only for any future tuning.",
+  "incomplete_peak": "Original peak flag or latest series audit; unknown for reserved pairs.",
+  "metadata_scope": "Time series use completed study audits; peak-only instrument metadata remain unknown. No raw new-collection winds are read.",
+  "supersedes": "reports/observation_inventory_v1",
+  "primary_instrument_eligible_in_new_collection": "Eligibility under the six-pair collection audit; missing for earlier studies.",
+  "state": "All 60 pairs have now been examined. No untouched test pairs remain in this inventory."
+}

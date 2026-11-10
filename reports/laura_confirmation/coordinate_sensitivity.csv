@@ -1,0 +1,6 @@
+variant,split,storm_id,max_abs_wind_change_ms,rmse_ms_at_alternative_coordinate
+baseline,test,AL132020,0.34712891023362147,8.849990836390955
+fallback_rmw_25km,test,AL132020,0.3434150466580448,7.20528322088065
+translation_asymmetry,test,AL132020,0.4174276510032371,8.18677950960072
+local_inland_attenuation,test,AL132020,0.4098386756838579,4.999484841433209
+combined_structure,test,AL132020,0.4517583189823213,4.9013257070420835

@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "first_evaluation_access_utc": "2026-11-10T20:11:36.530505+00:00",
+  "collection_id": "next_collection_v1",
+  "evaluation_lock_sha256": "ef6b69a6b79900bc060db547f90c79065d922cb0d83b27e6bb8f6acd163214c6",
+  "future_tuning_role": "examined; requires new held-out events for future tuning",
+  "completed_report_path": "reports/next_collection_study_v1/report.md",
+  "completed_manifest_sha256": "25371c95aeb899c41ffda49f88c07d57490bb2a940d5eac0728eafad03a577ec",
+  "meaning": "All six station/event pairs have now been examined. Never use them as untouched tests for future tuning. Original registration and held-out results remain unchanged."
+}

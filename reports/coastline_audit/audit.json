@@ -1,0 +1,9 @@
+{
+  "sites": 343,
+  "classification_disagreements": 38,
+  "synthetic_properties_offshore": 85,
+  "sites_within_5km_shore": 221,
+  "maximum_signed_distance_difference_km": 9.451720030466504,
+  "method": "Nearest shoreline point in a regional equirectangular projection; final spherical distance. Clipping edges excluded.",
+  "limits": "Generalized shoreline, not parcel geometry. Near-coast sites carry a 5-km diagnostic uncertainty flag. Offshore synthetic points are retained and not snapped."
+}

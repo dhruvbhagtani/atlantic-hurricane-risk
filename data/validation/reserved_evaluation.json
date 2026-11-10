@@ -1,0 +1,70 @@
+{
+  "purpose": "Reserve previously unexamined event windows before implementing and scoring structural wind candidates.",
+  "development_storms": [
+    "AL112017",
+    "AL142018",
+    "AL092022",
+    "AL102023",
+    "AL092024"
+  ],
+  "test_events": [
+    {
+      "storm_id": "AL042024",
+      "name": "Debby",
+      "start": "2024-08-04T00:00:00Z",
+      "end": "2024-08-08T00:00:00Z"
+    },
+    {
+      "storm_id": "AL142024",
+      "name": "Milton",
+      "start": "2024-10-08T00:00:00Z",
+      "end": "2024-10-12T00:00:00Z"
+    }
+  ],
+  "stations": [
+    {
+      "station_id": "KVLD",
+      "ncei_id": "72216693845",
+      "lat": 30.77629,
+      "lon": -83.27393
+    }
+  ],
+  "candidates": [
+    {
+      "name": "baseline",
+      "overrides": {}
+    },
+    {
+      "name": "fallback_rmw_25km",
+      "overrides": {
+        "rmw_km": 25.0
+      }
+    },
+    {
+      "name": "translation_asymmetry",
+      "overrides": {
+        "translation_fraction": 0.5,
+        "asymmetry_cap": 0.25
+      }
+    },
+    {
+      "name": "local_inland_attenuation",
+      "overrides": {
+        "inland_decay_km": 100.0
+      }
+    },
+    {
+      "name": "combined_structure",
+      "overrides": {
+        "translation_fraction": 0.5,
+        "asymmetry_cap": 0.25,
+        "inland_decay_km": 100.0
+      }
+    }
+  ],
+  "selection_rule": "Compare all candidates; do not tune or select using reserved-event errors.",
+  "primary_eligibility": "Provider-QC samples at report times require documented station height/duration. Unknown exposure, incomplete uptime and sampled peak censoring remain explicit; no full-event peak claims.",
+  "limitations": "Annual CSV metadata and the Helene window were previously inspected, but Debby/Milton wind values and residuals have not been examined. Reservation is analyst-level separation, not independence from NHC best-track construction.",
+  "created_utc": "2026-11-10T04:15:11.224660+00:00",
+  "annual_input_sha256": "b0df405f71f2fd55324a781494d8d596226745833d4fa0bf13f287bd1ad03096"
+}

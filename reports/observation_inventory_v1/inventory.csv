@@ -1,0 +1,61 @@
+storm_id,station_id,status,historical_role,future_tuning_role,product,reports,good_reports,eligible_reports,hurricane_force_reports,cadence_coverage,max_gap_minutes,incomplete_peak,height_m,averaging_minutes,uptime_confirmed,roughness_verified,metadata_issue,legacy_primary_peak_eligible,source_references
+AL042024,KVLD,examined,test,development_only,quality_controlled_time_series,189.0,165.0,165.0,0.0,0.9072164948453608,188.0,1.0,10.0,2.0,False,False,unknown_site_exposure;missing_uptime_reference,False,reports/reserved_structural_study
+AL062018,KFAY,registered_unexamined,test,held_out,planned_global_hourly,,,,,,,,,,False,False,"pending dated ASOS, coordinate and instrument audit; expected provider ID must be verified from contents",False,data/validation/next_collection_v1/plan.json
+AL062018,KILM,registered_unexamined,test,held_out,planned_global_hourly,,,,,,,,,,False,False,"pending dated ASOS, coordinate and instrument audit; expected provider ID must be verified from contents",False,data/validation/next_collection_v1/plan.json
+AL092021,KBTR,registered_unexamined,test,held_out,planned_global_hourly,,,,,,,,,,False,False,"pending dated ASOS, coordinate and instrument audit; expected provider ID must be verified from contents",False,data/validation/next_collection_v1/plan.json
+AL092021,KMSY,registered_unexamined,test,held_out,planned_global_hourly,,,,,,,,,,False,False,"pending dated ASOS, coordinate and instrument audit; expected provider ID must be verified from contents",False,data/validation/next_collection_v1/plan.json
+AL092022,KCGC,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL092022,KFMY,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL092022,KGIF,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL092022,KINF,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL092022,KMCF,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL092022,KPGD,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL092022,KPIE,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL092022,KRSW,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL092022,KSEF,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL092022,KSPG,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL092022,KSRQ,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL092022,KTPA,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL092022,KVDF,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,coordinates_duplicate_KBKV_in_Irma_report,False,data/validation/expanded_station_peaks.csv
+AL092022,KX60,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL092024,KVLD,examined,development,development_only,quality_controlled_time_series,103.0,96.0,96.0,0.0,0.5104166666666666,2654.0,1.0,10.0,2.0,False,False,unknown_site_exposure;missing_uptime_reference,False,data/validation/expanded_station_peaks.csv;reports/reserved_structural_study
+AL102023,KVLD,examined,development,development_only,quality_controlled_time_series,102.0,89.0,89.0,0.0,0.5277777777777778,2046.0,1.0,10.0,2.0,False,False,unknown_site_exposure;missing_uptime_reference,False,data/validation/expanded_station_peaks.csv;reports/reserved_structural_study
+AL112017,KBKV,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL112017,KFMY,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,longitude_disagrees_with_Ian_by_0.10deg,False,data/validation/expanded_station_peaks.csv
+AL112017,KGIF,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL112017,KMCF,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL112017,KPGD,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL112017,KPIE,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL112017,KRSW,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL112017,KSPG,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL112017,KSRQ,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL112017,KTPA,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL132020,KLCH,examined,test,development_only,quality_controlled_time_series,102.0,71.0,71.0,4.0,0.4383561643835616,2460.0,1.0,10.0,2.0,False,False,unknown_site_exposure,False,reports/laura_confirmation
+AL142018,17J,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,29J,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,BIJ,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,EDN,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL142018,FZG,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,K1JO,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,K40J,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,K54J,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,KAAF,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,KABY,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,KCTY,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,KDHN,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL142018,KDTS,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,KECP,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,KMAI,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,KOZR,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL142018,KPAM,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,KTLH,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,KTMA,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL142018,KVAD,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL142018,KVLD,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL142018,LOR,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,MGR,examined,development,development_only,reported_peak,,,,,,,0.0,,,False,False,,True,data/validation/expanded_station_peaks.csv
+AL142018,SXS,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142018,TVI,examined,development,development_only,reported_peak,,,,,,,1.0,,,False,False,,False,data/validation/expanded_station_peaks.csv
+AL142024,KVLD,examined,test,development_only,quality_controlled_time_series,111.0,101.0,95.0,0.0,0.9175257731958762,300.0,1.0,10.0,2.0,False,False,unknown_site_exposure;missing_uptime_reference,False,reports/reserved_structural_study
+AL192020,KMOB,registered_unexamined,test,held_out,planned_global_hourly,,,,,,,,,,False,False,"pending dated ASOS, coordinate and instrument audit; expected provider ID must be verified from contents",False,data/validation/next_collection_v1/plan.json
+AL192020,KPNS,registered_unexamined,test,held_out,planned_global_hourly,,,,,,,,,,False,False,"pending dated ASOS, coordinate and instrument audit; expected provider ID must be verified from contents",False,data/validation/next_collection_v1/plan.json

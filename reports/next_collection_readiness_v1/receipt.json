@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "collection_id": "next_collection_v1",
+  "started_utc": "2026-11-10T19:58:06.407649+00:00",
+  "finished_utc": "2026-11-10T19:58:06.410369+00:00",
+  "check_only": true,
+  "registration_sha256": "5c827f02a0a7114c89cf73b0f3906ef4156d4d543e2450e3778acf9daa9d8327",
+  "wind_values_inspected": false,
+  "instrument_eligibility_verified": false,
+  "limitations": "Identity-only input readiness. Wind QC, complete annual/event coverage, instrument height/duration, roughness and uptime are not certified.",
+  "inputs": [
+    {
+      "storm_id": "AL192020",
+      "station_id": "KPNS",
+      "kind": "homr",
+      "path": "data/raw/metadata/homr_KPNS.json",
+      "url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13899&date=all&definitions=false&phrData=true",
+      "access_started_utc": "2026-11-10T19:58:06.408820+00:00",
+      "status": "unavailable_or_invalid",
+      "error": "Missing input: data/raw/metadata/homr_KPNS.json\nDownload: https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13899&date=all&definitions=false&phrData=true"
+    },
+    {
+      "storm_id": "AL192020",
+      "station_id": "KPNS",
+      "kind": "annual",
+      "path": "data/raw/global_hourly/2020/72222313899.csv",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2020/72222313899.csv",
+      "access_started_utc": "2026-11-10T19:58:06.409570+00:00",
+      "status": "unavailable_or_invalid",
+      "error": "Missing input: data/raw/global_hourly/2020/72222313899.csv\nDownload: https://noaa-global-hourly-pds.s3.amazonaws.com/2020/72222313899.csv"
+    },
+    {
+      "storm_id": "AL192020",
+      "station_id": "KMOB",
+      "kind": "homr",
+      "path": "data/raw/metadata/homr_KMOB.json",
+      "url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13894&date=all&definitions=false&phrData=true",
+      "access_started_utc": "2026-11-10T19:58:06.410169+00:00",
+      "status": "unavailable_or_invalid",
+      "error": "Missing input: data/raw/metadata/homr_KMOB.json\nDownload: https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13894&date=all&definitions=false&phrData=true"
+    },
+    {
+      "storm_id": "AL192020",
+      "station_id": "KMOB",
+      "kind": "annual",
+      "path": "data/raw/global_hourly/2020/72223013894.csv",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2020/72223013894.csv",
+      "access_started_utc": "2026-11-10T19:58:06.410193+00:00",
+      "status": "unavailable_or_invalid",
+      "error": "Missing input: data/raw/global_hourly/2020/72223013894.csv\nDownload: https://noaa-global-hourly-pds.s3.amazonaws.com/2020/72223013894.csv"
+    },
+    {
+      "storm_id": "AL092021",
+      "station_id": "KMSY",
+      "kind": "homr",
+      "path": "data/raw/metadata/homr_KMSY.json",
+      "url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:12916&date=all&definitions=false&phrData=true",
+      "access_started_utc": "2026-11-10T19:58:06.410216+00:00",
+      "status": "unavailable_or_invalid",
+      "error": "Missing input: data/raw/metadata/homr_KMSY.json\nDownload: https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:12916&date=all&definitions=false&phrData=true"
+    },
+    {
+      "storm_id": "AL092021",
+      "station_id": "KMSY",
+      "kind": "annual",
+      "path": "data/raw/global_hourly/2021/72231012916.csv",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2021/72231012916.csv",
+      "access_started_utc": "2026-11-10T19:58:06.410237+00:00",
+      "status": "unavailable_or_invalid",
+      "error": "Missing input: data/raw/global_hourly/2021/72231012916.csv\nDownload: https://noaa-global-hourly-pds.s3.amazonaws.com/2021/72231012916.csv"
+    },
+    {
+      "storm_id": "AL092021",
+      "station_id": "KBTR",
+      "kind": "homr",
+      "path": "data/raw/metadata/homr_KBTR.json",
+      "url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13970&date=all&definitions=false&phrData=true",
+      "access_started_utc": "2026-11-10T19:58:06.410260+00:00",
+      "status": "unavailable_or_invalid",
+      "error": "Missing input: data/raw/metadata/homr_KBTR.json\nDownload: https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13970&date=all&definitions=false&phrData=true"
+    },
+    {
+      "storm_id": "AL092021",
+      "station_id": "KBTR",
+      "kind": "annual",
+      "path": "data/raw/global_hourly/2021/72232013970.csv",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2021/72232013970.csv",
+      "access_started_utc": "2026-11-10T19:58:06.410279+00:00",
+      "status": "unavailable_or_invalid",
+      "error": "Missing input: data/raw/global_hourly/2021/72232013970.csv\nDownload: https://noaa-global-hourly-pds.s3.amazonaws.com/2021/72232013970.csv"
+    },
+    {
+      "storm_id": "AL062018",
+      "station_id": "KILM",
+      "kind": "homr",
+      "path": "data/raw/metadata/homr_KILM.json",
+      "url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13748&date=all&definitions=false&phrData=true",
+      "access_started_utc": "2026-11-10T19:58:06.410295+00:00",
+      "status": "unavailable_or_invalid",
+      "error": "Missing input: data/raw/metadata/homr_KILM.json\nDownload: https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13748&date=all&definitions=false&phrData=true"
+    },
+    {
+      "storm_id": "AL062018",
+      "station_id": "KILM",
+      "kind": "annual",
+      "path": "data/raw/global_hourly/2018/72301313748.csv",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2018/72301313748.csv",
+      "access_started_utc": "2026-11-10T19:58:06.410316+00:00",
+      "status": "unavailable_or_invalid",
+      "error": "Missing input: data/raw/global_hourly/2018/72301313748.csv\nDownload: https://noaa-global-hourly-pds.s3.amazonaws.com/2018/72301313748.csv"
+    },
+    {
+      "storm_id": "AL062018",
+      "station_id": "KFAY",
+      "kind": "homr",
+      "path": "data/raw/metadata/homr_KFAY.json",
+      "url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:93740&date=all&definitions=false&phrData=true",
+      "access_started_utc": "2026-11-10T19:58:06.410336+00:00",
+      "status": "unavailable_or_invalid",
+      "error": "Missing input: data/raw/metadata/homr_KFAY.json\nDownload: https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:93740&date=all&definitions=false&phrData=true"
+    },
+    {
+      "storm_id": "AL062018",
+      "station_id": "KFAY",
+      "kind": "annual",
+      "path": "data/raw/global_hourly/2018/72303593740.csv",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2018/72303593740.csv",
+      "access_started_utc": "2026-11-10T19:58:06.410356+00:00",
+      "status": "unavailable_or_invalid",
+      "error": "Missing input: data/raw/global_hourly/2018/72303593740.csv\nDownload: https://noaa-global-hourly-pds.s3.amazonaws.com/2018/72303593740.csv"
+    }
+  ]
+}

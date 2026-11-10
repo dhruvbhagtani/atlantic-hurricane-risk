@@ -1,0 +1,53 @@
+{
+  "cases": [
+    {
+      "name": "baseline",
+      "time_shift_minutes": 0,
+      "east_km": 0,
+      "north_km": 0,
+      "rmw_km": 35
+    },
+    {
+      "name": "time_-30min",
+      "time_shift_minutes": -30
+    },
+    {
+      "name": "time_-15min",
+      "time_shift_minutes": -15
+    },
+    {
+      "name": "time_+15min",
+      "time_shift_minutes": 15
+    },
+    {
+      "name": "time_+30min",
+      "time_shift_minutes": 30
+    },
+    {
+      "name": "east_-10km",
+      "east_km": -10
+    },
+    {
+      "name": "east_+10km",
+      "east_km": 10
+    },
+    {
+      "name": "north_-10km",
+      "north_km": -10
+    },
+    {
+      "name": "north_+10km",
+      "north_km": 10
+    },
+    {
+      "name": "fallback_rmw_25km",
+      "rmw_km": 25
+    },
+    {
+      "name": "fallback_rmw_45km",
+      "rmw_km": 45
+    }
+  ],
+  "positive_time_shift": "Model evaluated at observation time plus shift; observations never shifted or interpolated.",
+  "rule": "All one-factor perturbations retained in declared order; no fit, ranking or production parameter change."
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-11-10T20:17:07.380430+00:00",
+  "timing": "Metadata evidence found after the first frozen evaluation; original metadata audit and results retained.",
+  "source_url": "https://www.weather.gov/lch/2021Ida-PSHLIX",
+  "source_title": "NWS New Orleans/Baton Rouge 2021 Hurricane Ida post-tropical-cyclone report, hosted by NWS Lake Charles",
+  "section": "A. METAR OBSERVATIONS, header and KMSY station entry",
+  "source_excerpt": "ANEMOMETER HEIGHT IS 10 METERS AND WIND AVERAGING IS 2 MINUTES",
+  "original_audit_sha256": "c90bbca7910b44f2bd29e18f6cf55e1cadb0e3a135798e055fbff3fd1d758415",
+  "original_results_manifest_sha256": "25371c95aeb899c41ffda49f88c07d57490bb2a940d5eac0728eafad03a577ec",
+  "updates": [
+    {
+      "storm_id": "AL092021",
+      "station_id": "KMSY",
+      "height_m": 10,
+      "averaging_minutes": 2,
+      "height_matches_event_site": true,
+      "basis": "Contemporaneous event-specific METAR statement explicitly covers the KMSY entry after the 2017 relocation. Dated HOMR remains the coordinate source; the rounded PSH coordinates are not substituted.",
+      "uptime_confirmed": false,
+      "peak_incomplete": true
+    }
+  ],
+  "rule": "Metadata eligibility update only. Preserve all original winds, model predictions, QC decisions, candidate parameters, station selection and windows. No promotion or fitting."
+}

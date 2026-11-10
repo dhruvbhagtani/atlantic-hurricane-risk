@@ -1,0 +1,3 @@
+storm_id,station_id,lat,lon,sustained_kt,peak_time_utc,incomplete,metadata_issue,source_id
+AL102023,KVLD,30.77629,-83.27393,34.01730800631361,2023-08-30T13:13:00,1,height_not_confirmed_10m;unknown_site_exposure;missing_uptime_reference,AL102023
+AL092024,KVLD,30.77629,-83.27393,34.989231092208286,2024-09-27T03:45:00,1,height_not_confirmed_10m;unknown_site_exposure;missing_uptime_reference,AL092024

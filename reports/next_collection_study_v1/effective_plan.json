@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "collection_id": "next_collection_v1",
+  "purpose": "New project-held-out multistorm, multistation validation collection before further model development.",
+  "examined_storms_excluded": [
+    "AL112017",
+    "AL142018",
+    "AL092022",
+    "AL102023",
+    "AL092024",
+    "AL042024",
+    "AL142024",
+    "AL132020"
+  ],
+  "events": [
+    {
+      "storm_id": "AL192020",
+      "name": "Sally",
+      "split": "test",
+      "window_start": "2020-09-14T00:00:00Z",
+      "window_end": "2020-09-18T00:00:00Z",
+      "selection_basis": "Geographic landfall and coastal/interior station contrast, not inspected station wind values, data completeness or candidate errors. Neither high winds nor complete peak capture is guaranteed.",
+      "stations": [
+        {
+          "station_id": "KPNS",
+          "wban": "13899",
+          "expected_ncei_id": "72222313899",
+          "name": "Pensacola Regional Airport",
+          "annual_url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2020/72222313899.csv",
+          "annual_path": "data/raw/global_hourly/2020/72222313899.csv",
+          "homr_url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13899&date=all&definitions=false&phrData=true",
+          "homr_path": "data/raw/metadata/homr_KPNS.json",
+          "metadata_status": "pending dated ASOS, coordinate and instrument audit; expected provider ID must be verified from contents"
+        },
+        {
+          "station_id": "KMOB",
+          "wban": "13894",
+          "expected_ncei_id": "72223013894",
+          "name": "Mobile Regional Airport",
+          "annual_url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2020/72223013894.csv",
+          "annual_path": "data/raw/global_hourly/2020/72223013894.csv",
+          "homr_url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13894&date=all&definitions=false&phrData=true",
+          "homr_path": "data/raw/metadata/homr_KMOB.json",
+          "metadata_status": "pending dated ASOS, coordinate and instrument audit; expected provider ID must be verified from contents"
+        }
+      ]
+    },
+    {
+      "storm_id": "AL092021",
+      "name": "Ida",
+      "split": "test",
+      "window_start": "2021-08-28T00:00:00Z",
+      "window_end": "2021-09-01T00:00:00Z",
+      "selection_basis": "Geographic landfall and coastal/interior station contrast, not inspected station wind values, data completeness or candidate errors. Neither high winds nor complete peak capture is guaranteed.",
+      "stations": [
+        {
+          "station_id": "KMSY",
+          "wban": "12916",
+          "expected_ncei_id": "72231012916",
+          "name": "New Orleans International Airport",
+          "annual_url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2021/72231012916.csv",
+          "annual_path": "data/raw/global_hourly/2021/72231012916.csv",
+          "homr_url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:12916&date=all&definitions=false&phrData=true",
+          "homr_path": "data/raw/metadata/homr_KMSY.json",
+          "metadata_status": "pending dated ASOS, coordinate and instrument audit; expected provider ID must be verified from contents"
+        },
+        {
+          "station_id": "KBTR",
+          "wban": "13970",
+          "expected_ncei_id": "72232013970",
+          "name": "Baton Rouge Metropolitan Airport",
+          "annual_url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2021/72232013970.csv",
+          "annual_path": "data/raw/global_hourly/2021/72232013970.csv",
+          "homr_url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13970&date=all&definitions=false&phrData=true",
+          "homr_path": "data/raw/metadata/homr_KBTR.json",
+          "metadata_status": "pending dated ASOS, coordinate and instrument audit; expected provider ID must be verified from contents"
+        }
+      ]
+    },
+    {
+      "storm_id": "AL062018",
+      "name": "Florence",
+      "split": "test",
+      "window_start": "2018-09-12T00:00:00Z",
+      "window_end": "2018-09-17T00:00:00Z",
+      "selection_basis": "Geographic landfall and coastal/interior station contrast, not inspected station wind values, data completeness or candidate errors. Neither high winds nor complete peak capture is guaranteed.",
+      "stations": [
+        {
+          "station_id": "KILM",
+          "wban": "13748",
+          "expected_ncei_id": "72302013748",
+          "name": "Wilmington International Airport",
+          "annual_url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2018/72302013748.csv",
+          "annual_path": "data/raw/global_hourly/2018/72302013748.csv",
+          "homr_url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:13748&date=all&definitions=false&phrData=true",
+          "homr_path": "data/raw/metadata/homr_KILM.json",
+          "metadata_status": "pending dated ASOS, coordinate and instrument audit; expected provider ID must be verified from contents"
+        },
+        {
+          "station_id": "KFAY",
+          "wban": "93740",
+          "expected_ncei_id": "72303593740",
+          "name": "Fayetteville Regional Airport",
+          "annual_url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2018/72303593740.csv",
+          "annual_path": "data/raw/global_hourly/2018/72303593740.csv",
+          "homr_url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:93740&date=all&definitions=false&phrData=true",
+          "homr_path": "data/raw/metadata/homr_KFAY.json",
+          "metadata_status": "pending dated ASOS, coordinate and instrument audit; expected provider ID must be verified from contents"
+        }
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "name": "baseline",
+      "overrides": {}
+    },
+    {
+      "name": "fallback_rmw_25km",
+      "overrides": {
+        "rmw_km": 25.0
+      }
+    },
+    {
+      "name": "translation_asymmetry",
+      "overrides": {
+        "translation_fraction": 0.5,
+        "asymmetry_cap": 0.25
+      }
+    },
+    {
+      "name": "local_inland_attenuation",
+      "overrides": {
+        "inland_decay_km": 100.0
+      }
+    },
+    {
+      "name": "combined_structure",
+      "overrides": {
+        "translation_fraction": 0.5,
+        "asymmetry_cap": 0.25,
+        "inland_decay_km": 100.0
+      }
+    }
+  ],
+  "qc": {
+    "implementation": "hurricane_risk.global_hourly.normalize_global_hourly",
+    "speed_quality_codes": [
+      "1",
+      "5"
+    ],
+    "report_types": [
+      "FM-15",
+      "FM-16"
+    ],
+    "require_matching_icao": true,
+    "conflicting_duplicate_timestamps": "suspect and no selected wind value",
+    "observed_interpolation": "none"
+  },
+  "eligibility": {
+    "time_matched": "Good provider QC, finite wind, dated station identity and coordinates, documented 10-m height and 1- or 2-minute sustained duration, within registered window and original track support. Unknown roughness explicitly limits interpretation.",
+    "peak": "Retain sampled maximum as a lower bound unless independent uptime documentation plus coverage >= 0.95 and maximum gap <= two cadence intervals support completeness.",
+    "cadence_minutes": 60,
+    "missing_cases": "Retain every declared station/event with an exclusion reason; never replace a station because of weak winds, outage or poor model scores.",
+    "high_wind_threshold_ms": 32.924416,
+    "high_wind_threshold_definition": "64 kt converted with KNOT_TO_MS; no rounded 33-m/s cutoff."
+  },
+  "metrics": {
+    "primary": "Compute RMSE per station/event over eligible report times, average equally across stations within each storm, then equally across storms. Retain baseline-paired changes with identical sample support.",
+    "secondary": [
+      "signed bias",
+      "MAE",
+      "hurricane-force sample RMSE and count",
+      "observed sampled maximum",
+      "model at report-time maximum",
+      "model dense maximum",
+      "descriptive peak-time offsets with tie counts and censoring flags"
+    ],
+    "uncertainty": "If intervals are computed, resample storms as clusters with paired candidates, never individual reports. Three storms are insufficient for strong population or tail claims.",
+    "failure_rule": "Report absent high-wind subsets and metadata/QC failures as missing with counts, never as zero error or a passing validation.",
+    "no_promotion": "No candidate is fitted or selected using this collection."
+  },
+  "metadata_rules": {
+    "selection": "Require the unique HOMR station record with dated matching ICAO, WBAN and ASOS platform at event time. Do not take the first search result.",
+    "coordinates": "Use the latest applicable dated surface position; preserve all source history. Independently documented wind-tower coordinates are a separate sensitivity.",
+    "provider_id": "Verify expected NCEI station ID and event-year contents. Identity corrections require a dated amendment before reading wind values, retaining the original registration.",
+    "height_duration": "Obtain station-specific evidence before primary scoring. Do not infer height or uptime from an annual CSV."
+  },
+  "access_protocol": {
+    "current_state": "Station winds, completeness and model residuals for these six station/event pairs have not been inspected in this project session. Only public station-identification metadata and existing best-track names/times were consulted.",
+    "before_first_wind_access": "Verify registration and frozen hashes; record acquisition timestamps and raw file hashes. Any additional model candidates need a dated supplemental code/parameter lock before access, retaining this original protocol.",
+    "after_access": "Mark collection examined; all future tuning requires a different test collection.",
+    "independence": "Project-level withholding only; these observations may have informed NHC best tracks. This local timestamp/hash lock is not an externally timestamped preregistration."
+  },
+  "sources": [
+    {
+      "title": "NOAA station identifier listing",
+      "url": "https://vlab.noaa.gov/web/mdl/verif-station-list"
+    },
+    {
+      "title": "NOAA ISD station metadata catalogue; expected IDs require event-date validation",
+      "url": "https://www.ncei.noaa.gov/pub/data/noaa/isd-history.csv"
+    },
+    {
+      "title": "NOAA Global Hourly format",
+      "url": "https://www.ncei.noaa.gov/pub/data/noaa/isd-format-document.pdf"
+    },
+    {
+      "title": "NWS ASOS wind convention",
+      "url": "https://www.weather.gov/asos/WindSensor.html"
+    }
+  ]
+}

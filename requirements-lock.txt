@@ -18,3 +18,4 @@ certifi==2025.11.12
 charset-normalizer==3.3.2
 idna==3.7
 urllib3==2.2.3
+shapely==2.0.6

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-11-10T20:11:19.247277+00:00",
+  "purpose": "Evaluation implementation and metadata locked before first collection wind inspection. No model parameter changes.",
+  "inputs_sha256": {
+    "data/validation/next_collection_v1/plan.json": "196db30864559f388997af68f8072446d1d71247d39003330d725651f2189e5e",
+    "data/validation/next_collection_v1/registration.json": "5c827f02a0a7114c89cf73b0f3906ef4156d4d543e2450e3778acf9daa9d8327",
+    "data/validation/next_collection_v1/provider_id_amendment_v1.json": "2a5035fdacba7ebe51b4a813ca666628d30d06ff4674e6cefd56ca64e594b110",
+    "data/validation/next_collection_v1/station_metadata_audit_v1.json": "c90bbca7910b44f2bd29e18f6cf55e1cadb0e3a135798e055fbff3fd1d758415",
+    "examples/structural_config.json": "5336de15c67482d321d1445594a80796be3abdceaef452ae45c6596e437d6274",
+    "data/hurdat2-1851-2024-040425.txt": "d595ada8aaa64e402c26eeb80efb344b52ef420b1627d8c0ee6ee65f0729923b",
+    "data/raw/metadata/homr_KPNS.json": "ddc237bcbee6df5267611e4bb45ad3ebd201e03d459b0699fd8f3cd5b2abb40a",
+    "data/raw/global_hourly/2020/72222313899.csv": "4105e45fa9398d0ab13b861b67541369434b7c8c4753f4a3dcdd42e038944f04",
+    "data/raw/metadata/homr_KMOB.json": "48b6a452b96ec923d366132423732c7d2c68fd7fcffafd14b13971b787094f3b",
+    "data/raw/global_hourly/2020/72223013894.csv": "34fa8b93b4c4557c4f10305c7ac8733b12a67462265418ef15ccb384c5ecb04c",
+    "data/raw/metadata/homr_KMSY.json": "1ad31faccaf62949c91e8decd1244adbdceec7bcd3f66ed00b1506b0a2892680",
+    "data/raw/global_hourly/2021/72231012916.csv": "c87c811c6e40e84290ea83a838f47ae1a7a03a103f7fad618e5cb26ccdfee835",
+    "data/raw/metadata/homr_KBTR.json": "fa7027c70b173177c472b7756169f22fabbce11a64e546966749eec410603c01",
+    "data/raw/global_hourly/2021/72232013970.csv": "addc64adade3e8d824dc3afc9769658568acabfbe2db180ff5be61c5b68c231e",
+    "data/raw/metadata/homr_KILM.json": "d0ec379397cc613fd48da9f8be59cad907834f8b73a1463d38619609712627d6",
+    "data/raw/global_hourly/2018/72302013748.csv": "c7926e5904fd49ccdae2a6052bbe7032ee6b0ff88fb1988585661d971c5ee026",
+    "data/raw/metadata/homr_KFAY.json": "2aed900c70e057db0c9636fa6b3da979343da3c7e1f0c64cfc4f9501f232efef",
+    "data/raw/global_hourly/2018/72303593740.csv": "c11eaf90628c9c38ea33931e7b9b2e8fc9fcd23ba1ae26b55316689e36f97415"
+  },
+  "missing_inputs": [],
+  "code_sha256": {
+    "collection_study.py": "1f11dd104353fc0930fc2efe405b7d245f0a5655034f3d4d1afb8dbd57a1c00e",
+    "collection_inputs.py": "0e5e9cf6e040b23eb4bd0bc419a93a12cf2cbfaee6aa8fff709aa680f6c9a6d3",
+    "global_hourly.py": "79481d4eb7c76556e7345bea8a568130e07d16dcf40feb359187ad4b90cd98c1",
+    "observations.py": "3933351dc3045c89c6c788632f7f99a9df3d3f9997d7879a92fd3866a3a49d0d",
+    "model.py": "848eb608a760531a1f410edf8e2f8a1dc38611d8af37c05928c58185e86f3d27",
+    "geography.py": "628d40a36fdf5dec89394b81035ba171c02c82fe54954eaf4e3586cbb6ba4531",
+    "time_series_validation.py": "3cd8bcd7feaa810523523761379fd3e5b4eed1091babaaf6f810c780958cb489",
+    "validation.py": "0299ddcd8fe6099e8127e9e96fb072b82e0e686cc0e5706afa4f10253697057d",
+    "artifacts.py": "d5ef30477449c094e8f9d59135cc2344c5d6f56f95fbe2a15148f62dbb78d619",
+    "observation_inventory.py": "c88f686cbbaea46678d32b544aecefc3192079ed0eeea9545cc9fff1c8da4cff",
+    "confirmation_inputs.py": "93ce30cdf852ed6fdc62d5429d72d5197aca0dd2af2248d473c76e4e318660db",
+    "confirmation_study.py": "9d4433e0720aee7024b34820f8a731a6ea9247142c38dd962ee444709e4839b1"
+  },
+  "rule": "Never replace this lock after wind inspection. Keep all declared pairs and label unavailable primary metrics."
+}

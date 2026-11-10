@@ -1,0 +1,12 @@
+{
+  "inputs_sha256": {
+    "data/geography/natural_earth_10m_atlantic.geojson.gz": "f5a00bf305b66b48b30ba0479f3efbf9041652088e2c06c91fa39bd3aee1b158",
+    "data/geography/natural_earth_50m_atlantic.geojson.gz": "03f41c901707460d2080a790634db1807111680ce89e47ffee0f4cad4cc774d5",
+    "data/validation/expanded_station_peaks.csv": "7746a0e085b1a174be8bdf0e70ba678d7f404c254aa85fe22aef2a60f263105d"
+  },
+  "outputs_sha256": {
+    "audit.json": "203ae6a066275e80cf297aacfadc35c7fe81a460ebee0379ab2bee0d59232e28",
+    "coast_audit.png": "ae00f70f8c1c0d03256832b2441e28b39f57fd137112acbcd1e6a6001d7a82d8",
+    "site_audit.csv": "c97102f08e944e7ab0cee054df1ca5900938a958ca0d6c4928ae0e73d427f871"
+  }
+}

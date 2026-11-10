@@ -1,0 +1,6 @@
+variant,observed_sampled_peak_ms,observed_sampled_peak_time_utc,observed_peak_ties,modeled_dense_peak_ms,modeled_dense_peak_time_utc,dense_peak_ties,dense_peak_offset_from_sampled_peak_minutes,modeled_report_time_peak_ms,modeled_report_time_peak_utc,report_peak_offset_from_sampled_peak_minutes,report_peak_ties
+baseline,43.8,2020-08-27 06:53:00+00:00,1,55.59712314112181,2020-08-27 06:20:00+00:00,1,-33.0,54.69115540306903,2020-08-27 06:18:00+00:00,-35.0,1
+fallback_rmw_25km,43.8,2020-08-27 06:53:00+00:00,1,55.37082446817155,2020-08-27 06:22:00+00:00,1,-31.0,54.106025545055445,2020-08-27 06:18:00+00:00,-35.0,1
+translation_asymmetry,43.8,2020-08-27 06:53:00+00:00,1,53.6869621888855,2020-08-27 06:20:00+00:00,1,-33.0,52.80090552399552,2020-08-27 06:18:00+00:00,-35.0,1
+local_inland_attenuation,43.8,2020-08-27 06:53:00+00:00,1,37.713071270315375,2020-08-27 06:20:00+00:00,1,-33.0,37.09852821586514,2020-08-27 06:18:00+00:00,-35.0,1
+combined_structure,43.8,2020-08-27 06:53:00+00:00,1,36.417356095510236,2020-08-27 06:20:00+00:00,1,-33.0,35.8163192744554,2020-08-27 06:18:00+00:00,-35.0,1

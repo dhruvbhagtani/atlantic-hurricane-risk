@@ -1,0 +1,126 @@
+{
+  "purpose": "Compare station winds at report times, retaining outages and metadata limitations.",
+  "config": {
+    "start_year": 1980,
+    "end_year": 2024,
+    "seed": 7319,
+    "properties": 300,
+    "interpolation_minutes": 30,
+    "rmw_km": 35.0,
+    "rankine_alpha": 0.6,
+    "land_exposure_factor": 0.85,
+    "uncertainty_replicates": 200,
+    "simulation_years": 20000,
+    "return_periods": [
+      2,
+      5,
+      10,
+      20
+    ],
+    "scenarios": [
+      {
+        "name": "historical",
+        "wind_multiplier": 1.0,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct_frequency_plus_20pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.2
+      }
+    ]
+  },
+  "plan": {
+    "quality_control_description": "Good requires NCEI speed QC 1 or 5, normal/variable/calm wind, METAR/SPECI and matching call sign. Conflicting duplicate timestamps are suspect; missing winds retained.",
+    "quality_control_reference": "https://www.ncei.noaa.gov/pub/data/noaa/isd-format-document.pdf",
+    "events": [
+      {
+        "storm_id": "AL102023",
+        "name": "Idalia",
+        "split": "development",
+        "window_start": "2023-08-29T00:00:00Z",
+        "window_end": "2023-08-31T23:59:00Z",
+        "product": "NOAA Global Hourly KVLD 2023; METAR/SPECI sustained winds",
+        "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2023/72216693845.csv",
+        "best_track_provenance": "Unknown whether these observations informed NHC best-track analysis. Values inspected during pipeline development; not an untouched test event.",
+        "stations": [
+          {
+            "station_id": "KVLD",
+            "lat": 30.77629,
+            "lon": -83.27393,
+            "height_m": null,
+            "averaging_minutes": 2,
+            "exposure": "unknown",
+            "cadence_minutes": 60,
+            "uptime_confirmed": false,
+            "metadata_reference": "Raw NOAA station coordinates verified; standard ASOS 2-min convention: https://www.weather.gov/asos/WindSensor.html ; station-specific height and exposure unverified.",
+            "uptime_reference": ""
+          }
+        ]
+      },
+      {
+        "storm_id": "AL092024",
+        "name": "Helene",
+        "split": "development",
+        "window_start": "2024-09-25T00:00:00Z",
+        "window_end": "2024-09-28T23:59:00Z",
+        "product": "NOAA Global Hourly KVLD 2024; METAR/SPECI sustained winds",
+        "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2024/72216693845.csv",
+        "best_track_provenance": "Unknown whether these observations informed NHC best-track analysis. Values inspected during pipeline development; not an untouched test event.",
+        "stations": [
+          {
+            "station_id": "KVLD",
+            "lat": 30.77629,
+            "lon": -83.27393,
+            "height_m": null,
+            "averaging_minutes": 2,
+            "exposure": "unknown",
+            "cadence_minutes": 60,
+            "uptime_confirmed": false,
+            "metadata_reference": "Raw NOAA station coordinates verified; standard ASOS 2-min convention: https://www.weather.gov/asos/WindSensor.html ; station-specific height and exposure unverified.",
+            "uptime_reference": ""
+          }
+        ]
+      }
+    ]
+  },
+  "inputs_sha256": {
+    "data/validation/valdosta_time_series.csv": "2fb34142fef0bdb89cec8e04ebd6f5ccbef2f0a3bef6901b79961029964b3521",
+    "data/validation/valdosta_event_plan.json": "a762108183dc52111d961ed5add8d5a397b184bef3347d68d82b59b3595fff18",
+    "data/hurdat2-1851-2024-040425.txt": "d595ada8aaa64e402c26eeb80efb344b52ef420b1627d8c0ee6ee65f0729923b",
+    "config.json": "cd18e803964f1bd57df40281feb8ea6d0c294163b5457768a7ac8ff975109cfe"
+  },
+  "code_sha256": {
+    "observations.py": "3933351dc3045c89c6c788632f7f99a9df3d3f9997d7879a92fd3866a3a49d0d",
+    "model.py": "8c7e36dbc09d5299f101da47065c676a3dec1263144d4fbb2e41540557738019",
+    "validation.py": "8a6c8eefa833e1dce0d2c581f8c54deb59bbb13118292e0db3dfbd8849f52ae9",
+    "__init__.py": "07db4356552223670a5b7fb14a9fe7b5c15c1ddd64114f35db45cefe89799a46",
+    "global_hourly.py": "79481d4eb7c76556e7345bea8a568130e07d16dcf40feb359187ad4b90cd98c1",
+    "benchmark.py": "b1e44c3c9860899d3031486e6af643cdbdc17e4e52c006945ac4ba5e5bcd210d",
+    "diagnostics.py": "a70eb818e13270f597da49fdfbc32e2a07953e691501dec3c86cca9192c08a2e",
+    "inputs.py": "42b6dfa8c1a17c6c136173894932aca9517f7454ce24a9a5d002e6b2b2b5cfd6",
+    "__main__.py": "64cc06121ce192f98177c7d2a5df3ea40a850d6d10c3ed92100218544809a230",
+    "time_series_validation.py": "292ded2652578ca052931f587bb5852f2c3ab2a15d6f5dc5a73c476a1a06b626",
+    "artifacts.py": "d5ef30477449c094e8f9d59135cc2344c5d6f56f95fbe2a15148f62dbb78d619"
+  },
+  "versions": {
+    "python": "3.12.2",
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "matplotlib": "3.9.2"
+  },
+  "outputs_sha256": {
+    "coverage.csv": "c1c597575a2345e6a32073f006d6730934809e54f2fd7e827772e6b7057369bb",
+    "modeled_time_series.csv": "5175967aa7015eaa3e3bd09aab9bc9108a0b590215907b46c1d3fb188fe4ea28",
+    "performance.csv": "3143d77b7fbf92f0feee082c7bba72a6891a8c4e18c0cc3ab5d59b2347067038",
+    "report.md": "b0ddddc8c28e1c56700511258a601c8a48b3488ea6ac3dad4d7a76bf6d5d31eb",
+    "sampled_peaks.csv": "0c54676406a333755c07c342b7bc9f7c5986cf14b89698f03d6b222ab82ec09c",
+    "time_matched_pairs.csv": "5ac20ef8f9fcb21a04b84c61eb53b2caa78b6397307a12ad7014c4962c7189d6",
+    "time_series.png": "9bb5bdaf60c6afc4f2c040f1c63674de95d57e215fe691190f238c326673ae9c"
+  }
+}

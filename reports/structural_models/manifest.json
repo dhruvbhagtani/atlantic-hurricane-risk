@@ -1,0 +1,22 @@
+{
+  "source_batches": {
+    "outputs/structure_size_batch": "754b61d5d2e60111f96652e9a09ddb3147cc2e942a61b8e4bb90b9ffc75a8b88",
+    "outputs/structure_translation_batch": "01d74124399781a0cb5678d596c29247faa193c5ba5430e28678ef6edd08ff98",
+    "outputs/structure_inland_batch": "ec69c4c463f72de50b54e042d0be1b8c17c612d072eea2c8bcc8d383b3e2c434",
+    "outputs/structure_combined_batch": "6012454d6c8222daf2a70927c35611988e899eeab1d069dacff33b1c5fac9e99"
+  },
+  "rule": "Repeated baseline tables and portfolio must match exactly; duplicate rows removed only after verification.",
+  "outputs_sha256": {
+    "annual_losses.csv": "7aaf71e4c8a9b0eef4fbb2e6092cef68b2e85d8ea7286ea3f7363e910b201198",
+    "batch_manifests.json": "29593cae371f9b82f00ec9e0a87adef37a3ee79e5aeb94dc2c442b978344b7f3",
+    "comparison.png": "8fb06e6fc4bf8f8f595bd918cddf5a95c1e61f098992f7eb83e8842d5e54c355",
+    "convergence.csv": "140333a390103b655723746cac6eeb17836d9ba0a145afe7d36cc7683fd62ebf",
+    "event_losses.csv": "722ddf5a68faf148073a559c64852c2d3caa5f025044a49ed0aa48970694dcf5",
+    "grouped_errors.csv": "1e5caea94e4b38c9516f39521eb74708b672cc922f9b8fdd148e4158a770290a",
+    "portfolio.csv": "6f9461943a16a4565bf442a9982780b16809b6f38b528bbbaf28771306a72344",
+    "report.md": "248cfe8f542d5f86f02b9738ee9c3c3fff0b5e90a10eafaa91dd12a298610d79",
+    "station_pairs.csv": "42e074383c7c73331d3ef61f59d48fe3af7cd0ee50ef40b54b142d6478ac665b",
+    "station_skill.csv": "1131c5ea40e9e68dac9de77612f1148b92e99fe4fc3231dc194ba0120f63a50d",
+    "summary.csv": "0053028133137fdbd9ca7398525a96ba67d93083701a57697a42e01e7d2e6b6d"
+  }
+}

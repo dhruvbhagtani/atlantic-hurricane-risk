@@ -1,0 +1,33 @@
+{
+  "schema_version": 2,
+  "original_manifest_sha256": "25371c95aeb899c41ffda49f88c07d57490bb2a940d5eac0728eafad03a577ec",
+  "inputs_sha256": {
+    "reports/next_collection_study_v1/manifest.json": "25371c95aeb899c41ffda49f88c07d57490bb2a940d5eac0728eafad03a577ec",
+    "data/validation/next_collection_v1/station_metadata_supplement_v1.json": "f5c2973a3ffb9ed86f2a9af4563ab87cb40b953faf12f21825088abf44a6727b"
+  },
+  "original_evaluation_lock_sha256": "ef6b69a6b79900bc060db547f90c79065d922cb0d83b27e6bb8f6acd163214c6",
+  "script_sha256": "e50898a510a0a4b42bc080313aeae722e8baeb09f7513fdd4486f958ffaee4a1",
+  "numeric_predictions_and_observations_unchanged": true,
+  "outputs_sha256": {
+    "coverage.csv": "36d7c7b3c70452cb88f1742e3466c2da6a2f1c593dc8a803e45094e77afc924c",
+    "effective_plan.json": "60026962b040a41c266217d8db81aa5a3a74e0eac2567ea6d379d0535d5dd496",
+    "metadata_supplement.json": "f5c2973a3ffb9ed86f2a9af4563ab87cb40b953faf12f21825088abf44a6727b",
+    "modeled_time_series.csv": "661100ea75f9c057b51cf2fe8a9ebab04ecd8c1c2c56f396307c7a45d5bcb911",
+    "observed_time_series.csv": "96e7dfc52312aa084f9f6501b00d6abb3bb17455edb3740e96c19078e1621731",
+    "qc_audit.csv": "6753c49ee58bb2a8452a96872cf823765ca0a857f271a312ae1e2d2a7b98eca3",
+    "raw_AL062018_KFAY.csv": "f46caef4a7d0a473a01c9a511bd69493dd9f33d099db289812ccf102a5c3ab5e",
+    "raw_AL062018_KILM.csv": "0e2716142a47ed1cc94b7d590280a68bc7e10b8a4be2ae236dbdcdfaeaa0afb3",
+    "raw_AL092021_KBTR.csv": "98ec9910fe05b045138e577cfd0bceef81440a04abbc03ec610b6fa41026f6d7",
+    "raw_AL092021_KMSY.csv": "95def6c8655411d4664447f94b36900e8e37bfe7c2c8ba1f5beae821a973350e",
+    "raw_AL192020_KMOB.csv": "6c184f7ab36de5e26f7ca26db2bbae9d8098ecf852e3eb60d4bf9486187c062c",
+    "raw_AL192020_KPNS.csv": "612e9eb7bb12410cec58227e2020f743d7ec0af44f3330aad67e4c97f7dd1bf0",
+    "report.md": "432448280874039cb00dcb7009f3372ef41efa1339191ad409825966e909ae38",
+    "station_metadata_audit.json": "9afba48deb84af244840fe2d4a88b91006a06edac6dda54276a23170a2a19841",
+    "station_scores.csv": "94731ef398ac99d396fe6f6f37ed627bbe90e7f4ce3eb442578b18ac84aef132",
+    "storm_scores.csv": "dabf6807ee93444081128e75057426922f78f88a2420770808fd5a27ce420f0c",
+    "summary.csv": "0be97ca975ae0e62e5f0f47706e7c39edd57092bbd3856e58cc5b2a5508d1073",
+    "time_matched_pairs.csv": "486a2f2dca68745c47b741f6414971b7f0ee5465daf506e35bc8bf63d968e88c",
+    "time_series.png": "7d1ee3873e4bc552806070916b714d3e6dd87be64a5b1cfb5a2e4df0f2f76fa8",
+    "wind_access.json": "c3b59c2b0946076892aaef3ed8844a391eec92b2a220312b2707919197715a48"
+  }
+}

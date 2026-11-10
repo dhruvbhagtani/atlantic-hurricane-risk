@@ -1,0 +1,11 @@
+{
+  "fine_coastline_sha256": "f5a00bf305b66b48b30ba0479f3efbf9041652088e2c06c91fa39bd3aee1b158",
+  "coarse_coastline_sha256": "03f41c901707460d2080a790634db1807111680ce89e47ffee0f4cad4cc774d5",
+  "sites": 343,
+  "classification_disagreements": 38,
+  "synthetic_properties_offshore": 85,
+  "sites_within_5km_shore": 221,
+  "maximum_signed_distance_difference_km": 9.451720030466504,
+  "method": "Nearest shoreline point in regional equirectangular projection; final spherical distance. Clipping edges excluded from coastline.",
+  "limits": "Natural Earth is generalized. Near-shore sites carry a 5-km diagnostic uncertainty flag. Offshore synthetic properties are retained for paired comparability, never snapped to land."
+}

@@ -1,0 +1,13 @@
+[
+  {
+    "name": "baseline",
+    "overrides": {}
+  },
+  {
+    "name": "translation_asymmetry",
+    "overrides": {
+      "translation_fraction": 0.5,
+      "asymmetry_cap": 0.25
+    }
+  }
+]

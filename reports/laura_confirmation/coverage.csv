@@ -1,0 +1,2 @@
+storm_id,station_id,split,expected_reports,reports,good_reports,good_cadence_bins,coverage,max_gap_minutes,incomplete,metadata_issue,uptime_confirmed,exposure,height_m,averaging_minutes
+AL132020,KLCH,test,73,102,71,32,0.4383561643835616,2460.0,1,unknown_site_exposure,False,unknown,10,2

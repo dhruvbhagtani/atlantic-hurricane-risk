@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-11-10T20:07:20.525255+00:00",
+  "original_plan_sha256": "196db30864559f388997af68f8072446d1d71247d39003330d725651f2189e5e",
+  "original_registration_sha256": "5c827f02a0a7114c89cf73b0f3906ef4156d4d543e2450e3778acf9daa9d8327",
+  "purpose": "Correct the expected provider identifier for the same registered Wilmington station before inspecting any collection wind values. No station, window, candidate or scoring rule changes.",
+  "corrections": [
+    {
+      "storm_id": "AL062018",
+      "station_id": "KILM",
+      "old_expected_ncei_id": "72301313748",
+      "expected_ncei_id": "72302013748",
+      "annual_url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2018/72302013748.csv",
+      "annual_path": "data/raw/global_hourly/2018/72302013748.csv",
+      "basis": "Registered annual URL returned 404. Dated ASOS surface history has WMO 72302 and WBAN 13748; concatenation WMO + 0 + WBAN gives expected ISD ID 72302013748. Identity must still verify from CSV station/date/call-sign fields.",
+      "metadata_source_path": "data/raw/metadata/homr_KILM.json",
+      "metadata_source_sha256": "d0ec379397cc613fd48da9f8be59cad907834f8b73a1463d38619609712627d6"
+    }
+  ],
+  "wind_values_inspected": false
+}

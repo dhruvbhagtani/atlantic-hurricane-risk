@@ -1,0 +1,47 @@
+{
+  "purpose": "Additional high-wind confirmation event; parameters unchanged after Debby/Milton evaluation.",
+  "storm_id": "AL132020",
+  "name": "Laura",
+  "station_id": "KLCH",
+  "ncei_id": "72240003937",
+  "window_start": "2020-08-26T00:00:00Z",
+  "window_end": "2020-08-29T00:00:00Z",
+  "annual_url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2020/72240003937.csv",
+  "selection_basis": "Major landfall near Lake Charles; chosen for high-wind exposure and a second geographic region, before obtaining or inspecting station-series winds or model errors.",
+  "candidates": [
+    {
+      "name": "baseline",
+      "overrides": {}
+    },
+    {
+      "name": "fallback_rmw_25km",
+      "overrides": {
+        "rmw_km": 25.0
+      }
+    },
+    {
+      "name": "translation_asymmetry",
+      "overrides": {
+        "translation_fraction": 0.5,
+        "asymmetry_cap": 0.25
+      }
+    },
+    {
+      "name": "local_inland_attenuation",
+      "overrides": {
+        "inland_decay_km": 100.0
+      }
+    },
+    {
+      "name": "combined_structure",
+      "overrides": {
+        "translation_fraction": 0.5,
+        "asymmetry_cap": 0.25,
+        "inland_decay_km": 100.0
+      }
+    }
+  ],
+  "frozen_model_lock_sha256": "349eaae2c112dd2f6c0000a939386ffaae33cd31ac3a044c8389818d0323f977",
+  "rule": "No fitting, parameter changes or selection. Report all candidates and QC exclusions, even if the high-wind observations are missing or censored.",
+  "created_utc": "2026-11-10T04:40:48.441155+00:00"
+}

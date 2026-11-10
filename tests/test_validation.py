@@ -10,6 +10,18 @@ from hurricane_risk.validation import (load_observations, leave_one_storm_out,
 
 
 class ValidationTests(unittest.TestCase):
+    def test_new_downloaded_events_remain_censored_with_unverified_metadata(self):
+        sources = json.loads(Path('data/validation/expanded_sources.json').read_text())
+        obs = load_observations(Path('data/validation/expanded_station_peaks.csv'), sources)
+        self.assertEqual(len(obs), 51)
+        self.assertEqual(obs.storm_id.nunique(), 5)
+        self.assertEqual(int(obs.primary.sum()), 22)
+        new = obs[obs.storm_id.isin(['AL102023', 'AL092024'])]
+        self.assertEqual(len(new), 2)
+        self.assertTrue(new.incomplete.eq(1).all())
+        self.assertFalse(new.primary.any())
+        self.assertTrue(new.exclusion_reason.eq('incompatible_or_unverified_metadata').all())
+
     def test_curation_excludes_censored_missing_and_suspect_peaks(self):
         sources = json.loads(Path('data/validation/sources.json').read_text())
         obs = load_observations(Path('data/validation/station_peaks.csv'), sources)

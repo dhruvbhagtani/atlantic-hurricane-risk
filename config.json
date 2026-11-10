@@ -3,16 +3,35 @@
   "end_year": 2024,
   "seed": 7319,
   "properties": 300,
-  "interpolation_minutes": 30,
+  "interpolation_minutes": 1,
   "rmw_km": 35.0,
   "rankine_alpha": 0.6,
   "land_exposure_factor": 0.85,
   "uncertainty_replicates": 200,
   "simulation_years": 20000,
-  "return_periods": [2, 5, 10, 20],
+  "return_periods": [
+    2,
+    5,
+    10,
+    20
+  ],
   "scenarios": [
-    {"name": "historical", "wind_multiplier": 1.0, "frequency_multiplier": 1.0},
-    {"name": "wind_plus_10pct", "wind_multiplier": 1.1, "frequency_multiplier": 1.0},
-    {"name": "wind_plus_10pct_frequency_plus_20pct", "wind_multiplier": 1.1, "frequency_multiplier": 1.2}
-  ]
+    {
+      "name": "historical",
+      "wind_multiplier": 1.0,
+      "frequency_multiplier": 1.0
+    },
+    {
+      "name": "wind_plus_10pct",
+      "wind_multiplier": 1.1,
+      "frequency_multiplier": 1.0
+    },
+    {
+      "name": "wind_plus_10pct_frequency_plus_20pct",
+      "wind_multiplier": 1.1,
+      "frequency_multiplier": 1.2
+    }
+  ],
+  "coastline_path": "data/geography/natural_earth_10m_atlantic.geojson.gz",
+  "synthetic_land_buffer_km": 2.0
 }

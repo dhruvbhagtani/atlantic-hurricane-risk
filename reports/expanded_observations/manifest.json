@@ -1,0 +1,107 @@
+{
+  "purpose": "Compare predeclared wind variants and timestep convergence without fitting observations.",
+  "config": {
+    "start_year": 1980,
+    "end_year": 2024,
+    "seed": 7319,
+    "properties": 300,
+    "interpolation_minutes": 30,
+    "rmw_km": 35.0,
+    "rankine_alpha": 0.6,
+    "land_exposure_factor": 0.85,
+    "uncertainty_replicates": 200,
+    "simulation_years": 20000,
+    "return_periods": [
+      2,
+      5,
+      10,
+      20
+    ],
+    "scenarios": [
+      {
+        "name": "historical",
+        "wind_multiplier": 1.0,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct_frequency_plus_20pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.2
+      }
+    ]
+  },
+  "variants": [
+    {
+      "name": "baseline",
+      "overrides": {}
+    }
+  ],
+  "timesteps": [
+    30,
+    5,
+    1
+  ],
+  "splits": {
+    "development": [
+      "AL092022",
+      "AL092024",
+      "AL102023",
+      "AL112017",
+      "AL142018"
+    ],
+    "test": []
+  },
+  "wind_tolerance_ms": 1.0,
+  "loss_tolerance_pct": 1.0,
+  "inputs_sha256": {
+    "data/hurdat2-1851-2024-040425.txt": "d595ada8aaa64e402c26eeb80efb344b52ef420b1627d8c0ee6ee65f0729923b",
+    "data/validation/expanded_station_peaks.csv": "7746a0e085b1a174be8bdf0e70ba678d7f404c254aa85fe22aef2a60f263105d",
+    "data/validation/expanded_sources.json": "652f74f77bb7abcfe26cfe5377cc2204144c58193cf0946a7f3def6cd281e4c1",
+    "config.json": "cd18e803964f1bd57df40281feb8ea6d0c294163b5457768a7ac8ff975109cfe",
+    "examples/baseline_variant.json": "916d3bbae1d409da5382c00c8377455779c0090af574b9cb226792247388a9ec"
+  },
+  "code_sha256": {
+    "observations.py": "3933351dc3045c89c6c788632f7f99a9df3d3f9997d7879a92fd3866a3a49d0d",
+    "model.py": "8c7e36dbc09d5299f101da47065c676a3dec1263144d4fbb2e41540557738019",
+    "validation.py": "8a6c8eefa833e1dce0d2c581f8c54deb59bbb13118292e0db3dfbd8849f52ae9",
+    "__init__.py": "07db4356552223670a5b7fb14a9fe7b5c15c1ddd64114f35db45cefe89799a46",
+    "global_hourly.py": "79481d4eb7c76556e7345bea8a568130e07d16dcf40feb359187ad4b90cd98c1",
+    "benchmark.py": "b1e44c3c9860899d3031486e6af643cdbdc17e4e52c006945ac4ba5e5bcd210d",
+    "diagnostics.py": "a70eb818e13270f597da49fdfbc32e2a07953e691501dec3c86cca9192c08a2e",
+    "inputs.py": "42b6dfa8c1a17c6c136173894932aca9517f7454ce24a9a5d002e6b2b2b5cfd6",
+    "__main__.py": "64cc06121ce192f98177c7d2a5df3ea40a850d6d10c3ed92100218544809a230",
+    "time_series_validation.py": "292ded2652578ca052931f587bb5852f2c3ab2a15d6f5dc5a73c476a1a06b626",
+    "artifacts.py": "d5ef30477449c094e8f9d59135cc2344c5d6f56f95fbe2a15148f62dbb78d619"
+  },
+  "versions": {
+    "python": "3.12.2",
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "matplotlib": "3.9.2"
+  },
+  "vulnerability_metadata": {
+    "averaging_minutes": 1,
+    "height_m": 10,
+    "wind_type": "sustained",
+    "units": "m/s",
+    "exposure": "local",
+    "source": "Explicit educational assumptions"
+  },
+  "outputs_sha256": {
+    "annual_losses.csv": "41de49663b101ad241df0323a63666501ab0afa24b6840ed5194e70ad6f9d5a9",
+    "benchmark.png": "87d5e8f8f7f36ea16acc7d17234a6058763e003a96ba917c98a36376f4fc09d3",
+    "convergence.csv": "8d34c7c7d6ae1285e516e8b39ab979c79bbf0b431ab53d2aad61f25b1b15814a",
+    "event_losses.csv": "7532aa764b96b7b58899e2c6076662bef53befba60a0ecfeb875f32bac0e83aa",
+    "grouped_errors.csv": "c3a3cc40475c70fe52c0276accd75e2e2bfa773cfb1f39fd76429eda830c6735",
+    "portfolio.csv": "6f9461943a16a4565bf442a9982780b16809b6f38b528bbbaf28771306a72344",
+    "report.md": "cc47824d35f51ce0dc4f1e92fd2a4e4dd412f78d620165892cbb07432dd5d8ec",
+    "station_pairs.csv": "7697252334d5647a6bb69ec7fe7bbf87518cad3ccb3f5fc40953ddccf368de12",
+    "station_skill.csv": "3763cb69711b2519944f2b5652c09759af05ed5078338c712eedd1c33f0466be",
+    "summary.csv": "ecd74fe6e26590684fe260f5ca21b53140be741b78a7cad3b6fc6df77bbbb535"
+  }
+}

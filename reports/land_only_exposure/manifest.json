@@ -1,0 +1,33 @@
+{
+  "kind": "SYNTHETIC LAND-ONLY EXPOSURE; NOT VERIFIED PARCELS",
+  "properties": 300,
+  "seed": 7319,
+  "location_seed": 7339,
+  "min_inland_km": 2.0,
+  "proposal_half_width_deg": 0.075,
+  "coastline_sha256": "f5a00bf305b66b48b30ba0479f3efbf9041652088e2c06c91fa39bd3aee1b158",
+  "relocated_properties": 169,
+  "maximum_displacement_km": 10.665124530568482,
+  "unchanged_fields": "IDs, city labels, construction, values, deductibles and limits",
+  "limits": "On-land classification uses generalized Natural Earth geometry, not a verified address or building inventory.",
+  "code_sha256": {
+    "observations.py": "3933351dc3045c89c6c788632f7f99a9df3d3f9997d7879a92fd3866a3a49d0d",
+    "model.py": "848eb608a760531a1f410edf8e2f8a1dc38611d8af37c05928c58185e86f3d27",
+    "structural_study.py": "fed48b8338c0a7efe21877e527c477c0af65a36d1439847841b86624123ec78f",
+    "validation.py": "8a6c8eefa833e1dce0d2c581f8c54deb59bbb13118292e0db3dfbd8849f52ae9",
+    "__init__.py": "07db4356552223670a5b7fb14a9fe7b5c15c1ddd64114f35db45cefe89799a46",
+    "global_hourly.py": "79481d4eb7c76556e7345bea8a568130e07d16dcf40feb359187ad4b90cd98c1",
+    "benchmark.py": "fdce2cdc7c73caee7a7b787b7f1fa47994730227f690ddc433c4a300d0914c3b",
+    "diagnostics.py": "9ad480546d177e77047073e962b1504f20c12f9e0c43279c729c66303841fc32",
+    "inputs.py": "42b6dfa8c1a17c6c136173894932aca9517f7454ce24a9a5d002e6b2b2b5cfd6",
+    "__main__.py": "2946ecc6fefad315cf592f20040cc9581cf2cc38002baf72b41244164bd5b0d6",
+    "time_series_validation.py": "3cd8bcd7feaa810523523761379fd3e5b4eed1091babaaf6f810c780958cb489",
+    "artifacts.py": "d5ef30477449c094e8f9d59135cc2344c5d6f56f95fbe2a15148f62dbb78d619",
+    "geography.py": "628d40a36fdf5dec89394b81035ba171c02c82fe54954eaf4e3586cbb6ba4531",
+    "portfolio.py": "9a41d35c49fc7e4e829f85837db70237234b8dfbcc1f87f44696e084038613c4"
+  },
+  "outputs_sha256": {
+    "location_audit.csv": "dd9cb53822c54a1eb794015155baf38f2ba50f1292a1648460f969984682b537",
+    "portfolio.csv": "2ac76f1580fc38688314d88f699fd25f4ccc20cd400dff6676b0331685263b04"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "registration": {
+    "purpose": "Additional high-wind confirmation event; parameters unchanged after Debby/Milton evaluation.",
+    "storm_id": "AL132020",
+    "name": "Laura",
+    "station_id": "KLCH",
+    "ncei_id": "72240003937",
+    "window_start": "2020-08-26T00:00:00Z",
+    "window_end": "2020-08-29T00:00:00Z",
+    "annual_url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2020/72240003937.csv",
+    "selection_basis": "Major landfall near Lake Charles; chosen for high-wind exposure and a second geographic region, before obtaining or inspecting station-series winds or model errors.",
+    "candidates": [
+      {
+        "name": "baseline",
+        "overrides": {}
+      },
+      {
+        "name": "fallback_rmw_25km",
+        "overrides": {
+          "rmw_km": 25.0
+        }
+      },
+      {
+        "name": "translation_asymmetry",
+        "overrides": {
+          "translation_fraction": 0.5,
+          "asymmetry_cap": 0.25
+        }
+      },
+      {
+        "name": "local_inland_attenuation",
+        "overrides": {
+          "inland_decay_km": 100.0
+        }
+      },
+      {
+        "name": "combined_structure",
+        "overrides": {
+          "translation_fraction": 0.5,
+          "asymmetry_cap": 0.25,
+          "inland_decay_km": 100.0
+        }
+      }
+    ],
+    "frozen_model_lock_sha256": "349eaae2c112dd2f6c0000a939386ffaae33cd31ac3a044c8389818d0323f977",
+    "rule": "No fitting, parameter changes or selection. Report all candidates and QC exclusions, even if the high-wind observations are missing or censored.",
+    "created_utc": "2026-11-10T04:40:48.441155+00:00"
+  },
+  "config": {
+    "start_year": 1980,
+    "end_year": 2024,
+    "seed": 7319,
+    "properties": 300,
+    "interpolation_minutes": 1,
+    "rmw_km": 35.0,
+    "rankine_alpha": 0.6,
+    "land_exposure_factor": 0.85,
+    "uncertainty_replicates": 200,
+    "simulation_years": 20000,
+    "return_periods": [
+      2,
+      5,
+      10,
+      20
+    ],
+    "scenarios": [
+      {
+        "name": "historical",
+        "wind_multiplier": 1.0,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct_frequency_plus_20pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.2
+      }
+    ],
+    "coastline_path": "data/geography/natural_earth_10m_atlantic.geojson.gz"
+  },
+  "inputs_sha256": {
+    "data/validation/laura_confirmation_registration.json": "dc5fbda564c563be88dd4d033b19168b541b4eb45e31ae027495802f6436e932",
+    "data/validation/laura_reported_point.csv": "f7e85e9b0c24e386c8ec146e3f675e8a0b98a0d4a506f73e290dabcae83e4d7c",
+    "data/hurdat2-1851-2024-040425.txt": "d595ada8aaa64e402c26eeb80efb344b52ef420b1627d8c0ee6ee65f0729923b"
+  },
+  "frozen_model_lock_sha256": "349eaae2c112dd2f6c0000a939386ffaae33cd31ac3a044c8389818d0323f977",
+  "outputs_sha256": {
+    "report.md": "65b473920f06ef2816614c108e9a089c1dbb3f785de8367286617278dc2dd4d2",
+    "reported_point_comparison.csv": "9912d83455bde3a2fa75496c82d037fdcb8c6228ba073377783576b4b6008c8b",
+    "source_observation.csv": "f7e85e9b0c24e386c8ec146e3f675e8a0b98a0d4a506f73e290dabcae83e4d7c"
+  }
+}

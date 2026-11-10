@@ -1,0 +1,6 @@
+variant,samples,hurricane_force_samples,observed_sampled_peak_ms,high_wind_bias_ms,high_wind_rmse_ms
+baseline,71,4,43.8,-0.41636308980227277,16.337601110592466
+fallback_rmw_25km,71,4,43.8,0.09731104798362633,15.404256434568092
+translation_asymmetry,71,4,43.8,-1.6323167504607952,15.789192437181802
+local_inland_attenuation,71,4,43.8,-12.956317411629312,17.594626494064205
+combined_structure,71,4,43.8,-13.781132518508427,17.93663716721933

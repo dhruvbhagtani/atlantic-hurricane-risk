@@ -1,0 +1,14 @@
+{
+  "inputs_sha256": {
+    "reports/subminute_convergence/summary.csv": "6209989aaf0137db13bcf44aeb9830db3fb039000b8332e1eb802f83cf8db07a",
+    "reports/land_only_resolution/summary.csv": "a683e5f5145b26be21370dbbb08b175b50293538f6795c3422b1802ef96ae0bd",
+    "reports/structural_models/summary.csv": "0053028133137fdbd9ca7398525a96ba67d93083701a57697a42e01e7d2e6b6d",
+    "reports/reserved_structural_study/storm_balanced_summary.csv": "b6156b1a82de7094ff02e66339d0a8bda22105caa9e663a11efbf036e5df80f2",
+    "reports/current_default_historical/summary.csv": "81af3dfe5e1d8930019edd83280575f2a79c18de4fc45e168ab0f0da4469de6f",
+    "reports/land_only_exposure/location_audit.csv": "dd9cb53822c54a1eb794015155baf38f2ba50f1292a1648460f969984682b537"
+  },
+  "outputs_sha256": {
+    "overview.png": "e736ee641c3c8e25c53240ddb6667bdd762b69d8402fde21563ac51217d6d223",
+    "report.md": "467d4ce7e3c759915a7ee44bd12884ca3f0f46ea8ee779a3daed2a0450e3cfee"
+  }
+}

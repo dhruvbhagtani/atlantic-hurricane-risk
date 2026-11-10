@@ -1,0 +1,2 @@
+storm_id,station_id,lat,lon,sustained_kt,time_utc,height_m,averaging_minutes,incomplete_event_peak,source_url,source_product,quality_basis,coordinate_precision_deg
+AL132020,KLCH,30.12,-93.22,85.0,2020-08-27T06:54:00Z,10.0,2.0,1,https://www.weather.gov/lch/2020Laura-PSHLCH,"NWS PSHLCH, 2021-02-24 03:36 UTC; METAR section",NWS corrected/reviewed sustained-wind report; event peak explicitly incomplete,0.01

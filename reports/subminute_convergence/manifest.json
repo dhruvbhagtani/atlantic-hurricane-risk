@@ -1,0 +1,111 @@
+{
+  "purpose": "Compare predeclared wind variants and timestep convergence without fitting observations.",
+  "config": {
+    "start_year": 1980,
+    "end_year": 2024,
+    "seed": 7319,
+    "properties": 300,
+    "interpolation_minutes": 1,
+    "rmw_km": 35.0,
+    "rankine_alpha": 0.6,
+    "land_exposure_factor": 0.85,
+    "uncertainty_replicates": 200,
+    "simulation_years": 20000,
+    "return_periods": [
+      2,
+      5,
+      10,
+      20
+    ],
+    "scenarios": [
+      {
+        "name": "historical",
+        "wind_multiplier": 1.0,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.0
+      },
+      {
+        "name": "wind_plus_10pct_frequency_plus_20pct",
+        "wind_multiplier": 1.1,
+        "frequency_multiplier": 1.2
+      }
+    ],
+    "coastline_path": "data/geography/natural_earth_10m_atlantic.geojson.gz"
+  },
+  "variants": [
+    {
+      "name": "baseline",
+      "overrides": {}
+    }
+  ],
+  "timesteps": [
+    1.0,
+    0.5,
+    0.25
+  ],
+  "coastline_sha256": "f5a00bf305b66b48b30ba0479f3efbf9041652088e2c06c91fa39bd3aee1b158",
+  "splits": {
+    "development": [
+      "AL092022",
+      "AL092024",
+      "AL102023",
+      "AL112017",
+      "AL142018"
+    ],
+    "test": []
+  },
+  "wind_tolerance_ms": 1.0,
+  "loss_tolerance_pct": 1.0,
+  "inputs_sha256": {
+    "data/hurdat2-1851-2024-040425.txt": "d595ada8aaa64e402c26eeb80efb344b52ef420b1627d8c0ee6ee65f0729923b",
+    "data/validation/expanded_station_peaks.csv": "7746a0e085b1a174be8bdf0e70ba678d7f404c254aa85fe22aef2a60f263105d",
+    "data/validation/expanded_sources.json": "652f74f77bb7abcfe26cfe5377cc2204144c58193cf0946a7f3def6cd281e4c1",
+    "examples/structural_config.json": "5336de15c67482d321d1445594a80796be3abdceaef452ae45c6596e437d6274",
+    "examples/baseline_variant.json": "916d3bbae1d409da5382c00c8377455779c0090af574b9cb226792247388a9ec"
+  },
+  "code_sha256": {
+    "observations.py": "3933351dc3045c89c6c788632f7f99a9df3d3f9997d7879a92fd3866a3a49d0d",
+    "model.py": "848eb608a760531a1f410edf8e2f8a1dc38611d8af37c05928c58185e86f3d27",
+    "structural_study.py": "fed48b8338c0a7efe21877e527c477c0af65a36d1439847841b86624123ec78f",
+    "validation.py": "8a6c8eefa833e1dce0d2c581f8c54deb59bbb13118292e0db3dfbd8849f52ae9",
+    "__init__.py": "07db4356552223670a5b7fb14a9fe7b5c15c1ddd64114f35db45cefe89799a46",
+    "global_hourly.py": "79481d4eb7c76556e7345bea8a568130e07d16dcf40feb359187ad4b90cd98c1",
+    "benchmark.py": "fdce2cdc7c73caee7a7b787b7f1fa47994730227f690ddc433c4a300d0914c3b",
+    "diagnostics.py": "9ad480546d177e77047073e962b1504f20c12f9e0c43279c729c66303841fc32",
+    "inputs.py": "42b6dfa8c1a17c6c136173894932aca9517f7454ce24a9a5d002e6b2b2b5cfd6",
+    "__main__.py": "2946ecc6fefad315cf592f20040cc9581cf2cc38002baf72b41244164bd5b0d6",
+    "time_series_validation.py": "3cd8bcd7feaa810523523761379fd3e5b4eed1091babaaf6f810c780958cb489",
+    "artifacts.py": "d5ef30477449c094e8f9d59135cc2344c5d6f56f95fbe2a15148f62dbb78d619",
+    "geography.py": "628d40a36fdf5dec89394b81035ba171c02c82fe54954eaf4e3586cbb6ba4531"
+  },
+  "versions": {
+    "python": "3.12.2",
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "matplotlib": "3.9.2"
+  },
+  "vulnerability_metadata": {
+    "averaging_minutes": 1,
+    "height_m": 10,
+    "wind_type": "sustained",
+    "units": "m/s",
+    "exposure": "local",
+    "source": "Explicit educational assumptions"
+  },
+  "outputs_sha256": {
+    "annual_losses.csv": "602a72e56992766c38c863427f3555b9894ee5086b5a88d1f15fac69799dde64",
+    "benchmark.png": "6c6d08b34a11d25291d5ab815b15a078a008d5615765333c873c89d5f1a6756c",
+    "convergence.csv": "7e0a03663a7ee3af1d141a0e8f5faf98167b6ad157b0527d4d91b1b252e18922",
+    "event_losses.csv": "039f1e9ee97b37c835b111445dd17899e247794d9b06c0be0786a50f9764f93c",
+    "grouped_errors.csv": "7b548b924ce8a755faaecae9a41c8751049865546c169712e281dacd2aeab109",
+    "portfolio.csv": "6f9461943a16a4565bf442a9982780b16809b6f38b528bbbaf28771306a72344",
+    "report.md": "1af0193fbe9bc37d173642fe230c93050cc84cc6225341f53124d2a9241f4dfb",
+    "station_pairs.csv": "34076f7d125e38b525c11289da8c201bdea8b53e895d16223202e57dd7d073a8",
+    "station_skill.csv": "d629a462b93f17281e39685a079557762526eec02e6797f43c843ac2fc307d4e",
+    "summary.csv": "6209989aaf0137db13bcf44aeb9830db3fb039000b8332e1eb802f83cf8db07a"
+  }
+}
