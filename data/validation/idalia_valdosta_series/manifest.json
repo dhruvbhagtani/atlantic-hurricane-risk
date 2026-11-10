@@ -1,0 +1,30 @@
+{
+  "inputs_sha256": {
+    "data/raw/global_hourly/2023/72216693845.csv": "f268e55ddb42cc93d64b77fb84a986636c910738dfd677de4efa57448c0d3e02"
+  },
+  "storm_id": "AL102023",
+  "station_id": "KVLD",
+  "ncei_id": "72216693845",
+  "start": "2023-08-29T00:00:00Z",
+  "end": "2023-08-31T23:59:00Z",
+  "documentation": "https://www.ncei.noaa.gov/pub/data/noaa/isd-format-document.pdf",
+  "qc_rule": "Good requires speed QC 1 or 5; normal/variable/calm wind; METAR or SPECI; matching call sign. Other finite values remain suspect.",
+  "limitations": "No sensor height, averaging duration, exposure or uptime is inferred from Global Hourly. Sampled winds are not event peak maxima.",
+  "code_sha256": {
+    "observations.py": "3933351dc3045c89c6c788632f7f99a9df3d3f9997d7879a92fd3866a3a49d0d",
+    "model.py": "d683e5aaaa9460bc0fe7f3e3b6560331163e5a506525a70459e5b06594ebdec5",
+    "validation.py": "1179484f2924cd84fc21c99f22f001fc29a31ddcc00e72f2471ed4a9ecec3bad",
+    "__init__.py": "07db4356552223670a5b7fb14a9fe7b5c15c1ddd64114f35db45cefe89799a46",
+    "global_hourly.py": "79481d4eb7c76556e7345bea8a568130e07d16dcf40feb359187ad4b90cd98c1",
+    "benchmark.py": "f8e424ccb75baf41ba71a8d06c744882296edb9b34383faa6d8b2bee496289db",
+    "diagnostics.py": "a70eb818e13270f597da49fdfbc32e2a07953e691501dec3c86cca9192c08a2e",
+    "inputs.py": "42b6dfa8c1a17c6c136173894932aca9517f7454ce24a9a5d002e6b2b2b5cfd6",
+    "__main__.py": "64cc06121ce192f98177c7d2a5df3ea40a850d6d10c3ed92100218544809a230",
+    "artifacts.py": "d5ef30477449c094e8f9d59135cc2344c5d6f56f95fbe2a15148f62dbb78d619"
+  },
+  "outputs_sha256": {
+    "qc_audit.csv": "9884af6fb7d434f157f9298f7b69dcc512bd019f6f71cb3d919e2e241d767e0e",
+    "raw_event_records.csv": "ae5b37f067324a4f919256f87d4c2a4bbc9e759e7f3c17f9e7b947f68939e81e",
+    "time_series.csv": "3181a66f99178d057a9c3f4893987e95c8b79dace75b83c71ebbc79e1e2eb85a"
+  }
+}

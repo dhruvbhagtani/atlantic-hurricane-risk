@@ -1,0 +1,54 @@
+{
+  "quality_control_description": "Good requires NCEI speed QC 1 or 5, normal/variable/calm wind, METAR/SPECI and matching call sign. Conflicting duplicate timestamps are suspect; missing winds retained.",
+  "quality_control_reference": "https://www.ncei.noaa.gov/pub/data/noaa/isd-format-document.pdf",
+  "events": [
+    {
+      "storm_id": "AL102023",
+      "name": "Idalia",
+      "split": "development",
+      "window_start": "2023-08-29T00:00:00Z",
+      "window_end": "2023-08-31T23:59:00Z",
+      "product": "NOAA Global Hourly KVLD 2023; METAR/SPECI sustained winds",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2023/72216693845.csv",
+      "best_track_provenance": "Unknown whether these observations informed NHC best-track analysis. Values inspected during pipeline development; not an untouched test event.",
+      "stations": [
+        {
+          "station_id": "KVLD",
+          "lat": 30.77629,
+          "lon": -83.27393,
+          "height_m": null,
+          "averaging_minutes": 2,
+          "exposure": "unknown",
+          "cadence_minutes": 60,
+          "uptime_confirmed": false,
+          "metadata_reference": "Raw NOAA station coordinates verified; standard ASOS 2-min convention: https://www.weather.gov/asos/WindSensor.html ; station-specific height and exposure unverified.",
+          "uptime_reference": ""
+        }
+      ]
+    },
+    {
+      "storm_id": "AL092024",
+      "name": "Helene",
+      "split": "development",
+      "window_start": "2024-09-25T00:00:00Z",
+      "window_end": "2024-09-28T23:59:00Z",
+      "product": "NOAA Global Hourly KVLD 2024; METAR/SPECI sustained winds",
+      "url": "https://noaa-global-hourly-pds.s3.amazonaws.com/2024/72216693845.csv",
+      "best_track_provenance": "Unknown whether these observations informed NHC best-track analysis. Values inspected during pipeline development; not an untouched test event.",
+      "stations": [
+        {
+          "station_id": "KVLD",
+          "lat": 30.77629,
+          "lon": -83.27393,
+          "height_m": null,
+          "averaging_minutes": 2,
+          "exposure": "unknown",
+          "cadence_minutes": 60,
+          "uptime_confirmed": false,
+          "metadata_reference": "Raw NOAA station coordinates verified; standard ASOS 2-min convention: https://www.weather.gov/asos/WindSensor.html ; station-specific height and exposure unverified.",
+          "uptime_reference": ""
+        }
+      ]
+    }
+  ]
+}
