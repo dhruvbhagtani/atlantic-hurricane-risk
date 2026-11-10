@@ -81,7 +81,11 @@ def synthetic_portfolio(n: int, seed: int) -> pd.DataFrame:
 
 
 def interpolate_track(track: pd.DataFrame, minutes: int, fallback_rmw: float):
+    if track.empty or not np.isfinite(minutes) or minutes <= 0 or fallback_rmw <= 0:
+        raise ValueError("Need a nonempty track and positive timestep/RMW")
     t = track.time.astype("int64").to_numpy() / 1e9
+    if (np.diff(t) <= 0).any() or not np.isfinite(track.vmax_ms).all():
+        raise ValueError("Track times must strictly increase and winds must be finite")
     if len(t) > 1 and np.max(np.diff(t)) > 12 * 3600:
         raise ValueError(f"Track gap >12 hours: {track.storm_id.iloc[0]}")
     # Retain all original fixes, including special landfall observations.
@@ -125,11 +129,19 @@ def hazard_catalog(tracks, portfolio, cfg):
     return pd.DataFrame(events, columns=["storm_id", "name", "year"]), np.stack(fields)
 
 
-def property_losses(wind, portfolio, vulnerability_scale=1.):
-    damage = np.zeros_like(wind)
-    for kind, nodes in DAMAGE_NODES.items():
+def property_losses(wind, portfolio, vulnerability_scale=1., vulnerability=None):
+    from .inputs import default_vulnerability, validate_portfolio
+    curves = default_vulnerability() if vulnerability is None else vulnerability
+    validate_portfolio(portfolio, curves["damage_nodes"])
+    wind = np.asarray(wind, dtype=float)
+    if wind.ndim != 2 or wind.shape[1] != len(portfolio) or not np.isfinite(wind).all() or (wind < 0).any():
+        raise ValueError("Wind must be a finite nonnegative event-by-property array")
+    if not np.isfinite(vulnerability_scale) or vulnerability_scale < 0:
+        raise ValueError("Vulnerability scale must be finite and nonnegative")
+    damage = np.zeros_like(wind, dtype=float)
+    for kind, nodes in curves["damage_nodes"].items():
         mask = portfolio.construction.to_numpy() == kind
-        damage[:, mask] = np.interp(wind[:, mask], WIND_NODES, nodes)
+        damage[:, mask] = np.interp(wind[:, mask], curves["wind_nodes_ms"], nodes)
     damage = np.clip(damage * vulnerability_scale, 0, 1)
     value = portfolio.replacement_value_usd.to_numpy()
     ground_up = damage * value
@@ -139,6 +151,15 @@ def property_losses(wind, portfolio, vulnerability_scale=1.):
 
 
 def annual_losses(event_losses, event_years, years):
+    years = np.asarray(years)
+    event_years = np.asarray(event_years)
+    event_losses = np.asarray(event_losses, dtype=float)
+    if years.ndim != 1 or not len(years) or not np.isfinite(years).all() or (years != np.floor(years)).any() or (np.diff(years) != 1).any():
+        raise ValueError("Years must be consecutive increasing integers")
+    if event_years.ndim != 1 or event_losses.shape != event_years.shape or not np.isin(event_years, years).all():
+        raise ValueError("Event years must belong to the annual catalog and match event losses")
+    if not np.isfinite(event_losses).all() or (event_losses < 0).any():
+        raise ValueError("Event losses must be finite and nonnegative")
     sums, maxima = np.zeros(len(years)), np.zeros(len(years))
     index = np.asarray(event_years, dtype=int) - years[0]
     np.add.at(sums, index, event_losses)
