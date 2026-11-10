@@ -52,17 +52,23 @@ was validated with a manually downloaded NOAA file. Focused unit tests and
 historical output consistency checks passed, including zero-year retention,
 AEP >= OEP, and exact AAL scaling with the frequency multiplier.
 
-### Validated historical example
+### Current historical example
 
-The default configuration processes 310 hurricanes in 1980–2024 and a synthetic
-portfolio with $127,415,900 in replacement value. Results from the pinned NOAA
-catalog are:
+The default uses one-minute wind sampling and 300 synthetic locations constrained
+to at least 2 km inland in the generalized land dataset. It processes 310 hurricanes
+in 1980–2024 and preserves $127,415,900 in replacement value. The location audit
+records every relocation; these are synthetic points, not verified insured parcels.
 
 | Scenario | Insured AAL | Combined 5–95% range |
 |---|---:|---:|
-| Historical | $416,633 | $62,726–$895,355 |
-| Wind +10% | $680,246 | $149,002–$1,397,355 |
-| Wind +10%, frequency +20% | $816,295 | $178,803–$1,676,826 |
+| Historical | $524,813 | $88,876–$1,058,338 |
+| Wind +10% | $821,931 | $200,548–$1,566,439 |
+| Wind +10%, frequency +20% | $986,317 | $240,658–$1,879,727 |
+
+The archived 30-minute configuration and original approximate coordinates produced
+historical AAL of $416,633. Reproduce that version with
+`--config examples/legacy_30min_config.json` and a new output directory. The current
+historical run is archived under `reports/current_default_historical/`.
 
 These ranges reflect the assumed model and resampling distributions described
 below. RMW is missing for 88.2% of selected track observations, making the assumed
@@ -84,7 +90,7 @@ All recorded phases of those storms contribute, including weakening and
 extratropical phases; this is an approximation and excludes storms that remain
 tropical storms. Original observations, including special landfall fixes, are
 retained. Latitude, unwrapped longitude, maximum wind and RMW are interpolated
-linearly at 30-minute intervals. Interpolation smooths the original observations;
+linearly at one-minute intervals by default. Interpolation smooths the original observations;
 it does not reconstruct unobserved rapid intensity changes. Track gaps longer
 than 12 hours fail validation. Great-circle distances use Earth radius 6371.0088 km.
 
@@ -111,15 +117,18 @@ Parametric surface wind fitting has a research basis; see
 [Knaff et al. (2006), A Real-Time Hurricane Surface Wind Forecasting Model](https://journals.ametsoc.org/view/journals/mwre/134/5/mwr3126.1.xml).
 The simple profile and coefficients here are **assumptions**, not a reproduction
 or validation of that model or of Holland's pressure-gradient model. A smaller
-time step can be used to check peak-wind sensitivity; 30-minute sampling may
-still miss a small eye or RMW passage.
+time step can be used to check peak-wind sensitivity. One-minute sampling passed
+the declared 1 m/s maximum wind and 1% loss-metric criteria against 15-second
+sampling for both documented synthetic portfolios; this is a numerical check,
+not reconstruction of unobserved storm evolution.
 
 ## Exposure, damage and policy assumptions
 
 The seeded portfolio contains 300 synthetic properties clustered around Miami,
-Tampa, Orlando, Jacksonville, Pensacola and Fort Myers, with small coordinate
-jitter. Locations are approximate city clusters, not verified parcels or a
-geocoded coastline. Replacement values follow a clipped lognormal distribution
+Tampa, Orlando, Jacksonville, Pensacola and Fort Myers. Seeded coordinate proposals
+that fail the 2-km inland buffer are resampled within a fixed region around the
+original point. IDs, city labels, construction, replacement values and policy
+terms are retained. Locations are approximate city clusters, not verified parcels. Replacement values follow a clipped lognormal distribution
 (median $400,000, log standard deviation 0.45, bounds $100,000–$2,000,000).
 Construction probabilities are 40% wood, 40% masonry and 20% mitigated.
 
@@ -289,12 +298,12 @@ these workflow safeguards.
 python -m hurricane_risk.benchmark --out outputs/benchmark-run1
 ```
 
-The default compares 30-, 15-, and 5-minute timesteps for the baseline, missing-RMW
+The default compares 30-, 5-, and 1-minute timesteps for the baseline, missing-RMW
 fallbacks of 25/45 km, and outer radial exponents of 0.5/0.7. Each change is tested
 individually on the same tracks, observations and exposure. Override these with
-`--variants examples/benchmark_variants.json` and `--timesteps 30 15 5 1`.
+`--variants examples/benchmark_variants.json` and `--timesteps 1 0.5 0.25`.
 Variants are predeclared sensitivity tests; the command does not fit parameters or
-select a winner. The historical production defaults are unchanged.
+select a winner. The original wind-profile coefficients remain the production baseline; structural candidates are optional.
 
 Outputs include pooled and split-specific `station_skill.csv`, auditable
 `station_pairs.csv`, residuals grouped by storm, closest-track distance, side,
@@ -329,10 +338,11 @@ for the schema, commands, data requirements and source-discovery links.
 
 The expanded collection now adds downloaded Idalia and Helene Valdosta records,
 with 185 observations passing wind QC. Their sampled peaks are incomplete, and
-height/exposure metadata remain unverified; they are development diagnostics.
+height and duration are now documented, while roughness and complete uptime remain unresolved; these are development diagnostics.
 The peak benchmark retains 51 rows across five storms and 22 eligible primary
-comparisons. An independent test collection still requires verified metadata and
-events reserved before model development.
+comparisons. Debby and Milton were separately reserved before structural development and now
+supply 260 test samples. Their report-time scores and metadata audit are retained
+in the frozen study; independence from NHC best-track construction is not established.
 Prepared time-series outputs should be evaluated with the benchmark command.
 The original `hurricane_risk.validation` narrative is specific to the bundled NWS
 peak dataset. Both loss and legacy validation commands now accept custom portfolio
@@ -347,7 +357,8 @@ and provenance manifests are linked there.
 For manual NOAA acquisition, see [the station-year download links and import commands](docs/data_downloads.md).
 `python -m hurricane_risk.global_hourly` reads the downloaded CSVs, decodes sustained
 wind speeds and quality flags, and retains raw event records and a QC audit. Site
-exposure, wind-duration metadata and instrument uptime still need separate evidence.
+exposure and instrument uptime still need separate evidence; height and duration
+are documented in the station audit.
 
 [Valdosta time-series diagnostics](reports/valdosta_time_series/report.md) compare
 available observations at their reporting times and show the missing data near
@@ -358,8 +369,8 @@ retains the new censored records without treating them as complete event peaks.
 
 [Structural-model methods](docs/structural_models.md) describe the translation
 asymmetry, local inland attenuation, coastline audit, station metadata and frozen
-Debby/Milton evaluation. These candidates are explicit sensitivities and do not
-change the production defaults. `examples/structural_config.json` supplies the
+Debby/Milton evaluation. These candidates are explicit sensitivities and remain disabled in the
+production baseline. `examples/structural_config.json` supplies the
 versioned coastline; `examples/structural_variants.json` reproduces the registered
 candidate list. Fractional-minute timesteps are supported for convergence checks.
 
@@ -369,3 +380,11 @@ they must not be interpreted as verified insured parcels. The station metadata
 audit now documents Valdosta's nominal 10-m wind height and two-minute duration.
 Earlier archived preparation reports preserve their original, more conservative
 metadata flags; continuous uptime and quantitative site roughness remain unresolved.
+
+
+The completed [structural comparison](reports/structural_models/report.md),
+[reserved-event evaluation](reports/reserved_structural_study/report.md), and
+[subminute convergence checks](reports/subminute_convergence/report.md) retain
+all candidate results. The [land-only resolution check](reports/land_only_resolution/report.md)
+verifies the current exposure separately. See [current results](docs/current_results.md)
+for the resulting default behavior, remaining model limitations and reproduction commands.

@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 import requests
 
-from .inputs import load_vulnerability, load_portfolio
+from .inputs import load_vulnerability, load_portfolio, portfolio_from_config
 from .artifacts import output_directory, output_hashes, sha256
 
 from .model import (NOAA_URL, DAMAGE_NODES, WIND_NODES, read_hurdat, synthetic_portfolio,
@@ -40,6 +40,9 @@ def validate_config(cfg):
         raise ValueError('Translation fraction must be <= 1 and asymmetry cap < 1')
     if cfg.get('inland_decay_km', 0.) and not cfg.get('coastline_path'):
         raise ValueError('Inland attenuation requires coastline_path')
+    buffer = cfg.get('synthetic_land_buffer_km')
+    if buffer is not None and (isinstance(buffer, bool) or not isinstance(buffer, (int, float)) or not np.isfinite(buffer) or buffer < 0 or not cfg.get('coastline_path')):
+        raise ValueError('Synthetic land buffer must be finite, nonnegative and have a coastline')
     if cfg.get('coastline_path') and not Path(cfg['coastline_path']).is_file():
         raise ValueError('Coastline file does not exist')
     if cfg["uncertainty_replicates"] < 20:
@@ -265,12 +268,12 @@ def main():
     parser.add_argument("--vulnerability", type=Path, help="Curve JSON with wind conventions and source")
     parser.add_argument("--out", type=Path, default=None)
     args = parser.parse_args()
+    execution_source_hashes = {p.name: sha256(p) for p in Path(__file__).parent.glob("*.py")}
     cfg = json.loads(args.config.read_text())
     validate_config(cfg)
     out = args.out or Path("outputs/demo" if args.demo else "outputs/historical")
     vulnerability = load_vulnerability(args.vulnerability)
-    portfolio = (load_portfolio(args.portfolio, vulnerability) if args.portfolio else
-                 synthetic_portfolio(cfg["properties"], cfg["seed"]))
+    portfolio, location_audit = portfolio_from_config(cfg, vulnerability, args.portfolio)
     destination = out
     with output_directory(destination) as out:
         if args.demo:
@@ -292,6 +295,8 @@ def main():
             raise ValueError("Selected hurricane tracks contain missing maximum winds; supply a complete "
                              "catalog or explicitly resolve missing intensities before modeling")
         portfolio.to_csv(out / "portfolio.csv", index=False)
+        if location_audit is not None:
+            location_audit.to_csv(out / "exposure_location_audit.csv", index=False)
         pd.DataFrame({"wind_ms": vulnerability["wind_nodes_ms"], **vulnerability["damage_nodes"]}).to_csv(out / "assumed_vulnerability.csv", index=False)
         print(f"{'SYNTHETIC DEMO' if args.demo else 'HISTORICAL CATALOG'}: {len(ids)} storms, "
               f"{len(portfolio)} properties; computing wind fields", flush=True)
@@ -306,7 +311,8 @@ def main():
             "track_path": str((destination / "SYNTHETIC_tracks.txt").resolve() if args.demo else track_path.resolve()),
             "additional_inputs": {str(p): sha256(p) for p in [args.config, args.portfolio, args.vulnerability] if p},
             "coastline_sha256": sha256(cfg['coastline_path']) if cfg.get('coastline_path') else None,
-            "exposure_kind": "user-supplied" if args.portfolio else "synthetic",
+            "exposure_kind": "user-supplied" if args.portfolio else ("synthetic land-only" if location_audit is not None else "synthetic legacy"),
+            "properties": len(portfolio),
             "vulnerability_metadata": vulnerability["metadata"], "download_url": args.url if args.download and not args.demo else None,
             "track_sha256": hashlib.sha256(track_path.read_bytes()).hexdigest(),
             "config": cfg, "total_insured_value_usd": float(portfolio.replacement_value_usd.sum()),
@@ -315,7 +321,7 @@ def main():
             "rmw_missing_fraction": float(selected.rmw_km.isna().mean()),
             "versions": {"python": platform.python_version(), "numpy": np.__version__, "pandas": pd.__version__,
                          "matplotlib": matplotlib.__version__},
-            "source_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in Path(__file__).parent.glob("*.py")},
+            "source_sha256": execution_source_hashes,
         }
         lines = ["# " + manifest["data_kind"], "", f"Portfolio replacement value: ${manifest['total_insured_value_usd']:,.0f}.",
                  "", "| Scenario | Insured AAL | Combined 5–95% range |", "|---|---:|---:|"]
@@ -326,6 +332,8 @@ def main():
                   "Ranges combine annual block resampling with assumed wind, storm-size and vulnerability uncertainty; they are not calibrated confidence bounds.",
                   "EP CSVs use strict exceedance; return losses are generalized inverse empirical CDF quantiles.",
                   "The simulated years recycle this finite catalog and add no new tail information. See README.md for equations and limitations."]
+        if location_audit is not None:
+            lines += ["", "Synthetic locations are constrained to the declared generalized land buffer; they are not verified insured parcels. See exposure_location_audit.csv."]
         (out / "report.md").write_text("\n".join(lines) + "\n")
         manifest["outputs_sha256"] = output_hashes(out)
         (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")

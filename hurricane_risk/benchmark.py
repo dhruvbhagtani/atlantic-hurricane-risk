@@ -17,7 +17,7 @@ import pandas as pd
 from .__main__ import validate_config
 from .artifacts import output_directory, output_hashes, sha256
 from .diagnostics import station_geometry, grouped_errors
-from .inputs import load_portfolio, load_vulnerability
+from .inputs import load_portfolio, load_vulnerability, portfolio_from_config
 from .model import (read_hurdat, synthetic_portfolio, hazard_catalog, property_losses,
                     annual_losses, loss_metrics)
 from .validation import load_observations, scores, uncertainty_bands
@@ -213,30 +213,33 @@ def main():
     parser.add_argument('--vulnerability', type=Path)
     parser.add_argument('--variants', type=Path, help='JSON list of named wind-parameter overrides')
     parser.add_argument('--splits', type=Path, help='JSON with development/test storm lists')
-    parser.add_argument('--timesteps', type=float, nargs='+', default=[30, 15, 5])
+    parser.add_argument('--timesteps', type=float, nargs='+', default=[30, 5, 1])
     parser.add_argument('--wind-tolerance-ms', type=float, default=1.)
     parser.add_argument('--loss-tolerance-pct', type=float, default=1.)
     parser.add_argument('--out', type=Path, default=Path('outputs/benchmark'))
     args = parser.parse_args()
+    execution_source_hashes = {p.name: sha256(p) for p in Path(__file__).parent.glob("*.py")}
     cfg = json.loads(args.config.read_text())
     validate_config(cfg)
     variants = json.loads(args.variants.read_text()) if args.variants else DEFAULT_VARIANTS
     validate_variants(variants, cfg)
     curves = load_vulnerability(args.vulnerability)
-    portfolio = load_portfolio(args.portfolio, curves) if args.portfolio else synthetic_portfolio(cfg['properties'], cfg['seed'])
+    portfolio, location_audit = portfolio_from_config(cfg, curves, args.portfolio)
     sources = json.loads(args.sources.read_text())
     obs, splits = assign_splits(load_observations(args.observations, sources), args.splits)
     tracks = read_hurdat(args.tracks)
     with output_directory(args.out) as out:
         run_benchmark(tracks, obs, sources, cfg, portfolio, curves, variants, args.timesteps, out,
                       args.wind_tolerance_ms, args.loss_tolerance_pct)
+        if location_audit is not None:
+            location_audit.to_csv(out/'exposure_location_audit.csv', index=False)
         manifest = {'purpose': __doc__, 'config': cfg, 'variants': variants, 'timesteps': args.timesteps,
                     'coastline_sha256': sha256(cfg['coastline_path']) if cfg.get('coastline_path') else None,
                     'splits': splits, 'wind_tolerance_ms': args.wind_tolerance_ms,
                     'loss_tolerance_pct': args.loss_tolerance_pct,
                     'inputs_sha256': {str(p): sha256(p) for p in [args.tracks, args.observations, args.sources,
                                       args.config, args.portfolio, args.vulnerability, args.variants, args.splits] if p},
-                    'code_sha256': {p.name: sha256(p) for p in Path(__file__).parent.glob('*.py')},
+                    'code_sha256': execution_source_hashes,
                     'versions': {'python': platform.python_version(), 'numpy': np.__version__,
                                  'pandas': pd.__version__, 'matplotlib': matplotlib.__version__},
                     'vulnerability_metadata': curves['metadata'],

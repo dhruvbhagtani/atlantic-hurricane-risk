@@ -32,6 +32,10 @@ class IntegrationTests(unittest.TestCase):
             samples = pd.read_csv(out/'uncertainty_samples.csv')
             self.assertEqual(set(samples['mode']), {'sampling', 'model', 'combined'})
             self.assertTrue(samples.filter(regex='_usd$').eq(0).all().all())
+            manifest = json.loads((out/'manifest.json').read_text())
+            self.assertEqual(manifest['exposure_kind'], 'synthetic land-only')
+            audit = pd.read_csv(out/'exposure_location_audit.csv')
+            self.assertTrue(audit.signed_coast_km.ge(2).all())
 
     def test_demo_reproducibility_policy_invariants_and_output_protection(self):
         with tempfile.TemporaryDirectory() as tmp:
