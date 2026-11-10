@@ -1,0 +1,35 @@
+{
+  "station_id": "KVLD",
+  "ncei_id": "72216693845",
+  "homr_ncdc_id": "20004698",
+  "coordinates": {
+    "lat": 30.77629,
+    "lon": -83.27393,
+    "valid_from": "2021-11-22",
+    "meaning": "ASOS primary DCP position per HOMR; not necessarily exact wind tower position"
+  },
+  "height_m": 10,
+  "height_reference": {
+    "url": "https://s3.amazonaws.com/fema-femadata/NationalDisasters/2023/Idalia/NIST_Windfield/Release_1/3-Hurricane_Idalia_2023_Model_Fit_Release1.pdf",
+    "page": 4,
+    "evidence": "Station table lists KVLD as ASOS with 10 m anemometer height."
+  },
+  "height_crosscheck": {
+    "url": "https://19january2017snapshot.epa.gov/sites/production/files/2016-01/documents/20140912residrisk.pdf",
+    "evidence": "Historical EPA inventory lists WBAN 93845 anemometer height 10.05 m."
+  },
+  "averaging_minutes": 2,
+  "duration_reference": "https://www.weather.gov/asos/WindSensor.html",
+  "equipment": "ANEMSONIC",
+  "equipment_valid_from": "2007-06-07",
+  "homr_url": "https://www.ncei.noaa.gov/access/homr/services/station/search?qid=WBAN:93845&date=all&definitions=false&phrData=true",
+  "homr_sha256": "42b5eb776b45e67634f527276fc85860a89f84f5b30111013982cfcb5e35661c",
+  "wind_tower_coordinate_sensitivity": {
+    "lat": 30.7825,
+    "lon": -83.2767,
+    "source": "NIST Idalia station table; roughly 0.7 km from the current HOMR DCP position. Evaluate separately without selecting by errors."
+  },
+  "exposure": "Airport site; quantitative directional roughness remains unknown.",
+  "uptime": "No uptime logs available. Good QC flags support measurements only at report times, not continuous peak capture.",
+  "eligibility": "Documented nominal 10-m, two-minute sample comparisons; full-event peaks stay censored unless independently established."
+}

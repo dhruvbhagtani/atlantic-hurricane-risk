@@ -16,7 +16,8 @@ import pandas as pd
 
 from .__main__ import validate_config
 from .artifacts import output_directory, output_hashes, sha256
-from .model import read_hurdat, interpolate_track, distance_km, rankine_wind
+from .model import (read_hurdat, interpolate_track, distance_km, surface_wind,
+                    translation_velocity, interpolation_times)
 from .observations import prepare_observations
 from .validation import scores
 
@@ -24,7 +25,12 @@ from .validation import scores
 def modeled_at_times(track, station, times, cfg):
     lat, lon, vmax, rmw = interpolate_track(track, cfg['interpolation_minutes'], cfg['rmw_km'], times)
     radius = distance_km(lat, lon, station['lat'], station['lon'])
-    return rankine_wind(radius, vmax, rmw, cfg['rankine_alpha'])*cfg['land_exposure_factor']
+    u, v = translation_velocity(track, interpolation_times(track, cfg['interpolation_minutes'], times))
+    inland = None
+    if cfg.get('inland_decay_km', 0.):
+        from .geography import coast_distances
+        inland, _ = coast_distances([station['lat']], [station['lon']], cfg['coastline_path'])
+    return surface_wind(radius, vmax, rmw, lat, lon, station['lat'], station['lon'], cfg, u, v, inland)
 
 
 def evaluate_series(series, plan, tracks, cfg, out):

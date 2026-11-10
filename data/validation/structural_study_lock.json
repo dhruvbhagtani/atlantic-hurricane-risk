@@ -1,0 +1,20 @@
+{
+  "registration_sha256": "49b4fd47b83118a24a39f87dbe844880c3d724a9a3d63a9f7f4950eaee0f217b",
+  "registration_commit": "3063c281eb87ebdf0ac9216d22cf17cca77cee7a",
+  "annual_input_sha256": "b0df405f71f2fd55324a781494d8d596226745833d4fa0bf13f287bd1ad03096",
+  "coastline_sha256": "f5a00bf305b66b48b30ba0479f3efbf9041652088e2c06c91fa39bd3aee1b158",
+  "model_code_sha256": {
+    "model.py": "848eb608a760531a1f410edf8e2f8a1dc38611d8af37c05928c58185e86f3d27",
+    "geography.py": "628d40a36fdf5dec89394b81035ba171c02c82fe54954eaf4e3586cbb6ba4531",
+    "time_series_validation.py": "3cd8bcd7feaa810523523761379fd3e5b4eed1091babaaf6f810c780958cb489",
+    "structural_study.py": "fed48b8338c0a7efe21877e527c477c0af65a36d1439847841b86624123ec78f"
+  },
+  "support_inputs_sha256": {
+    "examples/structural_config.json": "5336de15c67482d321d1445594a80796be3abdceaef452ae45c6596e437d6274",
+    "data/validation/station_metadata/KVLD_audit.json": "417893987039c441db8666b72f09912b4fcf9802b037223c7ba7d5fb3a209ef1",
+    "data/validation/station_metadata/homr_KVLD.json": "42b5eb776b45e67634f527276fc85860a89f84f5b30111013982cfcb5e35661c",
+    "data/validation/valdosta_event_plan.json": "a762108183dc52111d961ed5add8d5a397b184bef3347d68d82b59b3595fff18",
+    "data/validation/valdosta_time_series.csv": "2fb34142fef0bdb89cec8e04ebd6f5ccbef2f0a3bef6901b79961029964b3521"
+  },
+  "rule": "Frozen before first examination of reserved-event wind values or scores; do not update after viewing results."
+}

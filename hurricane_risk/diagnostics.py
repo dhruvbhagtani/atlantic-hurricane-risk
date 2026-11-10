@@ -1,4 +1,4 @@
-"""Track-relative station diagnostics; geometric quantities, without a land mask."""
+"""Track-relative station geometry, optional coastal distances and grouped errors."""
 import numpy as np
 import pandas as pd
 
@@ -28,7 +28,15 @@ def station_geometry(pairs, tracks, sources, cfg):
                      'distance_over_rmw': r[closest]/rmw[closest],
                      'closest_vmax_ms': wind[closest], 'side_of_track': side,
                      'rmw_missing_fraction': float(track.rmw_km.isna().mean())})
-    return pd.concat([result.reset_index(drop=True), pd.DataFrame(rows)], axis=1)
+    result = pd.concat([result.reset_index(drop=True), pd.DataFrame(rows)], axis=1)
+    if cfg.get('coastline_path'):
+        from .geography import coast_distances
+        coast, on_land = coast_distances(result.lat, result.lon, cfg['coastline_path'])
+        result['signed_coast_distance_km'] = coast
+        result['inland_distance_km'] = np.maximum(coast, 0)
+        result['coast_land_mask'] = on_land
+        result['near_coast_uncertain'] = np.abs(coast) < 5
+    return result
 
 
 def grouped_errors(pairs):
@@ -39,7 +47,11 @@ def grouped_errors(pairs):
                                         include_lowest=True).astype(str)
     primary['rmw_availability'] = np.where(primary.rmw_missing_fraction > 0, 'some_missing', 'all_observed')
     rows = []
-    for dimension in ['split', 'storm_id', 'side_of_track', 'distance_bin_km', 'intensity_bin_ms', 'rmw_availability']:
+    dimensions = ['split', 'storm_id', 'side_of_track', 'distance_bin_km', 'intensity_bin_ms', 'rmw_availability']
+    if 'inland_distance_km' in primary:
+        primary['inland_bin_km'] = pd.cut(primary.inland_distance_km, [0, 5, 25, 75, np.inf], include_lowest=True).astype(str)
+        dimensions += ['inland_bin_km', 'near_coast_uncertain']
+    for dimension in dimensions:
         for label, group in primary.groupby(dimension, observed=True):
             rows.append({'dimension': dimension, 'group': str(label),
                          'storms': group.storm_id.nunique(), **scores(group.observed_ms, group.modeled_ms)})

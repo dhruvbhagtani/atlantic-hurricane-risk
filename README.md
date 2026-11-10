@@ -353,3 +353,19 @@ exposure, wind-duration metadata and instrument uptime still need separate evide
 available observations at their reporting times and show the missing data near
 the storms. [The expanded peak benchmark](reports/expanded_observations/report.md)
 retains the new censored records without treating them as complete event peaks.
+
+## Structural models and reserved events
+
+[Structural-model methods](docs/structural_models.md) describe the translation
+asymmetry, local inland attenuation, coastline audit, station metadata and frozen
+Debby/Milton evaluation. These candidates are explicit sensitivities and do not
+change the production defaults. `examples/structural_config.json` supplies the
+versioned coastline; `examples/structural_variants.json` reproduces the registered
+candidate list. Fractional-minute timesteps are supported for convergence checks.
+
+The finer coastline audit identifies 85 offshore points in the original synthetic
+portfolio. Those approximate coordinates are retained for controlled comparisons;
+they must not be interpreted as verified insured parcels. The station metadata
+audit now documents Valdosta's nominal 10-m wind height and two-minute duration.
+Earlier archived preparation reports preserve their original, more conservative
+metadata flags; continuous uptime and quantitative site roughness remain unresolved.

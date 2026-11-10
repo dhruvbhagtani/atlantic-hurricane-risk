@@ -42,8 +42,8 @@ def validate_variants(variants, cfg):
         if variant['name'] in names:
             raise ValueError('Variant names must be unique')
         names.add(variant['name'])
-        if not isinstance(variant['overrides'], dict) or set(variant['overrides']) - {'rmw_km', 'rankine_alpha', 'land_exposure_factor'}:
-            raise ValueError('Variant overrides may change only RMW, radial decay or exposure')
+        if not isinstance(variant['overrides'], dict) or set(variant['overrides']) - {'rmw_km', 'rankine_alpha', 'land_exposure_factor', 'translation_fraction', 'asymmetry_cap', 'inland_decay_km'}:
+            raise ValueError('Variant overrides may change only declared wind-model parameters')
         validate_config({**cfg, **variant['overrides']})
 
 
@@ -84,8 +84,8 @@ def percent_change(value, baseline):
 def run_benchmark(tracks, obs, sources, cfg, portfolio, vulnerability, variants, timesteps, out,
                   wind_tolerance_ms=1., loss_tolerance_pct=1.):
     validate_variants(variants, cfg)
-    if not timesteps or any(type(t) is not int or t <= 0 for t in timesteps) or len(set(timesteps)) != len(timesteps):
-        raise ValueError('Timesteps must be unique positive integer minutes')
+    if not timesteps or any(isinstance(t, bool) or not isinstance(t, (int, float)) or not np.isfinite(t) or t <= 0 for t in timesteps) or len(set(timesteps)) != len(timesteps):
+        raise ValueError('Timesteps must be unique positive minutes')
     if any(not np.isfinite(v) or v < 0 for v in [wind_tolerance_ms, loss_tolerance_pct]):
         raise ValueError('Convergence tolerances must be finite and nonnegative')
     if tracks.season.min() > cfg['start_year'] or tracks.season.max() < cfg['end_year']:
@@ -185,7 +185,8 @@ def write_report(summary, convergence, out, wind_tolerance, loss_tolerance):
               'Return losses use exact annual empirical quantiles, preserving zero years; no annual resampling noise is introduced.',
               'Losses use the full configured hurricane catalog and fixed exposure/policy terms; station skill uses source windows.',
               'Fallback-RMW variants change missing RMW only. Observed positive RMW is preserved.',
-              'Track-side and distance diagnostics are geometric. Inland distance is unavailable without an audited coastline.',
+              'Track-side and distance diagnostics are geometric. When a coastline is configured, signed coastal distances and inland bins are included.',
+              'Translation and local inland attenuation are declared structural sensitivities; they are not calibrated replacements.',
               'The prior wind envelope remains an assumed parameter ensemble, not a calibrated predictive interval.',
               'No claim validation, physical climate attribution, or high-wind validation follows from these comparisons.', '',
               '![Benchmark comparison](benchmark.png)', '']
@@ -212,7 +213,7 @@ def main():
     parser.add_argument('--vulnerability', type=Path)
     parser.add_argument('--variants', type=Path, help='JSON list of named wind-parameter overrides')
     parser.add_argument('--splits', type=Path, help='JSON with development/test storm lists')
-    parser.add_argument('--timesteps', type=int, nargs='+', default=[30, 15, 5])
+    parser.add_argument('--timesteps', type=float, nargs='+', default=[30, 15, 5])
     parser.add_argument('--wind-tolerance-ms', type=float, default=1.)
     parser.add_argument('--loss-tolerance-pct', type=float, default=1.)
     parser.add_argument('--out', type=Path, default=Path('outputs/benchmark'))
@@ -230,6 +231,7 @@ def main():
         run_benchmark(tracks, obs, sources, cfg, portfolio, curves, variants, args.timesteps, out,
                       args.wind_tolerance_ms, args.loss_tolerance_pct)
         manifest = {'purpose': __doc__, 'config': cfg, 'variants': variants, 'timesteps': args.timesteps,
+                    'coastline_sha256': sha256(cfg['coastline_path']) if cfg.get('coastline_path') else None,
                     'splits': splits, 'wind_tolerance_ms': args.wind_tolerance_ms,
                     'loss_tolerance_pct': args.loss_tolerance_pct,
                     'inputs_sha256': {str(p): sha256(p) for p in [args.tracks, args.observations, args.sources,

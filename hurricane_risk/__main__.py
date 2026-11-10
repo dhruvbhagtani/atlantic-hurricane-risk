@@ -26,9 +26,22 @@ from .model import (NOAA_URL, DAMAGE_NODES, WIND_NODES, read_hurdat, synthetic_p
 
 
 def validate_config(cfg):
-    for key in ["properties", "interpolation_minutes", "uncertainty_replicates", "simulation_years"]:
+    for key in ["properties", "uncertainty_replicates", "simulation_years"]:
         if type(cfg[key]) is not int or cfg[key] < 1:
             raise ValueError(f"{key} must be a positive integer")
+    step = cfg['interpolation_minutes']
+    if isinstance(step, bool) or not isinstance(step, (int, float)) or not np.isfinite(step) or step <= 0:
+        raise ValueError('interpolation_minutes must be finite and positive')
+    for key, default in [('translation_fraction', 0.), ('asymmetry_cap', .25), ('inland_decay_km', 0.)]:
+        value = cfg.get(key, default)
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not np.isfinite(value) or value < 0:
+            raise ValueError(f'{key} must be finite and nonnegative')
+    if cfg.get('translation_fraction', 0.) > 1 or cfg.get('asymmetry_cap', .25) >= 1:
+        raise ValueError('Translation fraction must be <= 1 and asymmetry cap < 1')
+    if cfg.get('inland_decay_km', 0.) and not cfg.get('coastline_path'):
+        raise ValueError('Inland attenuation requires coastline_path')
+    if cfg.get('coastline_path') and not Path(cfg['coastline_path']).is_file():
+        raise ValueError('Coastline file does not exist')
     if cfg["uncertainty_replicates"] < 20:
         raise ValueError("Use at least 20 uncertainty replicates (200+ recommended)")
     for key in ["start_year", "end_year", "seed"]:
@@ -292,6 +305,7 @@ def main():
             "data_kind": "FABRICATED DEMO; NOT HISTORICAL" if args.demo else "NOAA HURDAT2 user-supplied or downloaded catalog",
             "track_path": str((destination / "SYNTHETIC_tracks.txt").resolve() if args.demo else track_path.resolve()),
             "additional_inputs": {str(p): sha256(p) for p in [args.config, args.portfolio, args.vulnerability] if p},
+            "coastline_sha256": sha256(cfg['coastline_path']) if cfg.get('coastline_path') else None,
             "exposure_kind": "user-supplied" if args.portfolio else "synthetic",
             "vulnerability_metadata": vulnerability["metadata"], "download_url": args.url if args.download and not args.demo else None,
             "track_sha256": hashlib.sha256(track_path.read_bytes()).hexdigest(),

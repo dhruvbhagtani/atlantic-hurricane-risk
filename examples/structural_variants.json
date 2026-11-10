@@ -1,0 +1,33 @@
+[
+  {
+    "name": "baseline",
+    "overrides": {}
+  },
+  {
+    "name": "fallback_rmw_25km",
+    "overrides": {
+      "rmw_km": 25.0
+    }
+  },
+  {
+    "name": "translation_asymmetry",
+    "overrides": {
+      "translation_fraction": 0.5,
+      "asymmetry_cap": 0.25
+    }
+  },
+  {
+    "name": "local_inland_attenuation",
+    "overrides": {
+      "inland_decay_km": 100.0
+    }
+  },
+  {
+    "name": "combined_structure",
+    "overrides": {
+      "translation_fraction": 0.5,
+      "asymmetry_cap": 0.25,
+      "inland_decay_km": 100.0
+    }
+  }
+]
