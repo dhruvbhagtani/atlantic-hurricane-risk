@@ -17,6 +17,8 @@ import pandas as pd
 from .model import (KNOT_TO_MS, read_hurdat, hazard_catalog, synthetic_portfolio,
                     property_losses, annual_losses, loss_metrics)
 from .__main__ import validate_config
+from .inputs import load_portfolio, load_vulnerability
+from .artifacts import output_directory, output_hashes
 
 
 def sha256(path):
@@ -133,23 +135,24 @@ def uncertainty_bands(pairs, seed, exposure_factor):
     return pairs
 
 
-def loss_implications(tracks, cfg, factors, out):
+def loss_implications(tracks, cfg, factors, out, portfolio=None, vulnerability=None):
     """Transport a global wind-bias sensitivity through existing insurance terms."""
     selected = tracks[tracks.season.between(cfg["start_year"], cfg["end_year"])]
     ids = selected.loc[selected.status == "HU", "storm_id"].unique()
     selected = selected[selected.storm_id.isin(ids)]
-    portfolio = synthetic_portfolio(cfg["properties"], cfg["seed"])
+    if portfolio is None:
+        portfolio = synthetic_portfolio(cfg["properties"], cfg["seed"])
     events, hazard = hazard_catalog(selected, portfolio, cfg)
     years = np.arange(cfg["start_year"], cfg["end_year"] + 1)
     rows = []
     for label, factor in factors.items():
-        ground, insured = property_losses(hazard[:, 1, :] * factor, portfolio)
+        ground, insured = property_losses(hazard[:, 1, :] * factor, portfolio, vulnerability=vulnerability)
         agg, occ = annual_losses(insured.sum(axis=1), events.year, years)
         metrics = loss_metrics(agg, occ, cfg["return_periods"])
         rows.append({"case": label, "wind_factor": factor, "ground_up_aal_usd": ground.sum()/len(years), **metrics})
     frame = pd.DataFrame(rows)
     base = frame.loc[frame["case"] == "nominal", "aal_usd"].iloc[0]
-    frame["aal_change_pct"] = 100 * (frame.aal_usd/base - 1)
+    frame["aal_change_pct"] = 100 * (frame.aal_usd/(base if base else np.nan) - 1)
     frame.to_csv(out / "insured_loss_sensitivity.csv", index=False)
     return frame
 
@@ -294,7 +297,7 @@ def write_report(pairs, metric_table, boot, loeo, losses, sources, cfg, out, fac
              "incomplete stations than individual row flags. Unflagged rows can still have outages or "
              "report errors; the strongest near-eye winds are especially underrepresented in primary scores.", "",
              "## Implications for insured losses", "",
-             f"The existing {cfg['start_year']}–{cfg['end_year']} catalog, seeded Florida portfolio, "
+             f"The configured {cfg['start_year']}–{cfg['end_year']} catalog, portfolio, "
              "vulnerability curves, deductibles and limits are rerun with global wind multipliers. "
              "Below, `empirical_p05/p95` are the wind-factor bootstrap endpoints and `empirical_fit` "
              "uses all eligible observations. These are conditional transport sensitivities, not "
@@ -348,10 +351,14 @@ def main():
     parser.add_argument("--observations", type=Path, default=Path("data/validation/station_peaks.csv"))
     parser.add_argument("--sources", type=Path, default=Path("data/validation/sources.json"))
     parser.add_argument("--config", type=Path, default=Path("config.json"))
+    parser.add_argument("--portfolio", type=Path)
+    parser.add_argument("--vulnerability", type=Path)
     parser.add_argument("--out", type=Path, default=Path("reports/wind_validation"))
     args = parser.parse_args()
     cfg = json.loads(args.config.read_text())
     validate_config(cfg)
+    vulnerability = load_vulnerability(args.vulnerability)
+    portfolio = load_portfolio(args.portfolio, vulnerability) if args.portfolio else None
     sources = json.loads(args.sources.read_text())
     obs = load_observations(args.observations, sources)
     tracks = read_hurdat(args.tracks)
@@ -379,27 +386,30 @@ def main():
     factors = {"nominal": 1., "wind_minus_10pct": .9, "wind_plus_10pct": 1.1,
                "empirical_p05": float(boot.wind_correction_factor.quantile(.05)),
                "empirical_fit": factor, "empirical_p95": float(boot.wind_correction_factor.quantile(.95))}
-    args.out.mkdir(parents=True, exist_ok=True)
-    pairs.to_csv(args.out / "station_pairs.csv", index=False)
-    loeo.to_csv(args.out / "held_out_predictions.csv", index=False)
-    boot.to_csv(args.out / "storm_bootstrap.csv", index=False)
-    metric_table.to_csv(args.out / "performance.csv", index=False)
-    print(f"Matched {len(pairs)} station/event records; {len(primary)} eligible primary comparisons", flush=True)
-    losses = loss_implications(tracks, cfg, factors, args.out)
-    diagnostic_plot(pairs, loeo, losses, args.out)
-    footprint_plot(pairs, tracks, sources, cfg, args.out)
-    write_report(pairs, metric_table, boot, loeo, losses, sources, cfg, args.out, factor)
-    manifest = {"purpose": "external station-peak evaluation; not strictly withheld validation",
-                "inputs": {str(p): sha256(p) for p in [args.tracks, args.observations, args.sources, args.config]},
-                "config": cfg, "sources": sources, "bootstrap_replicates": 2000,
-                "bootstrap_seed": cfg["seed"]+11, "ensemble_seed": cfg["seed"]+10,
-                "versions": {"numpy": np.__version__, "pandas": pd.__version__, "matplotlib": matplotlib.__version__},
-                "code_sha256": {str(p): sha256(p) for p in Path(__file__).parent.glob("*.py")},
-                "eligible_pairs": len(primary), "eligible_storms": int(primary.storm_id.nunique()),
-                "model_changed": False}
-    (args.out / "manifest.json").write_text(json.dumps(manifest, indent=2)+"\n")
-    print(metric_table.to_string(index=False))
-    print(f"Report: {args.out / 'wind_validation_report.md'}")
+    destination = args.out
+    with output_directory(destination) as out:
+        pairs.to_csv(out / "station_pairs.csv", index=False)
+        loeo.to_csv(out / "held_out_predictions.csv", index=False)
+        boot.to_csv(out / "storm_bootstrap.csv", index=False)
+        metric_table.to_csv(out / "performance.csv", index=False)
+        print(f"Matched {len(pairs)} station/event records; {len(primary)} eligible primary comparisons", flush=True)
+        losses = loss_implications(tracks, cfg, factors, out, portfolio, vulnerability)
+        diagnostic_plot(pairs, loeo, losses, out)
+        footprint_plot(pairs, tracks, sources, cfg, out)
+        write_report(pairs, metric_table, boot, loeo, losses, sources, cfg, out, factor)
+        manifest = {"purpose": "external station-peak evaluation; not strictly withheld validation",
+                    "inputs": {str(p): sha256(p) for p in [p for p in [args.tracks, args.observations, args.sources, args.config, args.portfolio, args.vulnerability] if p]},
+                    "config": cfg, "sources": sources, "bootstrap_replicates": 2000,
+                    "bootstrap_seed": cfg["seed"]+11, "ensemble_seed": cfg["seed"]+10,
+                    "versions": {"numpy": np.__version__, "pandas": pd.__version__, "matplotlib": matplotlib.__version__},
+                    "code_sha256": {str(p): sha256(p) for p in Path(__file__).parent.glob("*.py")},
+                    "eligible_pairs": len(primary), "eligible_storms": int(primary.storm_id.nunique()),
+                    "custom_exposure": bool(args.portfolio), "vulnerability_metadata": vulnerability["metadata"],
+                    "model_changed": bool(args.vulnerability), "outputs_sha256": output_hashes(out)}
+        (out / "manifest.json").write_text(json.dumps(manifest, indent=2)+"\n")
+        print(metric_table.to_string(index=False))
+
+    print(f"Report: {destination / 'wind_validation_report.md'}")
 
 
 if __name__ == "__main__":

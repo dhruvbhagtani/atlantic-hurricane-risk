@@ -161,7 +161,7 @@ def annual_losses(event_losses, event_years, years):
     if not np.isfinite(event_losses).all() or (event_losses < 0).any():
         raise ValueError("Event losses must be finite and nonnegative")
     sums, maxima = np.zeros(len(years)), np.zeros(len(years))
-    index = np.asarray(event_years, dtype=int) - years[0]
+    index = np.asarray(event_years, dtype=int) - int(years[0])
     np.add.at(sums, index, event_losses)
     np.maximum.at(maxima, index, event_losses)
     return sums, maxima

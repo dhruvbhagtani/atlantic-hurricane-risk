@@ -1,0 +1,30 @@
+{
+  "quality_control_description": "REPLACE: provider QC and explicit mapping to good/suspect/missing",
+  "quality_control_reference": "REPLACE: source QC documentation URL or archived file",
+  "events": [
+    {
+      "storm_id": "AL012000",
+      "name": "FABRICATED_SCHEMA_EXAMPLE",
+      "split": "development",
+      "window_start": "2000-09-01T00:00:00Z",
+      "window_end": "2000-09-02T00:00:00Z",
+      "product": "REPLACE: source product",
+      "url": "https://example.invalid/replace-with-source",
+      "best_track_provenance": "REPLACE: possible use in NHC best-track analysis; state unknown if unknown",
+      "stations": [
+        {
+          "station_id": "EXAMPLE",
+          "lat": 25.0,
+          "lon": -80.0,
+          "height_m": null,
+          "averaging_minutes": null,
+          "exposure": "unknown",
+          "cadence_minutes": 10,
+          "uptime_confirmed": false,
+          "metadata_reference": "",
+          "uptime_reference": ""
+        }
+      ]
+    }
+  ]
+}

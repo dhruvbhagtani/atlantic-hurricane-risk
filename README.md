@@ -241,7 +241,7 @@ while historical runs default to `outputs/historical`.
 ## Observational validation
 
 ```bash
-python -m hurricane_risk.validation
+python -m hurricane_risk.validation --out outputs/validation-run1
 ```
 
 This uses the downloaded HURDAT2 file and the bundled, source-attributed
@@ -316,3 +316,26 @@ split must assign every observed storm exactly once to `development` or `test`.
 Keep new test events separate before tuning; the three existing storms have
 already been examined and cannot become an untouched test set by relabeling.
 A split does not establish independence from NHC best-track construction.
+
+
+## Quality-controlled time-series preparation
+
+`python -m hurricane_risk.observations` prepares compatible peak and source files
+from normalized, quality-flagged time series and a predeclared event/station plan.
+It retains incomplete and missing station records, computes cadence coverage and
+maximum gaps, checks wind duration/height/exposure metadata, and verifies registered
+plan hashes for test events. See [the observational protocol](docs/observation_protocol.md)
+for the schema, commands, data requirements and source-discovery links.
+
+The larger independent observational collection remains pending data acquisition;
+the new tools do not turn the existing three storms into an untouched test set.
+Prepared time-series outputs should be evaluated with the benchmark command.
+The original `hurricane_risk.validation` narrative is specific to the bundled NWS
+peak dataset. Both loss and legacy validation commands now accept custom portfolio
+and vulnerability inputs and protect existing output directories.
+
+The [historical benchmark findings](docs/benchmark_findings.md) document substantial
+timestep sensitivity: baseline insured AAL is $416,633 at 30 minutes, $511,514 at
+5 minutes and $532,088 at 1 minute. The 5-minute case still fails the declared
+convergence criteria against the 1-minute reference. Archived comparison reports
+and provenance manifests are linked there.
