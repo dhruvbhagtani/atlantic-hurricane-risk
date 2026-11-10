@@ -80,7 +80,7 @@ def synthetic_portfolio(n: int, seed: int) -> pd.DataFrame:
     })
 
 
-def interpolate_track(track: pd.DataFrame, minutes: int, fallback_rmw: float):
+def interpolate_track(track: pd.DataFrame, minutes: int, fallback_rmw: float, evaluation_times=None):
     if track.empty or not np.isfinite(minutes) or minutes <= 0 or fallback_rmw <= 0:
         raise ValueError("Need a nonempty track and positive timestep/RMW")
     t = track.time.astype("int64").to_numpy() / 1e9
@@ -89,7 +89,12 @@ def interpolate_track(track: pd.DataFrame, minutes: int, fallback_rmw: float):
     if len(t) > 1 and np.max(np.diff(t)) > 12 * 3600:
         raise ValueError(f"Track gap >12 hours: {track.storm_id.iloc[0]}")
     # Retain all original fixes, including special landfall observations.
-    target = np.unique(np.r_[np.arange(t[0], t[-1], minutes * 60), t])
+    if evaluation_times is None:
+        target = np.unique(np.r_[np.arange(t[0], t[-1], minutes * 60), t])
+    else:
+        target = pd.to_datetime(evaluation_times, utc=True).astype('int64').to_numpy() / 1e9
+        if not np.isfinite(target).all() or (target < t[0]).any() or (target > t[-1]).any():
+            raise ValueError('Evaluation times must lie within the track window')
     rmw = track.rmw_km.fillna(fallback_rmw).to_numpy()
     lon = np.rad2deg(np.unwrap(np.deg2rad(track.lon.to_numpy())))
     return tuple(np.interp(target, t, x) for x in

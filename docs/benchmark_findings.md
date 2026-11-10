@@ -39,6 +39,7 @@ python -m hurricane_risk.benchmark --variants examples/baseline_variant.json \
   --timesteps 30 15 5 1 --out outputs/reproduce-convergence
 ```
 
-All existing observations remain development diagnostics. A larger quality-controlled
-collection remains pending acquisition; see the observational protocol. Absolute
+All existing observations remain development diagnostics. Additional downloaded Valdosta records for Idalia and Helene are now included
+as development diagnostics with incomplete peaks and unverified instrument metadata;
+see the observational protocol and the separate time-series report. Absolute
 insured losses and hurricane-force wind skill remain unvalidated.

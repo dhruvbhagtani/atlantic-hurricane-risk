@@ -327,8 +327,12 @@ maximum gaps, checks wind duration/height/exposure metadata, and verifies regist
 plan hashes for test events. See [the observational protocol](docs/observation_protocol.md)
 for the schema, commands, data requirements and source-discovery links.
 
-The larger independent observational collection remains pending data acquisition;
-the new tools do not turn the existing three storms into an untouched test set.
+The expanded collection now adds downloaded Idalia and Helene Valdosta records,
+with 185 observations passing wind QC. Their sampled peaks are incomplete, and
+height/exposure metadata remain unverified; they are development diagnostics.
+The peak benchmark retains 51 rows across five storms and 22 eligible primary
+comparisons. An independent test collection still requires verified metadata and
+events reserved before model development.
 Prepared time-series outputs should be evaluated with the benchmark command.
 The original `hurricane_risk.validation` narrative is specific to the bundled NWS
 peak dataset. Both loss and legacy validation commands now accept custom portfolio
@@ -344,3 +348,8 @@ For manual NOAA acquisition, see [the station-year download links and import com
 `python -m hurricane_risk.global_hourly` reads the downloaded CSVs, decodes sustained
 wind speeds and quality flags, and retains raw event records and a QC audit. Site
 exposure, wind-duration metadata and instrument uptime still need separate evidence.
+
+[Valdosta time-series diagnostics](reports/valdosta_time_series/report.md) compare
+available observations at their reporting times and show the missing data near
+the storms. [The expanded peak benchmark](reports/expanded_observations/report.md)
+retains the new censored records without treating them as complete event peaks.

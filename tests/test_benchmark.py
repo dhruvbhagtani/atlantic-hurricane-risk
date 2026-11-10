@@ -30,7 +30,7 @@ class BenchmarkTests(unittest.TestCase):
                                       'window_end': str(tr.time.max())}
                 observations.append({'storm_id': sid, 'station_id': 'fixture', 'source_id': source_id,
                                      'lat': tr.lat.mean(), 'lon': tr.lon.mean(), 'observed_ms': 25.,
-                                     'primary': True, 'split': 'test' if i else 'development'})
+                                     'primary': True, 'incomplete': 0, 'metadata_issue': '', 'split': 'test' if i else 'development'})
             summary, convergence = run_benchmark(tracks, pd.DataFrame(observations), {'sources': sources},
                                                  cfg, synthetic_portfolio(6, cfg['seed']),
                                                  load_vulnerability(), variants, [30, 5], out)

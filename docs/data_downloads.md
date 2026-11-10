@@ -3,8 +3,10 @@
 Start with Valdosta Regional Airport, expected Global Hourly identifier
 `72216693845`. These station-year URLs were supplied to the user for manual
 retrieval because the execution environment cannot resolve the NOAA download host.
-The file downloads could not be verified from this environment; verify the station
-name, identifier, call sign, coordinates and available dates after downloading.
+The user supplied both downloads. Their station identifier, Valdosta name, KVLD call
+sign, coordinates (30.77629, −83.27393) and year spans have now been verified from
+the file contents. Raw annual files are ignored by Git; their hashes and extracted
+event records are retained in the normalization manifests.
 
 - [2023 station-year CSV](https://noaa-global-hourly-pds.s3.amazonaws.com/2023/72216693845.csv)
 - [2024 station-year CSV](https://noaa-global-hourly-pds.s3.amazonaws.com/2024/72216693845.csv)
@@ -51,3 +53,27 @@ from the existence of an hourly file. Concatenate normalized time-series files
 when evaluating multiple events, preserving their storm and station identifiers.
 Two events at one station are an initial diagnostic, not a sufficiently broad
 independent validation collection. Further events and stations are still required.
+
+
+The imported windows retain 89 good Idalia samples and 96 good Helene samples.
+Their maximum gaps, including the missing ends of the windows, are 2,046 and
+2,654 minutes. Instrument uptime and station-specific height/exposure remain
+unverified, so these are development diagnostics with incomplete sampled peaks.
+
+```bash
+python -m hurricane_risk.time_series_validation \
+  --series data/validation/valdosta_time_series.csv \
+  --plan data/validation/valdosta_event_plan.json \
+  --out outputs/valdosta-timeseries-run2
+python -m hurricane_risk.benchmark \
+  --observations data/validation/expanded_station_peaks.csv \
+  --sources data/validation/expanded_sources.json \
+  --variants examples/baseline_variant.json --timesteps 30 5 1 \
+  --out outputs/expanded-benchmark-run2
+```
+
+Time-matched metrics use actual good report times, with no observed interpolation
+across gaps. Model curves stop at the available best-track endpoint. The separate
+peak benchmark retains 51 station/event rows across five storms, with the original
+22 eligible primary peak comparisons. New data are not promoted to primary scores
+without supporting metadata and adequate peak capture.

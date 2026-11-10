@@ -2,10 +2,12 @@
 
 The bundled three-event peak dataset remains a development diagnostic. The new
 preparation workflow supports a larger benchmark but does not manufacture new
-observations or certify provider quality flags. No additional real time series
-were acquired during implementation: direct NOAA requests failed DNS resolution,
-and the browsing service could not retrieve the source CSV files. No instrument
-uptime, exposure, height or independent-test status has been inferred to fill that gap.
+observations or certify provider quality flags. The user subsequently downloaded NOAA Global Hourly records for Valdosta in 2023
+and 2024. The Idalia and Helene windows now supply 185 observations passing the
+conservative wind QC filter, with long missing tails. Both events remain development
+diagnostics. Station-specific wind height/exposure and uptime remain unverified;
+these sampled peaks are excluded from primary peak scores. See the archived
+Valdosta time-series report for matched-report diagnostics.
 
 1. Choose events and stations before examining residuals. Include a range of
    landfall regions, intensities, storm sizes and inland distances. Record why

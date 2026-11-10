@@ -48,7 +48,9 @@ def load_observations(path, sources):
     obs["primary"] = finite & (obs.incomplete == 0) & obs.metadata_issue.eq("")
     obs["exclusion_reason"] = np.select(
         [~finite, obs.metadata_issue.ne(""), obs.incomplete.eq(1)],
-        ["missing_sustained_wind", "suspect_coordinates", "incomplete_peak_lower_bound"],
+        ["missing_sustained_wind", np.where(obs.metadata_issue.str.contains('coordinate|longitude', case=False),
+                                          "suspect_coordinates", "incompatible_or_unverified_metadata"),
+         "incomplete_peak_lower_bound"],
         default="eligible_no_incomplete_flag")
     return obs
 

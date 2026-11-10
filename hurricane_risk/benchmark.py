@@ -72,8 +72,8 @@ def assign_splits(obs, split_path=None):
     all_ids = splits['development'] + splits['test']
     if len(all_ids) != len(set(all_ids)) or set(all_ids) != set(obs.storm_id):
         raise ValueError('Every observed storm must appear in exactly one split')
-    if not splits['development'] or not splits['test']:
-        raise ValueError('Explicit splits require both development and test storms')
+    if not splits['development']:
+        raise ValueError('Explicit splits require development storms; test may be empty')
     return obs.assign(split=np.where(obs.storm_id.isin(splits['test']), 'test', 'development')), splits
 
 
@@ -104,6 +104,13 @@ def run_benchmark(tracks, obs, sources, cfg, portfolio, vulnerability, variants,
             print(f"Benchmark {variant['name']}, {minutes} min", flush=True)
             pairs = station_predictions(obs, tracks, sources, run_cfg)
             pairs = station_geometry(pairs, tracks, sources, run_cfg)
+            lower_bound = pairs.incomplete.eq(1) & pairs.observed_ms.notna() & pairs.metadata_issue.eq('')
+            pairs['peak_comparison_class'] = np.select(
+                [pairs.primary, lower_bound], ['primary_peak', 'lower_bound_only'], default='excluded_metadata_or_missing')
+            pairs['lower_bound_violation'] = pd.Series(pd.NA, index=pairs.index, dtype='boolean')
+            pairs.loc[lower_bound, 'lower_bound_violation'] = pairs.loc[lower_bound, 'modeled_ms'] < pairs.loc[lower_bound, 'observed_ms']
+            # An incomplete peak cannot supply an ordinary signed peak error.
+            pairs.loc[~pairs.primary, 'residual_ms'] = np.nan
             all_pairs.append(pairs.assign(**case))
             all_groups.append(grouped_errors(pairs).assign(**case))
             station_scores = {}
