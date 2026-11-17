@@ -62,8 +62,11 @@ See [Holland (1980), An Analytic Model of the Wind and Pressure Profiles in
 Hurricanes](https://doi.org/10.1175/1520-0493(1980)108%3C1212:AAMOTW%3E2.0.CO;2).
 No extra gradient-to-surface conversion is applied to best-track surface Vmax.
 
-The uniform exposure reduction e is an assumption. Translation, terrain,
-quadrant structure and surface heterogeneity remain unresolved by the default.
+The uniform exposure reduction e is an assumption. The current default also
+applies a bounded local coastal friction transition, described in
+[structural-model methods](structural_models.md#local-inland-attenuation).
+Translation, terrain, quadrant structure and surface heterogeneity remain
+unresolved by the default.
 Best-track intensity already includes observed weakening. There is no radial
 cutoff; extratropical phases remain an approximation.
 
