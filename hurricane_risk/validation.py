@@ -364,7 +364,7 @@ def main():
     portfolio, location_audit = portfolio_from_config(cfg, vulnerability, args.portfolio)
     sources = json.loads(args.sources.read_text())
     obs = load_observations(args.observations, sources)
-    tracks = read_hurdat(args.tracks)
+    tracks = read_hurdat(args.tracks, cfg.get('ibtracs_path'))
     if tracks.season.min() > cfg["start_year"] or tracks.season.max() < cfg["end_year"]:
         raise ValueError("Track catalog does not span configured loss-analysis years")
     pairs = footprint_predictions(obs, tracks, sources, cfg)
@@ -402,7 +402,7 @@ def main():
         diagnostic_plot(pairs, loeo, losses, out)
         footprint_plot(pairs, tracks, sources, cfg, out)
         write_report(pairs, metric_table, boot, loeo, losses, sources, cfg, out, factor)
-        manifest = {"purpose": "external station-peak evaluation; not strictly withheld validation",
+        manifest = {'ibtracs_sha256': sha256(cfg['ibtracs_path']) if cfg.get('ibtracs_path') else None, "purpose": "external station-peak evaluation; not strictly withheld validation",
                     "inputs": {str(p): sha256(p) for p in [p for p in [args.tracks, args.observations, args.sources, args.config, args.portfolio, args.vulnerability] if p]},
                     "config": cfg, "sources": sources, "bootstrap_replicates": 2000,
                     "bootstrap_seed": cfg["seed"]+11, "ensemble_seed": cfg["seed"]+10,

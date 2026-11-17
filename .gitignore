@@ -5,3 +5,4 @@ data/hurdat2*.txt
 outputs/
 *.bundle
 data/raw/
+data/ibtracs*.csv

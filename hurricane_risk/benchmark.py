@@ -227,13 +227,13 @@ def main():
     portfolio, location_audit = portfolio_from_config(cfg, curves, args.portfolio)
     sources = json.loads(args.sources.read_text())
     obs, splits = assign_splits(load_observations(args.observations, sources), args.splits)
-    tracks = read_hurdat(args.tracks)
+    tracks = read_hurdat(args.tracks, cfg.get('ibtracs_path'))
     with output_directory(args.out) as out:
         run_benchmark(tracks, obs, sources, cfg, portfolio, curves, variants, args.timesteps, out,
                       args.wind_tolerance_ms, args.loss_tolerance_pct)
         if location_audit is not None:
             location_audit.to_csv(out/'exposure_location_audit.csv', index=False)
-        manifest = {'purpose': __doc__, 'config': cfg, 'variants': variants, 'timesteps': args.timesteps,
+        manifest = {'ibtracs_sha256': sha256(cfg['ibtracs_path']) if cfg.get('ibtracs_path') else None, 'purpose': __doc__, 'config': cfg, 'variants': variants, 'timesteps': args.timesteps,
                     'coastline_sha256': sha256(cfg['coastline_path']) if cfg.get('coastline_path') else None,
                     'splits': splits, 'wind_tolerance_ms': args.wind_tolerance_ms,
                     'loss_tolerance_pct': args.loss_tolerance_pct,

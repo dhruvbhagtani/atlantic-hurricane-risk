@@ -120,7 +120,7 @@ size, wind parameters, timestep, scenarios, and uncertainty settings.
 | Analysis period | 1980–2024, including zero-loss years |
 | Synthetic portfolio | 300 properties; seed 7319; 2 km inland buffer |
 | Wind sampling | 1 minute |
-| Missing radius of maximum wind (RMW) | 35 km |
+| Missing radius of maximum wind (RMW) | IBTrACS USA_RMW when supplied; otherwise 35 km |
 | Radial profile / Holland B / exposure factor | Holland / 1.5 / 0.85 |
 | Resampled years / uncertainty replicates per mode | 20,000 / 200 |
 | Return periods | 2, 5, 10, and 20 years |
@@ -262,3 +262,21 @@ for station inputs needed by additional studies.
 - [Benchmark findings](docs/benchmark_findings.md)
 - [Next validation milestone](docs/validation_next_steps.md)
 - [Final review](reports/final_review/report.md)
+
+## Supplement missing RMW with IBTrACS
+
+Download the [NOAA IBTrACS v04r01 North Atlantic CSV](https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r01/access/csv/ibtracs.NA.list.v04r01.csv)
+and pass it alongside the complete HURDAT2 catalog:
+
+```bash
+python -m hurricane_risk --ibtracs data/ibtracs.NA.list.v04r01.csv \
+  --out outputs/holland-ibtracs-first-run
+```
+
+Alternatively set `"ibtracs_path": "data/ibtracs.NA.list.v04r01.csv"` in a
+configuration shared by the loss, peak-validation, time-series-validation and
+benchmark commands. A configured missing file fails explicitly. Without this
+input, HURDAT2 and the declared fallback are used. Demo runs do not use IBTrACS.
+`track_rmw_audit.csv` records the radius source at each original fix; the manifest
+records source counts and the IBTrACS SHA-256. RMW is not the storm's outer extent.
+IBTrACS radii are not uniformly reanalyzed observations; see the methods.

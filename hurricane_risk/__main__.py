@@ -26,6 +26,8 @@ from .model import (NOAA_URL, DAMAGE_NODES, WIND_NODES, read_hurdat, synthetic_p
 
 
 def validate_config(cfg):
+    if cfg.get('ibtracs_path') is not None and not Path(cfg['ibtracs_path']).is_file():
+        raise ValueError('IBTrACS file does not exist')
     for key in ["properties", "uncertainty_replicates", "simulation_years"]:
         if type(cfg[key]) is not int or cfg[key] < 1:
             raise ValueError(f"{key} must be a positive integer")
@@ -268,6 +270,7 @@ def main():
     parser.add_argument("--tracks", type=Path, default=Path("data/hurdat2-1851-2024-040425.txt"))
     parser.add_argument("--download", action="store_true", help="Download pinned NOAA data if absent")
     parser.add_argument("--url", default=NOAA_URL)
+    parser.add_argument('--ibtracs', type=Path, help='IBTrACS v04r01 CSV to fill missing HURDAT2 RMW')
     parser.add_argument("--demo", action="store_true", help="Use FABRICATED tracks; never historical estimates")
     parser.add_argument("--portfolio", type=Path, help="Validated property CSV; default: seeded synthetic exposure")
     parser.add_argument("--vulnerability", type=Path, help="Curve JSON with wind conventions and source")
@@ -275,6 +278,8 @@ def main():
     args = parser.parse_args()
     execution_source_hashes = {p.name: sha256(p) for p in Path(__file__).parent.glob("*.py")}
     cfg = json.loads(args.config.read_text())
+    if args.ibtracs:
+        cfg['ibtracs_path'] = str(args.ibtracs)
     validate_config(cfg)
     out = args.out or Path("outputs/demo" if args.demo else "outputs/historical")
     vulnerability = load_vulnerability(args.vulnerability)
@@ -290,12 +295,15 @@ def main():
                 download(track_path, args.url)
             if not track_path.exists():
                 parser.error("Track file missing. Use --download, --tracks PATH, or --demo.")
-        tracks = read_hurdat(track_path)
+        tracks = read_hurdat(track_path, None if args.demo else cfg.get('ibtracs_path'))
         if tracks.season.min() > cfg["start_year"] or tracks.season.max() < cfg["end_year"]:
             raise ValueError("Input does not span requested years; provide a complete catalog, not a storm subset")
         selected = tracks[tracks.season.between(cfg["start_year"], cfg["end_year"])]
         ids = selected.loc[selected.status == "HU", "storm_id"].unique()
         selected = selected[selected.storm_id.isin(ids)]
+        selected[['storm_id', 'time', 'rmw_km', 'rmw_source'] +
+                 [c for c in ['rmw_agency', 'rmw_iflag'] if c in selected]].to_csv(
+                     out / 'track_rmw_audit.csv', index=False)
         if selected.vmax_ms.isna().any():
             raise ValueError("Selected hurricane tracks contain missing maximum winds; supply a complete "
                              "catalog or explicitly resolve missing intensities before modeling")
@@ -324,6 +332,8 @@ def main():
             "storms": len(events), "years_including_zero_loss": cfg["end_year"]-cfg["start_year"]+1,
             "input_season_span": [int(tracks.season.min()), int(tracks.season.max())],
             "rmw_missing_fraction": float(selected.rmw_km.isna().mean()),
+            "rmw_source_counts": selected.rmw_source.value_counts().to_dict(),
+            "ibtracs_sha256": sha256(cfg['ibtracs_path']) if cfg.get('ibtracs_path') and not args.demo else None,
             "versions": {"python": platform.python_version(), "numpy": np.__version__, "pandas": pd.__version__,
                          "matplotlib": matplotlib.__version__},
             "source_sha256": execution_source_hashes,
