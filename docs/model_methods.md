@@ -24,33 +24,39 @@ linearly at one-minute intervals by default. Interpolation smooths the original 
 it does not reconstruct unobserved rapid intensity changes. Track gaps longer
 than 12 hours fail validation. Great-circle distances use Earth radius 6371.0088 km.
 
-The local wind approximation is an **explicitly assumed modified Rankine vortex**:
+The default configuration uses the **Vmax-normalized cyclostrophic Holland
+(1980) radial profile**:
 
-```
-V(r,t) = e * Vmax(t) * r/R(t)             for 0 <= r <= R(t)
-V(r,t) = e * Vmax(t) * (R(t)/r)^alpha     for r > R(t)
+```text
+x = (R(t)/r)^B
+V(r,t) = e * Vmax(t) * sqrt(x * exp(1-x))  for r > 0
+V(0,t) = 0
 W(event, property) = max_t V(r(property,t),t)
 ```
 
-Default `alpha = 0.6`, `e = 0.85`, and missing `R = 35 km`. Observed positive
-RMW is used when available. Wind is zero at the center and peaks at RMW; there
-is no artificial geographic cutoff. The wind variable throughout is an assumed
-one-minute sustained 10-m wind, **not a gust**. `e` is a uniform exposure/roughness
-reduction applied to every property, not a geographic land mask or inland decay
-model. Observed track intensity already reflects storm weakening to the extent
-captured in the best track. The profile ignores translation asymmetry, terrain,
-quadrant size, pressure, surface heterogeneity and explicit post-landfall decay;
-its outer wind tail is unconstrained by observed wind radii. It is applied to
-all phases even though extratropical wind fields may be very different.
+`wind_profile = "holland"`, `holland_b = 1.5`, `e = 0.85`, and missing
+`R = 35 km` are the current defaults. The unmodified radial profile peaks at
+Vmax exactly at RMW. B controls the width and outer tail and is an assumed
+parameter, not fitted to pressure or quadrant radii. The implementation uses log
+space to remain finite near the eye. It is the cyclostrophic limit of the Holland
+pressure-gradient model, normalized to observed one-minute sustained 10-m Vmax;
+it does not solve the full Coriolis-dependent gradient wind or infer pressure.
+See [Holland (1980), An Analytic Model of the Wind and Pressure Profiles in
+Hurricanes](https://doi.org/10.1175/1520-0493(1980)108%3C1212:AAMOTW%3E2.0.CO;2).
+No extra gradient-to-surface conversion is applied to best-track surface Vmax.
 
-Parametric surface wind fitting has a research basis; see
-[Knaff et al. (2006), A Real-Time Hurricane Surface Wind Forecasting Model](https://journals.ametsoc.org/view/journals/mwre/134/5/mwr3126.1.xml).
-The simple profile and coefficients here are **assumptions**, not a reproduction
-or validation of that model or of Holland's pressure-gradient model. A smaller
-time step can be used to check peak-wind sensitivity. One-minute sampling passed
-the declared 1 m/s maximum wind and 1% loss-metric criteria against 15-second
-sampling for both documented synthetic portfolios; this is a numerical check,
-not reconstruction of unobserved storm evolution.
+The uniform exposure reduction e is an assumption. Translation, terrain,
+quadrant structure and surface heterogeneity remain unresolved by the default.
+Best-track intensity already includes observed weakening. There is no radial
+cutoff; extratropical phases remain an approximation.
+
+For archived runs, `wind_profile = "rankine"` uses the previous modified Rankine
+profile: V/Vmax = r/R inside R and (R/r)^rankine_alpha outside R. Configurations
+omitting wind_profile retain this legacy behavior. The shipped config explicitly
+selects Holland. Existing reports, observational scores, and timestep convergence
+claims describe the old Rankine configuration; they do not validate Holland.
+Re-run wind validation, numerical convergence and loss calculations for new results.
+The default benchmark includes Holland B=1.0 and B=2.0 sensitivities.
 
 ## Exposure, damage and policy assumptions
 

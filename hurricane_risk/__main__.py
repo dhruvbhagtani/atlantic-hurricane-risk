@@ -52,8 +52,13 @@ def validate_config(cfg):
             raise ValueError(f"{key} must be a nonnegative integer")
     if cfg["end_year"] < cfg["start_year"]:
         raise ValueError("end_year must be >= start_year")
-    for key in ["rmw_km", "rankine_alpha", "land_exposure_factor"]:
-        if not np.isfinite(cfg[key]) or cfg[key] <= 0:
+    profile = cfg.get('wind_profile', 'rankine')
+    if profile not in ('rankine', 'holland'):
+        raise ValueError('wind_profile must be rankine or holland')
+    for key, default in [('holland_b', 1.5), ('rankine_alpha', .6),
+                         ('rmw_km', None), ('land_exposure_factor', None)]:
+        value = cfg.get(key, default)
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not np.isfinite(value) or value <= 0:
             raise ValueError(f"{key} must be finite and positive")
     if cfg["land_exposure_factor"] > 1:
         raise ValueError("land_exposure_factor must be <= 1")

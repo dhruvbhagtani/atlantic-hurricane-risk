@@ -5,6 +5,8 @@
   "properties": 300,
   "interpolation_minutes": 1,
   "rmw_km": 35.0,
+  "wind_profile": "holland",
+  "holland_b": 1.5,
   "rankine_alpha": 0.6,
   "land_exposure_factor": 0.85,
   "uncertainty_replicates": 200,
