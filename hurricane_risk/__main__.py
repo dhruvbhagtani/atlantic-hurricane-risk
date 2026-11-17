@@ -22,7 +22,7 @@ from .artifacts import output_directory, output_hashes, sha256
 
 from .model import (NOAA_URL, DAMAGE_NODES, WIND_NODES, read_hurdat, synthetic_portfolio,
                     hazard_catalog, property_losses, annual_losses, sample_annual_blocks,
-                    ep_curve, loss_metrics)
+                    ep_curve, loss_metrics, inland_profile)
 
 
 def validate_config(cfg):
@@ -40,7 +40,15 @@ def validate_config(cfg):
             raise ValueError(f'{key} must be finite and nonnegative')
     if cfg.get('translation_fraction', 0.) > 1 or cfg.get('asymmetry_cap', .25) >= 1:
         raise ValueError('Translation fraction must be <= 1 and asymmetry cap < 1')
-    if cfg.get('inland_decay_km', 0.) and not cfg.get('coastline_path'):
+    inland = inland_profile(cfg)
+    if inland not in ('none', 'exponential', 'coastal_transition'):
+        raise ValueError('inland_profile must be none, exponential or coastal_transition')
+    floor = cfg.get('inland_equilibrium_factor', .78/.89)
+    if isinstance(floor, bool) or not isinstance(floor, (int, float)) or not np.isfinite(floor) or not 0 < floor <= 1:
+        raise ValueError('inland_equilibrium_factor must be in (0,1]')
+    if inland == 'exponential' and cfg.get('inland_decay_km', 0.) <= 0:
+        raise ValueError('Exponential inland attenuation needs positive inland_decay_km')
+    if inland != 'none' and not cfg.get('coastline_path'):
         raise ValueError('Inland attenuation requires coastline_path')
     buffer = cfg.get('synthetic_land_buffer_km')
     if buffer is not None and (isinstance(buffer, bool) or not isinstance(buffer, (int, float)) or not np.isfinite(buffer) or buffer < 0 or not cfg.get('coastline_path')):

@@ -1,9 +1,15 @@
 # Current results and reproduction
 
+These archived results use the previous Rankine and inland-friction settings.
+The current Holland plus bounded coastal-transition default requires fresh
+observational evaluation and timestep convergence checks. IBTrACS supplementation
+also changes results when supplied; archived radius coverage is not its coverage.
+
 The remaining wind-model comparisons, coastal diagnostics, reserved-event
-protocol and finer numerical checks are implemented and evaluated. The default
-now uses one-minute sampling and synthetic land-only exposure. Optional structural
-coefficients remain disabled; no model is promoted using test-set errors.
+protocol and finer numerical checks below describe the archived evaluation. It
+used one-minute sampling and synthetic land-only exposure with optional structural
+coefficients disabled. The new physical assumptions were not selected using
+these test-set errors.
 
 ## Defaults and numerical evidence
 
@@ -82,10 +88,15 @@ is retained as an earlier diagnostic with a different reported time and coordina
 ## Reproduce
 
 Use fresh output directories: completed experiments cannot be overwritten.
+Frozen studies validate source hashes and intentionally reject changed model code;
+run those studies at the archived pre-change revision
+`bcf93e76e42058c5b022c421872e53c675c801bd`. Do not refresh their locks to evaluate
+new defaults against previously reserved data.
 
 ```bash
-# Current default; no network needed when the pinned catalog is present.
-python -m hurricane_risk --out outputs/current-default-run2
+# Archived Rankine default; pinned catalog must be present.
+python -m hurricane_risk --config examples/archived_rankine_config.json \
+  --out outputs/archived-rankine-run2
 
 # Original 30-minute result, preserved explicitly.
 python -m hurricane_risk --config examples/legacy_30min_config.json \
@@ -95,7 +106,8 @@ python -m hurricane_risk --config examples/legacy_30min_config.json \
 python -m hurricane_risk.structural_study --out outputs/reserved-study-run2
 
 # Numerical reference with the current land-only exposure.
-python -m hurricane_risk.benchmark --variants examples/baseline_variant.json \
+python -m hurricane_risk.benchmark --config examples/archived_rankine_config.json \
+  --variants examples/baseline_variant.json \
   --timesteps 1 0.5 0.25 --out outputs/current-resolution-run2
 
 # Additional registered high-wind confirmation; inputs are now available locally.
@@ -107,7 +119,7 @@ python -m hurricane_risk.confirmation_study --out outputs/laura-confirmation-run
 python -m unittest discover -s tests -v
 ```
 
-The offline suite contains 54 tests, including registered station/storm weighting,
+The archived offline suite contained 54 tests, including registered station/storm weighting,
 missing/ineligible pair retention, identity amendments, timing-shift direction and shared
 support, inventory missingness, new-collection locks, identity checks that omit
 wind values, dated surface-station selection,

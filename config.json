@@ -7,6 +7,8 @@
   "rmw_km": 35.0,
   "wind_profile": "holland",
   "holland_b": 1.5,
+  "inland_profile": "coastal_transition",
+  "inland_equilibrium_factor": 0.8764044943820225,
   "rankine_alpha": 0.6,
   "land_exposure_factor": 0.85,
   "uncertainty_replicates": 200,

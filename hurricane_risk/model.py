@@ -199,6 +199,39 @@ def translation_velocity(track, targets):
     return np.interp(targets, t, east), np.interp(targets, t, north)
 
 
+def inland_profile(cfg):
+    """Resolve explicit selection, preserving old exponential configurations."""
+    return cfg.get('inland_profile', 'exponential' if cfg.get('inland_decay_km', 0.) else 'none')
+
+
+def inland_wind_factor(distance, cfg):
+    """Local friction only; best-track Vmax already includes intensity decay.
+
+    coastal_transition adapts NOAA NWS 23 (1979), eqs. 15.2–15.3,
+    using nearest-coast distance as a proxy for along-wind land fetch.
+    """
+    d = np.asarray(distance, dtype=float)
+    if not np.isfinite(d).all():
+        raise ValueError('Inland distances must be finite')
+    profile = inland_profile(cfg)
+    if profile == 'none':
+        return np.ones_like(d)
+    if profile == 'exponential':
+        length = cfg.get('inland_decay_km', 0.)
+        if not np.isfinite(length) or length <= 0:
+            raise ValueError('Exponential inland attenuation needs positive inland_decay_km')
+        return np.exp(-np.maximum(d, 0.)/length)
+    if profile == 'coastal_transition':
+        floor = cfg.get('inland_equilibrium_factor', .78/.89)
+        if not np.isfinite(floor) or not 0 < floor <= 1:
+            raise ValueError('inland_equilibrium_factor must be in (0,1]')
+        # Published Q uses nautical miles and reaches equilibrium at 10 nmi.
+        s = np.clip(d/1.852, 0., 10.)
+        q = np.clip(1.-.195*s+.0095*s*s, 0., 1.)
+        return floor+(1.-floor)*q
+    raise ValueError(f'Unknown inland_profile: {profile}')
+
+
 def surface_wind(distance, vmax, rmw, center_lat, center_lon, site_lat, site_lon,
                  cfg, motion_east=0., motion_north=0., inland_distance_km=None):
     """Shared wind kernel; optional, explicitly assumed structural sensitivities."""
@@ -225,11 +258,10 @@ def surface_wind(distance, vmax, rmw, center_lat, center_lon, site_lat, site_lon
         # Preserve best-track Vmax on the favored side, avoiding a second
         # addition of translation speed to an already earth-relative maximum.
         wind = wind*(1+beta*cosine)/(1+beta)
-    length = cfg.get('inland_decay_km', 0.)
-    if length:
+    if inland_profile(cfg) != 'none':
         if inland_distance_km is None:
             raise ValueError('Local inland attenuation requires coastline distances')
-        wind = wind*np.exp(-np.maximum(inland_distance_km, 0)/length)
+        wind = wind*inland_wind_factor(inland_distance_km, cfg)
     return wind
 
 
@@ -237,7 +269,7 @@ def hazard_catalog(tracks, portfolio, cfg):
     """Event/property maxima at three assumed RMW multipliers; no radius cutoff."""
     events, fields = [], []
     inland = None
-    if cfg.get('inland_decay_km', 0.):
+    if inland_profile(cfg) != 'none':
         from .geography import coast_distances
         inland, _ = coast_distances(portfolio.lat, portfolio.lon, cfg['coastline_path'])
     for sid, tr in tracks.groupby("storm_id", sort=True):

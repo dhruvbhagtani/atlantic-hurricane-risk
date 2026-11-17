@@ -42,7 +42,7 @@ def validate_variants(variants, cfg):
         if variant['name'] in names:
             raise ValueError('Variant names must be unique')
         names.add(variant['name'])
-        if not isinstance(variant['overrides'], dict) or set(variant['overrides']) - {'wind_profile', 'holland_b', 'rmw_km', 'rankine_alpha', 'land_exposure_factor', 'translation_fraction', 'asymmetry_cap', 'inland_decay_km'}:
+        if not isinstance(variant['overrides'], dict) or set(variant['overrides']) - {'inland_profile', 'inland_equilibrium_factor', 'wind_profile', 'holland_b', 'rmw_km', 'rankine_alpha', 'land_exposure_factor', 'translation_fraction', 'asymmetry_cap', 'inland_decay_km'}:
             raise ValueError('Variant overrides may change only declared wind-model parameters')
         validate_config({**cfg, **variant['overrides']})
 

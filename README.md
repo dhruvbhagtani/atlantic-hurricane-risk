@@ -59,7 +59,7 @@ overwrites, and results are published only after successful completion. Change
 
 1. Selects storms that attained hurricane status during the configured seasons,
    retaining their recorded weakening and extratropical phases.
-2. Interpolates tracks and computes property-level peak sustained winds using an
+2. Interpolates tracks and computes property-level peak sustained winds using a
    Vmax-normalized Holland profile.
 3. Applies vulnerability curves and policy terms to calculate ground-up and
    insured event losses.
@@ -75,8 +75,10 @@ cannot establish the completeness of a user-supplied subset.
 ## Current results
 
 The tables and archived validation below use the previous Rankine configuration.
-The current default uses Holland (B=1.5); these values and convergence conclusions
-must be recomputed before being attributed to the new default.
+The current default uses Holland (B=1.5) and bounded coastal friction. Recompute
+these values and convergence conclusions before attributing them to the new default.
+Use [the archived Rankine configuration](examples/archived_rankine_config.json)
+to reproduce the earlier default.
 
 The default uses one-minute wind sampling and 300 synthetic Florida properties
 constrained to at least 2 km inland in the generalized coastline dataset. The
@@ -122,6 +124,7 @@ size, wind parameters, timestep, scenarios, and uncertainty settings.
 | Wind sampling | 1 minute |
 | Missing radius of maximum wind (RMW) | IBTrACS USA_RMW when supplied; otherwise 35 km |
 | Radial profile / Holland B / exposure factor | Holland / 1.5 / 0.85 |
+| Local inland friction | Bounded coastal transition; equilibrium ratio 0.8764 |
 | Resampled years / uncertainty replicates per mode | 20,000 / 200 |
 | Return periods | 2, 5, 10, and 20 years |
 
@@ -182,8 +185,8 @@ independence from track construction is not established.
 | [Observation inventory v3](reports/observation_inventory_v3/report.md) | 60 examined station/event pairs; original roles and missing coverage retained |
 
 Local inland attenuation improves some overall scores but worsens Laura's
-high-wind errors. Structural candidates remain experimental and disabled in the
-default model. Gaps in station reporting leave event peaks incomplete.
+high-wind errors. The archived structural candidates were experimental; the new bounded coastal
+friction default has not been evaluated by those studies. Gaps in station reporting leave event peaks incomplete.
 
 The Sally/Ida/Florence collection has now been evaluated with all five frozen
 candidates. Baseline station/storm-balanced RMSE is 4.96 m/s. An event-specific
@@ -216,8 +219,8 @@ nodes, annual-block frequency model, and uncertainty distributions.
   insured parcels. Coastline classification uses generalized geography.
 - RMW is missing for 88.2% of selected track observations. The 35 km fallback and
   idealized radial wind profile materially influence results.
-- The default profile omits translation asymmetry, terrain, quadrant structure,
-  and explicit local inland attenuation. Track interpolation cannot reconstruct
+- The default profile omits translation asymmetry, terrain, and quadrant structure.
+  Inland friction uses nearest-coast distance as a proxy for wind-path fetch. Track interpolation cannot reconstruct
   unobserved storm evolution.
 - Assumed damage curves and losses are not calibrated to claims. Surge, flood,
   contents, business interruption, demand surge, and reinsurance are excluded.

@@ -33,14 +33,52 @@ coefficients are declared assumptions, not a fitted or published model reproduct
 
 ## Local inland attenuation
 
-Natural Earth land polygons determine whether a site is on land and its signed
-nearest-coast distance. Positive distances indicate inland sites. The wind at the
-site is multiplied by `exp(-max(distance_km, 0)/100)`. This is an explicitly assumed
-local roughness sensitivity. It does not apply another center-intensity weakening
-equation to best tracks that already include weakening. It is not the Kaplan–DeMaria
-inland intensity model, and shortest coastal distance is not directional land fetch.
-The study compares baseline, missing-RMW fallback 25 km, translation alone, local
-inland attenuation alone and their combination.
+The current default uses `inland_profile = "coastal_transition"`. Natural Earth
+polygons provide signed nearest-coast distance d (positive on land). The local
+wind is multiplied by a bounded surface-friction transition:
+
+```text
+s = clip(max(d, 0) / 1.852, 0, 10)    # nautical miles
+Q = clip(1 - 0.195*s + 0.0095*s*s, 0, 1)
+factor = f_eq + (1 - f_eq)*Q
+```
+
+The Q curve and 10-nautical-mile transition come from
+[Schwerdt, Ho and Watkins (1979), NOAA Technical Report NWS 23,
+section 15.2.4.3, equations 15.2–15.3](https://www.govinfo.gov/content/pkg/CZIC-qc983-n75-no-23/html/CZIC-qc983-n75-no-23.htm).
+It describes frictional adjustment toward an equilibrium, separately from
+storm filling. We normalize the coastal value to one because the model already
+applies `land_exposure_factor`. The assumed equilibrium ratio is configurable
+as `inland_equilibrium_factor`, default 0.78/0.89 (about 0.8764), based on the
+report's strong-wind land and coast coefficients. This is an adaptation: the
+report uses along-wind fetch and 10-minute winds, whereas here nearest-coast
+distance approximates fetch and the multiplier is applied to one-minute winds.
+The ratio and its use across all wind strengths need observational validation;
+they are not a reproduction of the full NOAA model or a fitted site correction.
+
+At the coast and over water the extra factor is one; by 18.52 km inland it
+reaches f_eq and remains there. With exposure 0.85, the combined default factor
+is about 0.745 far inland. Increasing coastal distance cannot make this local
+friction factor vanish. Terrain, flow direction, inland water and changing
+roughness remain unresolved. A directional fetch and roughness model would be
+needed to resolve those processes. See also
+[Vickery et al. (2009), A Hurricane Boundary Layer and Wind Field Model for Use
+in Engineering Applications](https://doi.org/10.1175/2008JAMC1841.1) for a more
+complete boundary-layer treatment.
+
+Exponential **storm-intensity decay with time since landfall** has an empirical
+basis in [Kaplan and DeMaria (1995)](https://rammb-data.cira.colostate.edu/ships/docs/1995_JAM_Kaplan_inland-wind.pdf).
+That does not validate the former shortest-distance multiplier
+`exp(-max(d,0)/100)`. Applying another storm-intensity decay to HURDAT2 would
+repeat weakening already present in its observed Vmax. We do not do so.
+
+For reproducibility, `inland_profile = "exponential"` and positive
+`inland_decay_km` retain the former experimental distance exponential;
+`inland_profile = "none"` disables the local adjustment. When inland_profile is
+omitted, a positive inland_decay_km selects the old exponential, otherwise no
+local adjustment is applied. Explicit selection takes precedence. The archived
+reserved study below used baseline, fallback RMW 25 km, translation, distance
+exponential, and their combination. Its scores do not evaluate the new profile.
 
 ## Coastline provenance and audit
 

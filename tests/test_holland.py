@@ -27,6 +27,7 @@ class HollandTests(unittest.TestCase):
     def test_dispatch_legacy_and_parameter_validation(self):
         cfg = json.loads(Path('config.json').read_text())
         self.assertEqual(cfg['wind_profile'], 'holland')
+        cfg['inland_profile'] = 'none'  # isolate the radial kernel
         actual = surface_wind(70., 60., 35., 25., -80., 25., -81., cfg)
         self.assertAlmostEqual(actual, holland_wind(70., 60., 35.)*.85)
         cfg.pop('wind_profile')
