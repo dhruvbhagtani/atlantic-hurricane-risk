@@ -152,10 +152,10 @@ def main():
     # A genuinely held-out protocol uses observations registration before evaluation.
     if any(e['split'] != 'development' for e in plan['events']):
         raise ValueError('This exploratory time-series diagnostic accepts development events only')
-    tracks = read_hurdat(args.tracks)
+    tracks = read_hurdat(args.tracks, cfg.get('ibtracs_path'))
     with output_directory(args.out) as out:
         evaluate_series(series, plan, tracks, cfg, out)
-        manifest = {'purpose': __doc__, 'config': cfg, 'plan': plan,
+        manifest = {'ibtracs_sha256': sha256(cfg['ibtracs_path']) if cfg.get('ibtracs_path') else None, 'purpose': __doc__, 'config': cfg, 'plan': plan,
                     'inputs_sha256': {str(p): sha256(p) for p in [args.series, args.plan, args.tracks, args.config]},
                     'code_sha256': {p.name: sha256(p) for p in Path(__file__).parent.glob('*.py')},
                     'versions': {'python': platform.python_version(), 'numpy': np.__version__,

@@ -15,6 +15,23 @@ sentinels are treated as missing. RMW reporting is sparse in historical records.
 Missing-wind sentinels (`-99`, also accepting `-999`) are parsed as missing; selected hurricane tracks with
 missing intensity stop the workflow rather than silently imputing winds.
 
+When `ibtracs_path` is supplied (or `--ibtracs` for the loss CLI), missing
+HURDAT2 RMW is supplemented from IBTrACS v04r01 `USA_RMW`. Match by `USA_ATCF_ID`
+and exact UTC `ISO_TIME`, convert nautical miles with 1.852, and preserve positive
+HURDAT2 RMW. Blank, nonfinite, nonpositive and 999 sentinel radii are excluded.
+Spur tracks are excluded and duplicate valid storm/time matches fail. Colon-separated
+ATCF aliases are supported. No storm-name matching or nearest-time extrapolation
+is used. Unmatched fixes retain the configured fallback before ordinary linear
+track interpolation. Special HURDAT2 fixes remain intact.
+
+[NOAA's IBTrACS column documentation](https://www.ncei.noaa.gov/sites/default/files/2025-09/IBTrACS_v04r01_column_documentation.pdf)
+defines USA_RMW separately from ROCI and quadrant radii, and cautions that RMW is
+only best tracked for NHC from 2021 onward and some historical US landfalls.
+Elsewhere it is not reanalyzed. Retain USA_AGENCY and IFLAG in the audit, including
+IBTrACS interpolation flags; these are supplementary estimates, not independent
+truth. Coverage improvement must be measured for the specific input snapshot;
+IBTrACS can contain the same missing information as HURDAT2.
+
 Only storms attaining `HU` status somewhere in the selected season are included.
 All recorded phases of those storms contribute, including weakening and
 extratropical phases; this is an approximation and excludes storms that remain

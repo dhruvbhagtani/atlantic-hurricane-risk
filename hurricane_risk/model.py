@@ -24,7 +24,7 @@ def coordinate(value: str) -> float:
     return float(value[:-1]) * (-1 if value[-1] in "SW" else 1)
 
 
-def read_hurdat(path: Path) -> pd.DataFrame:
+def read_hurdat(path: Path, ibtracs_path=None) -> pd.DataFrame:
     """Read variable-width comma-delimited HURDAT2; reject incomplete storms."""
     rows = []
     lines = iter(path.read_text().splitlines())
@@ -57,7 +57,52 @@ def read_hurdat(path: Path) -> pd.DataFrame:
                                     "lat", "lon", "vmax_ms", "rmw_km"])
     if df.duplicated(["storm_id", "time"]).any():
         raise ValueError("Duplicate storm timestamps")
-    return df.sort_values(["storm_id", "time"]).reset_index(drop=True)
+    df = df.sort_values(["storm_id", "time"]).reset_index(drop=True)
+    df['rmw_source'] = np.where(df.rmw_km.notna(), 'HURDAT2', 'fallback')
+    return supplement_rmw(df, ibtracs_path) if ibtracs_path else df
+
+
+def supplement_rmw(tracks, path):
+    """Fill missing HURDAT2 RMW with exact storm/time matches from IBTrACS.
+
+    USA_RMW is nautical miles, not ROCI or quadrant wind radii. Retain
+    agency and interpolation flags because not all radii are best tracked.
+    """
+    data = pd.read_csv(path, dtype=str, keep_default_na=False)
+    data.columns = data.columns.str.strip()
+    required = {'USA_ATCF_ID', 'ISO_TIME', 'USA_RMW'}
+    if not required.issubset(data):
+        raise ValueError(f'IBTrACS missing columns: {sorted(required-set(data))}')
+    data = data.apply(lambda col: col.str.strip())
+    # NOAA CSV includes a units row immediately after the header.
+    if len(data) and data.ISO_TIME.iloc[0] == 'UTC':
+        if data.USA_RMW.iloc[0] != 'nmile':
+            raise ValueError('IBTrACS USA_RMW units must be nmile')
+        data = data.iloc[1:].copy()
+    if 'TRACK_TYPE' in data:
+        data = data[~data.TRACK_TYPE.str.lower().str.contains('spur')].copy()
+    # Some systems have multiple colon-separated ATCF IDs.
+    data['storm_id'] = data.USA_ATCF_ID.str.upper().str.split(':')
+    data = data.explode('storm_id')
+    data = data[data.storm_id.isin(tracks.storm_id)].copy()
+    data['time'] = pd.to_datetime(data.ISO_TIME, utc=True, errors='raise').dt.tz_localize(None)
+    radii = pd.to_numeric(data.USA_RMW.replace('', np.nan), errors='raise')
+    data['ibtracs_rmw_km'] = radii.where(np.isfinite(radii) & (radii > 0) & (radii < 999))*1.852
+    data = data[data.ibtracs_rmw_km.notna()].copy()
+    if data.duplicated(['storm_id', 'time']).any():
+        raise ValueError('Duplicate IBTrACS storm/time RMW records')
+    for field in ['USA_AGENCY', 'IFLAG']:
+        if field not in data:
+            data[field] = ''
+    result = tracks.merge(data[['storm_id', 'time', 'ibtracs_rmw_km', 'USA_AGENCY', 'IFLAG']],
+                          on=['storm_id', 'time'], how='left', validate='one_to_one', sort=False)
+    result['rmw_source'] = np.where(result.rmw_km.notna(), 'HURDAT2', 'fallback')
+    fill = result.rmw_km.isna() & result.ibtracs_rmw_km.notna()
+    result.loc[fill, 'rmw_km'] = result.loc[fill, 'ibtracs_rmw_km']
+    result.loc[fill, 'rmw_source'] = 'IBTrACS:USA_RMW'
+    result['rmw_agency'] = result.USA_AGENCY.where(fill, '').fillna('')
+    result['rmw_iflag'] = result.IFLAG.where(fill, '').fillna('')
+    return result.drop(columns=['ibtracs_rmw_km', 'USA_AGENCY', 'IFLAG'])
 
 
 def synthetic_portfolio(n: int, seed: int) -> pd.DataFrame:
