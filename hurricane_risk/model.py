@@ -113,6 +113,28 @@ def rankine_wind(distance, vmax, rmw, alpha=.6):
     return vmax * np.where(ratio <= 1, ratio, np.maximum(ratio, 1)**(-alpha))
 
 
+def holland_wind(distance, vmax, rmw, b=1.5):
+    """Vmax-normalized cyclostrophic Holland (1980) profile; RMW in km.
+
+    V/Vmax = sqrt(x*exp(1-x)), x=(RMW/r)**B. This surface-wind
+    approximation uses observed Vmax, not an inferred pressure deficit.
+    """
+    r, v, radius, shape = np.broadcast_arrays(
+        np.asarray(distance, dtype=float), vmax, rmw, b)
+    if (not all(np.isfinite(a).all() for a in (r, v, radius, shape))
+            or (r < 0).any() or (v < 0).any()
+            or (radius <= 0).any() or (shape <= 0).any()):
+        raise ValueError('Holland requires finite nonnegative distance/wind and positive RMW/B')
+    # Work in log space to avoid overflow near the eye and define V(0)=0.
+    positive = r > 0
+    log_x = np.zeros_like(r)
+    np.log(r, out=log_x, where=positive)
+    log_x = shape*(np.log(radius)-log_x)
+    x = np.exp(np.minimum(log_x, 700.))
+    factor = np.exp(np.minimum(.5*(1+log_x-x), 0.))
+    return v*np.where(positive, factor, 0.)
+
+
 def interpolation_times(track, minutes, evaluation_times=None):
     t = track.time.astype('int64').to_numpy()/1e9
     if evaluation_times is not None:
@@ -135,7 +157,14 @@ def translation_velocity(track, targets):
 def surface_wind(distance, vmax, rmw, center_lat, center_lon, site_lat, site_lon,
                  cfg, motion_east=0., motion_north=0., inland_distance_km=None):
     """Shared wind kernel; optional, explicitly assumed structural sensitivities."""
-    wind = rankine_wind(distance, vmax, rmw, cfg['rankine_alpha'])*cfg['land_exposure_factor']
+    profile = cfg.get('wind_profile', 'rankine')  # preserve legacy configurations
+    if profile == 'holland':
+        wind = holland_wind(distance, vmax, rmw, cfg.get('holland_b', 1.5))
+    elif profile == 'rankine':
+        wind = rankine_wind(distance, vmax, rmw, cfg.get('rankine_alpha', .6))
+    else:
+        raise ValueError(f'Unknown wind_profile: {profile}')
+    wind = wind*cfg['land_exposure_factor']
     fraction = cfg.get('translation_fraction', 0.)
     if fraction:
         lat0, lat1 = np.deg2rad(center_lat), np.deg2rad(site_lat)

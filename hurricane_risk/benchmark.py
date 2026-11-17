@@ -27,8 +27,8 @@ DEFAULT_VARIANTS = [
     {'name': 'baseline', 'overrides': {}},
     {'name': 'fallback_rmw_25km', 'overrides': {'rmw_km': 25.}},
     {'name': 'fallback_rmw_45km', 'overrides': {'rmw_km': 45.}},
-    {'name': 'outer_decay_0.5', 'overrides': {'rankine_alpha': .5}},
-    {'name': 'outer_decay_0.7', 'overrides': {'rankine_alpha': .7}},
+    {'name': 'holland_b_1.0', 'overrides': {'wind_profile': 'holland', 'holland_b': 1.0}},
+    {'name': 'holland_b_2.0', 'overrides': {'wind_profile': 'holland', 'holland_b': 2.0}},
 ]
 
 
@@ -42,7 +42,7 @@ def validate_variants(variants, cfg):
         if variant['name'] in names:
             raise ValueError('Variant names must be unique')
         names.add(variant['name'])
-        if not isinstance(variant['overrides'], dict) or set(variant['overrides']) - {'rmw_km', 'rankine_alpha', 'land_exposure_factor', 'translation_fraction', 'asymmetry_cap', 'inland_decay_km'}:
+        if not isinstance(variant['overrides'], dict) or set(variant['overrides']) - {'wind_profile', 'holland_b', 'rmw_km', 'rankine_alpha', 'land_exposure_factor', 'translation_fraction', 'asymmetry_cap', 'inland_decay_km'}:
             raise ValueError('Variant overrides may change only declared wind-model parameters')
         validate_config({**cfg, **variant['overrides']})
 

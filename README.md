@@ -60,7 +60,7 @@ overwrites, and results are published only after successful completion. Change
 1. Selects storms that attained hurricane status during the configured seasons,
    retaining their recorded weakening and extratropical phases.
 2. Interpolates tracks and computes property-level peak sustained winds using an
-   assumed modified Rankine vortex.
+   Vmax-normalized Holland profile.
 3. Applies vulnerability curves and policy terms to calculate ground-up and
    insured event losses.
 4. Aggregates all catalog years, including zero-loss years, and compares paired
@@ -73,6 +73,10 @@ frequency and loss estimates. Input checks verify the catalog's date span but
 cannot establish the completeness of a user-supplied subset.
 
 ## Current results
+
+The tables and archived validation below use the previous Rankine configuration.
+The current default uses Holland (B=1.5); these values and convergence conclusions
+must be recomputed before being attributed to the new default.
 
 The default uses one-minute wind sampling and 300 synthetic Florida properties
 constrained to at least 2 km inland in the generalized coastline dataset. The
@@ -117,7 +121,7 @@ size, wind parameters, timestep, scenarios, and uncertainty settings.
 | Synthetic portfolio | 300 properties; seed 7319; 2 km inland buffer |
 | Wind sampling | 1 minute |
 | Missing radius of maximum wind (RMW) | 35 km |
-| Outer radial exponent / exposure factor | 0.6 / 0.85 |
+| Radial profile / Holland B / exposure factor | Holland / 1.5 / 0.85 |
 | Resampled years / uncertainty replicates per mode | 20,000 / 200 |
 | Return periods | 2, 5, 10, and 20 years |
 
